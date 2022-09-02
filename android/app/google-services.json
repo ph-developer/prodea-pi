@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "258044886668",
+    "project_id": "prodea-pi",
+    "storage_bucket": "prodea-pi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258044886668:android:15f1fb58272f9e1a3205a9",
+        "android_client_info": {
+          "package_name": "com.example.prodea"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "258044886668-ok9cpfgerauu6251hojvi2m0002nu4mo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqPNN5-UC_Puht5XuYzzYnyxdVOr0jA18"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "258044886668-ok9cpfgerauu6251hojvi2m0002nu4mo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "258044886668-gaubdaf7aamo1ugc3j7a2c5canncnphc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.prodea"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
