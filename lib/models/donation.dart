@@ -1,0 +1,26 @@
+class Donation {
+  final String? id;
+  final String description;
+  final String? photoUrl;
+
+  final String? donorId;
+  final String? beneficiaryId;
+
+  final String expiration;
+  final String? cancellation;
+  final bool isDelivered;
+
+  final DateTime? createdAt;
+
+  Donation(
+    this.id,
+    this.description,
+    this.photoUrl,
+    this.donorId,
+    this.beneficiaryId,
+    this.expiration,
+    this.cancellation,
+    this.isDelivered,
+    this.createdAt,
+  );
+}
