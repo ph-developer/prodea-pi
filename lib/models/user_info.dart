@@ -17,22 +17,22 @@ class UserInfo {
 
   final AuthorizationStatus status;
 
-  UserInfo(
-    this.id,
-    this.email,
-    this.cnpj,
-    this.name,
-    this.address,
-    this.city,
-    this.phoneNumber,
-    this.about,
-    this.responsibleName,
-    this.responsibleCpf,
-    this.isDonor,
-    this.isBeneficiary,
-    this.isAdmin,
-    this.status,
-  );
+  UserInfo({
+    required this.id,
+    required this.email,
+    required this.cnpj,
+    required this.name,
+    required this.address,
+    required this.city,
+    required this.phoneNumber,
+    required this.about,
+    required this.responsibleName,
+    required this.responsibleCpf,
+    required this.isDonor,
+    required this.isBeneficiary,
+    required this.isAdmin,
+    required this.status,
+  });
 }
 
 enum AuthorizationStatus {
