@@ -1,4 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart' hide UserInfo;
+import 'package:firebase_auth/firebase_auth.dart' hide UserInfo, User;
+import 'package:prodea/models/user.dart';
 import 'package:prodea/models/user_info.dart';
 import 'package:prodea/repositories/contracts/auth_repo.dart';
 import 'package:prodea/repositories/contracts/user_info_repo.dart';
@@ -81,5 +82,17 @@ class FirebaseAuthRepo implements IAuthRepo {
   @override
   Future<void> logout() async {
     await auth.signOut();
+  }
+
+  @override
+  Stream<User?> authStateChanged() {
+    return auth.authStateChanges().map((user) {
+      if (user == null) return null;
+
+      return User(
+        id: user.uid,
+        email: user.email!,
+      );
+    });
   }
 }
