@@ -43,6 +43,7 @@ dependencies:
   intl: ^0.17.0
   asuka: ^2.0.1
   seafarer: ^0.1.1
+  flutter_launcher_icons: ^0.10.0
 
   # State Management
   flutter_triple: ^1.2.7+4
@@ -105,3 +106,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
