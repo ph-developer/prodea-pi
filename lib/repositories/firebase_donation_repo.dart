@@ -40,8 +40,8 @@ class FirebaseDonationRepo implements IDonationRepo {
 
   @override
   Future<String> getPhotoUrl(String path) async {
-    // TODO ...
-    return "...";
+    final photoRef = storage.ref(path);
+    return await photoRef.getDownloadURL();
   }
 
   @override
