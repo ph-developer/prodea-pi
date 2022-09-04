@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:prodea/models/donation.dart';
 
@@ -50,15 +51,29 @@ extension DonationDTO on Donation {
       expiration: map['expiration'],
       cancellation: map['cancellation'],
       isDelivered: map['isDelivered'],
-      createdAt: map['createdAt'],
+      createdAt: (map['createdAt'] as Timestamp?)?.toDate(),
     );
   }
 
   bool get isExpired {
     final expiration =
-        DateFormat('DD/MM/YYYY HH:mm').parse("${this.expiration} 23:59");
+        DateFormat('d/M/y H:m').parse("${this.expiration} 23:59");
     final diff = expiration.difference(DateTime.now()).inMinutes;
 
     return diff < 0;
+  }
+
+  String get status {
+    if (cancellation != null) {
+      return "Cancelada. Motivo: $cancellation";
+    } else if (isDelivered) {
+      return "Doação retirada ou entregue";
+    } else if (isExpired) {
+      return "Validade expirada";
+    } else if (beneficiaryId == null) {
+      return "Aguardando interessados";
+    } else {
+      return "Aguardando retirada ou entrega";
+    }
   }
 }
