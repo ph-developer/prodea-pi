@@ -3,16 +3,17 @@ import 'package:prodea/models/user.dart';
 import 'package:prodea/models/user_info.dart';
 import 'package:prodea/repositories/contracts/auth_repo.dart';
 import 'package:prodea/repositories/contracts/user_info_repo.dart';
-
-bool _isFirstLoad = true;
+import 'package:prodea/services/contracts/navigation_service.dart';
 
 class AuthStore extends NotifierStore<Exception, AuthState> {
   final IAuthRepo authRepo;
   final IUserInfoRepo userInfoRepo;
+  final INavigationService navigationService;
 
   AuthStore(
     this.authRepo,
     this.userInfoRepo,
+    this.navigationService,
   ) : super(AuthState());
 
   bool get isLoggedIn => state.currentUser != null;
@@ -26,22 +27,25 @@ class AuthStore extends NotifierStore<Exception, AuthState> {
   bool get isDenied =>
       state.currentUserInfo?.status == AuthorizationStatus.denied;
 
-  Future<void> fetchUser(Function afterFirstLoad) async {
+  void fetchUser() {
     authRepo.authStateChanged().listen((user) async {
       if (user != null) {
         final userInfo = await userInfoRepo.getCurrentUserInfo();
         update(AuthState(currentUser: user, currentUserInfo: userInfo));
+        navigationService.navigate('/home', replace: true);
       } else {
         update(AuthState());
+        navigationService.navigate('/login', replace: true);
       }
-
-      if (_isFirstLoad) {
-        afterFirstLoad();
-        _isFirstLoad = false;
-      }
-
-      // TODO navigate
     });
+  }
+
+  Future<void> login(String email, String password) async {
+    await authRepo.login(email, password);
+  }
+
+  Future<void> logout() async {
+    await authRepo.logout();
   }
 }
 
