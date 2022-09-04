@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prodea/pages/home/my_donations_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class _HomePageState extends State<HomePage> {
       abbrTitle: 'Doar',
     ),
     PageInfo(
-      page: const Center(child: Text('Minhas Doações')),
+      page: const MyDonationsPage(),
       icon: Icons.thumb_up_alt_rounded,
       title: 'Minhas Doações',
       abbrTitle: 'Minhas Doações',
@@ -46,8 +47,12 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: () {},
+            icon: const Icon(Icons.person_rounded),
+          ),
+          IconButton(
+            onPressed: () {},
             icon: const Icon(Icons.admin_panel_settings_rounded),
-          )
+          ),
         ],
       ),
       bottomNavigationBar: NavigationBar(
