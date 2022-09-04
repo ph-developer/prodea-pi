@@ -50,7 +50,7 @@ extension UserInfoDTO on UserInfo {
       'isDonor': isDonor,
       'isBeneficiary': isBeneficiary,
       'isAdmin': isAdmin,
-      'status': status,
+      'status': status.statusCode,
     };
   }
 
@@ -69,7 +69,9 @@ extension UserInfoDTO on UserInfo {
       isDonor: map['isDonor'],
       isBeneficiary: map['isBeneficiary'],
       isAdmin: map['isAdmin'],
-      status: map['status'],
+      status: AuthorizationStatus.values.firstWhere(
+        (status) => status.statusCode == map['status'],
+      ),
     );
   }
 }

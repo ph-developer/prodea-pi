@@ -72,6 +72,7 @@ class FirebaseUserInfoRepo implements IUserInfoRepo {
         if (!doc.exists) {
           notificationService
               .notifyError('Usuário não possui dados cadastrais.');
+          return null;
         }
 
         final map = doc.toMap();
