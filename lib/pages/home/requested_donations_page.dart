@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:prodea/components/if.dart';
 import 'package:prodea/dialogs/user_info_dialog.dart';
 import 'package:prodea/extensions/date_time.dart';
+import 'package:prodea/extensions/string.dart';
 import 'package:prodea/injection.dart';
 import 'package:prodea/models/donation.dart';
 import 'package:prodea/models/dtos/donation_dto.dart';
@@ -17,9 +18,15 @@ class RequestedDonationsPage extends StatefulWidget {
 }
 
 class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
-  String cityFilter = '';
+  final cityFilterController = TextEditingController();
   final donationsStore = i<DonationsStore>();
   final userInfosStore = i<UserInfosStore>();
+
+  @override
+  void dispose() {
+    cityFilterController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +39,16 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
         padding: const EdgeInsets.all(16),
         child: Observer(
           builder: (context) {
-            final donations = donationsStore.requestedDonations;
+            final donations = cityFilterController.text.isNotEmpty
+                ? donationsStore.requestedDonations
+                    .where((donation) => userInfosStore
+                        .getDonorById(donation.donorId!)
+                        .city
+                        .includes(cityFilterController.text))
+                    .toList()
+                : donationsStore.requestedDonations;
 
-            if (donations.isEmpty) {
+            if (donationsStore.requestedDonations.isEmpty) {
               return const Text('No momento não há doaçoes solicitadas...');
             }
 
@@ -42,18 +56,7 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8),
-                  child: TextFormField(
-                    onChanged: (value) {
-                      setState(() {
-                        // TODO
-                        cityFilter = value;
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.filter_alt_rounded),
-                      hintText: 'Filtrar por cidade...',
-                    ),
-                  ),
+                  child: _buildFilterField(),
                 ),
                 Expanded(
                   child: ListView.builder(
@@ -68,6 +71,27 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildFilterField() {
+    return TextFormField(
+      controller: cityFilterController,
+      onChanged: (value) => setState(() {}),
+      decoration: InputDecoration(
+        prefixIcon: const Icon(Icons.filter_alt_rounded),
+        suffixIcon: cityFilterController.text.isNotEmpty
+            ? IconButton(
+                onPressed: () {
+                  setState(() {
+                    cityFilterController.clear();
+                  });
+                },
+                icon: const Icon(Icons.close_rounded),
+              )
+            : null,
+        hintText: 'Filtrar por cidade...',
       ),
     );
   }
