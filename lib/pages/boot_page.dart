@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:prodea/injection.dart';
 import 'package:prodea/stores/auth_store.dart';
 import 'package:prodea/stores/beneficiaries_store.dart';
+import 'package:prodea/stores/donors_store.dart';
+import 'package:prodea/stores/users_store.dart';
 
 class BootPage extends StatefulWidget {
   const BootPage({Key? key}) : super(key: key);
@@ -13,11 +15,15 @@ class BootPage extends StatefulWidget {
 class _BootPageState extends State<BootPage> {
   final authStore = i<AuthStore>();
   final beneficiariesStore = i<BeneficiariesStore>();
+  final usersStore = i<UsersStore>();
+  final donorsStore = i<DonorsStore>();
 
   @override
   void initState() {
     super.initState();
     beneficiariesStore.fetchData();
+    usersStore.fetchData();
+    donorsStore.fetchData();
     authStore.fetchUser();
   }
 

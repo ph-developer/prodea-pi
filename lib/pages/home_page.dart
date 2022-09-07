@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prodea/pages/home/my_donations_page.dart';
+import 'package:prodea/pages/home/requested_donations_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -29,7 +30,7 @@ class _HomePageState extends State<HomePage> {
       abbrTitle: 'Disponíveis',
     ),
     PageInfo(
-      page: const Center(child: Text('Doações Solicitadas')),
+      page: const RequestedDonationsPage(),
       icon: Icons.handshake_rounded,
       title: 'Doações Solicitadas',
       abbrTitle: 'Solicitadas',
