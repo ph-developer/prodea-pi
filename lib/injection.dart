@@ -15,12 +15,10 @@ import 'package:prodea/services/contracts/notification_service.dart';
 import 'package:prodea/services/contracts/photo_service.dart';
 import 'package:prodea/services/image_picker_photo_service.dart';
 import 'package:prodea/services/seafarer_navigation_service.dart';
-import 'package:prodea/stores/available_donations_store.dart';
 import 'package:prodea/stores/beneficiaries_store.dart';
 import 'package:prodea/stores/donation_store.dart';
+import 'package:prodea/stores/donations_store.dart';
 import 'package:prodea/stores/donors_store.dart';
-import 'package:prodea/stores/my_donations_store.dart';
-import 'package:prodea/stores/requested_donations_store.dart';
 import 'package:prodea/stores/users_store.dart';
 
 final i = GetIt.instance;
@@ -53,23 +51,17 @@ Future<void> setupInjection() async {
     () => FirebaseUserInfoRepo(i(), i(), i()),
   );
 
-  // Singleton Controllers
+  // Controllers
   i.registerSingleton<AuthController>(AuthController(i(), i(), i()));
+
+  // Stores
+  i.registerSingleton<DonationsStore>(DonationsStore(i()));
+
+  // Old
   i.registerSingleton<BeneficiariesStore>(BeneficiariesStore(i()));
   i.registerSingleton<DonorsStore>(DonorsStore(i()));
   i.registerSingleton<UsersStore>(UsersStore(i()));
-
-  // Factory Stores
   i.registerFactory<DonationStore>(
     () => DonationStore(i(), i()),
-  );
-  i.registerFactory<MyDonationsStore>(
-    () => MyDonationsStore(i()),
-  );
-  i.registerFactory<AvailableDonationsStore>(
-    () => AvailableDonationsStore(i()),
-  );
-  i.registerFactory<RequestedDonationsStore>(
-    () => RequestedDonationsStore(i()),
   );
 }

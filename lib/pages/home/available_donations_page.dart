@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:prodea/components/if.dart';
 import 'package:prodea/dialogs/user_info_dialog.dart';
@@ -6,7 +7,7 @@ import 'package:prodea/extensions/date_time.dart';
 import 'package:prodea/injection.dart';
 import 'package:prodea/models/donation.dart';
 import 'package:prodea/models/user_info.dart';
-import 'package:prodea/stores/available_donations_store.dart';
+import 'package:prodea/stores/donations_store.dart';
 import 'package:prodea/stores/donors_store.dart';
 
 class AvailableDonationsPage extends StatefulWidget {
@@ -18,31 +19,23 @@ class AvailableDonationsPage extends StatefulWidget {
 
 class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
   String cityFilter = '';
-  final donationsStore = i<AvailableDonationsStore>();
+  final donationsStore = i<DonationsStore>();
   final donorsStore = i<DonorsStore>();
-
-  @override
-  void initState() {
-    super.initState();
-    donationsStore.fetchData();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: donationsStore.fetchData,
+        onPressed: donationsStore.init,
         child: const Icon(Icons.refresh_rounded),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: ScopedBuilder(
-          store: donationsStore,
-          onLoading: (context) => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          onState: (context, List<Donation> state) {
-            if (state.isEmpty) {
+        child: Observer(
+          builder: (context) {
+            final donations = donationsStore.availableDonations;
+
+            if (donations.isEmpty) {
               return const Text(
                 'Infelizmente não há doaçoes disponíveis no momento...',
               );
@@ -67,9 +60,9 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: state.length,
+                    itemCount: donations.length,
                     itemBuilder: (context, index) {
-                      final donation = state[index];
+                      final donation = donations[index];
                       return _buildDonationCard(donation);
                     },
                   ),

@@ -46,13 +46,14 @@ abstract class _AuthControllerBase with Store {
   bool get isDenied => currentUserInfo?.status == AuthorizationStatus.denied;
 
   @action
-  void init() {
+  void init(Function? afterLoginCallback) {
     authRepo.authStateChanged().listen((user) async {
       if (user != null) {
         final userInfo = await userInfoRepo.getCurrentUserInfo();
         currentUser = user;
         currentUserInfo = userInfo;
         navigationService.navigate('/home', replace: true);
+        if (afterLoginCallback != null) afterLoginCallback();
       } else {
         currentUser = null;
         currentUserInfo = null;

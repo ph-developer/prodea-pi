@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:prodea/components/if.dart';
 import 'package:prodea/dialogs/cancel_reason_dialog.dart';
@@ -9,7 +10,7 @@ import 'package:prodea/models/donation.dart';
 import 'package:prodea/models/dtos/donation_dto.dart';
 import 'package:prodea/models/user_info.dart';
 import 'package:prodea/stores/beneficiaries_store.dart';
-import 'package:prodea/stores/my_donations_store.dart';
+import 'package:prodea/stores/donations_store.dart';
 
 class MyDonationsPage extends StatefulWidget {
   const MyDonationsPage({Key? key}) : super(key: key);
@@ -19,38 +20,30 @@ class MyDonationsPage extends StatefulWidget {
 }
 
 class _MyDonationsPageState extends State<MyDonationsPage> {
-  final donationsStore = i<MyDonationsStore>();
+  final donationsStore = i<DonationsStore>();
   final beneficiariesStore = i<BeneficiariesStore>();
-
-  @override
-  void initState() {
-    super.initState();
-    donationsStore.fetchData();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: donationsStore.fetchData,
+        onPressed: donationsStore.init,
         child: const Icon(Icons.refresh_rounded),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: ScopedBuilder(
-          store: donationsStore,
-          onLoading: (context) => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          onState: (context, List<Donation> state) {
-            if (state.isEmpty) {
+        child: Observer(
+          builder: (context) {
+            final donations = donationsStore.myDonations;
+
+            if (donations.isEmpty) {
               return const Text('No momento não há doaçoes efetuadas...');
             }
 
             return ListView.builder(
-              itemCount: state.length,
+              itemCount: donations.length,
               itemBuilder: (context, index) {
-                final donation = state[index];
+                final donation = donations[index];
                 return _buildDonationCard(donation);
               },
             );

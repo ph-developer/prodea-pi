@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:prodea/components/if.dart';
 import 'package:prodea/dialogs/user_info_dialog.dart';
@@ -7,8 +8,8 @@ import 'package:prodea/injection.dart';
 import 'package:prodea/models/donation.dart';
 import 'package:prodea/models/dtos/donation_dto.dart';
 import 'package:prodea/models/user_info.dart';
+import 'package:prodea/stores/donations_store.dart';
 import 'package:prodea/stores/donors_store.dart';
-import 'package:prodea/stores/requested_donations_store.dart';
 
 class RequestedDonationsPage extends StatefulWidget {
   const RequestedDonationsPage({Key? key}) : super(key: key);
@@ -19,31 +20,23 @@ class RequestedDonationsPage extends StatefulWidget {
 
 class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
   String cityFilter = '';
-  final donationsStore = i<RequestedDonationsStore>();
+  final donationsStore = i<DonationsStore>();
   final donorsStore = i<DonorsStore>();
-
-  @override
-  void initState() {
-    super.initState();
-    donationsStore.fetchData();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: donationsStore.fetchData,
+        onPressed: donationsStore.init,
         child: const Icon(Icons.refresh_rounded),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: ScopedBuilder(
-          store: donationsStore,
-          onLoading: (context) => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          onState: (context, List<Donation> state) {
-            if (state.isEmpty) {
+        child: Observer(
+          builder: (context) {
+            final donations = donationsStore.requestedDonations;
+
+            if (donations.isEmpty) {
               return const Text('No momento não há doaçoes solicitadas...');
             }
 
@@ -66,9 +59,9 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: state.length,
+                    itemCount: donations.length,
                     itemBuilder: (context, index) {
-                      final donation = state[index];
+                      final donation = donations[index];
                       return _buildDonationCard(donation);
                     },
                   ),
