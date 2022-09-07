@@ -12,5 +12,5 @@ abstract class IDonationRepo {
   Future<void> setAsUnrequested(Donation donation);
   Stream<List<Donation>> availableDonations();
   Stream<List<Donation>> myDonations();
-  Stream<List<Donation>> receivedDonations();
+  Stream<List<Donation>> requestedDonations();
 }

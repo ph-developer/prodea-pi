@@ -149,7 +149,7 @@ class FirebaseDonationRepo implements IDonationRepo {
   }
 
   @override
-  Stream<List<Donation>> receivedDonations() {
+  Stream<List<Donation>> requestedDonations() {
     final beneficiaryId = auth.currentUser?.uid;
 
     return _collectionRef

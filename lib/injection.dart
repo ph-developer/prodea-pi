@@ -17,7 +17,7 @@ import 'package:prodea/stores/available_donations_store.dart';
 import 'package:prodea/stores/beneficiaries_store.dart';
 import 'package:prodea/stores/donors_store.dart';
 import 'package:prodea/stores/my_donations_store.dart';
-import 'package:prodea/stores/received_donations_store.dart';
+import 'package:prodea/stores/requested_donations_store.dart';
 import 'package:prodea/stores/users_store.dart';
 
 final i = GetIt.instance;
@@ -55,5 +55,6 @@ Future<void> setupInjection() async {
   i.registerFactory<MyDonationsStore>(() => MyDonationsStore(i()));
   i.registerFactory<AvailableDonationsStore>(
       () => AvailableDonationsStore(i()));
-  i.registerFactory<ReceivedDonationsStore>(() => ReceivedDonationsStore(i()));
+  i.registerFactory<RequestedDonationsStore>(
+      () => RequestedDonationsStore(i()));
 }

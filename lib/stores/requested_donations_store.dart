@@ -2,13 +2,13 @@ import 'package:flutter_triple/flutter_triple.dart';
 import 'package:prodea/models/donation.dart';
 import 'package:prodea/repositories/contracts/donation_repo.dart';
 
-class ReceivedDonationsStore extends StreamStore<Error, List<Donation>> {
+class RequestedDonationsStore extends StreamStore<Error, List<Donation>> {
   final IDonationRepo donationRepo;
 
-  ReceivedDonationsStore(this.donationRepo) : super([]);
+  RequestedDonationsStore(this.donationRepo) : super([]);
 
   void fetchData() {
-    executeStream(donationRepo.receivedDonations());
+    executeStream(donationRepo.requestedDonations());
   }
 
   Future<String?> getDonationPhotoURL(Donation donation) async {
