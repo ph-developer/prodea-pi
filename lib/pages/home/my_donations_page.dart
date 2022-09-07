@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_triple/flutter_triple.dart';
+import 'package:prodea/components/if.dart';
 import 'package:prodea/dialogs/cancel_reason_dialog.dart';
 import 'package:prodea/dialogs/user_info_dialog.dart';
 import 'package:prodea/extensions/date_time.dart';
@@ -64,28 +65,31 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          FutureBuilder(
-            future: donationsStore.getDonationPhotoURL(donation),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData || snapshot.data == null) {
-                return const SizedBox(
-                  height: 215,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              } else {
-                return Container(
-                  height: 215,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.fitWidth,
-                      image: NetworkImage(snapshot.data!),
+          If(
+            condition: () => donation.photoUrl != null,
+            child: FutureBuilder(
+              future: donationsStore.getDonationPhotoURL(donation),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.data == null) {
+                  return const SizedBox(
+                    height: 215,
+                    child: Center(
+                      child: CircularProgressIndicator(),
                     ),
-                  ),
-                );
-              }
-            },
+                  );
+                } else {
+                  return Container(
+                    height: 215,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.fitWidth,
+                        image: NetworkImage(snapshot.data!),
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
           ),
           ListTile(
             title: Text(donation.description),
