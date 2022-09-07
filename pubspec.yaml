@@ -44,6 +44,8 @@ dependencies:
   asuka: ^2.0.1
   seafarer: ^0.1.1
   flutter_svg: ^1.1.4
+  mask_text_input_formatter: ^2.4.0
+  image_picker: ^0.8.5+3
 
   # State Management
   flutter_triple: ^1.2.7+4
