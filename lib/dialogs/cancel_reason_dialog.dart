@@ -33,10 +33,15 @@ class _CancelReasonDialogState extends State<CancelReasonDialog> {
     return AlertDialog(
       title: const Text('Cancelar Doação'),
       content: SingleChildScrollView(
-        child: TextFormField(
-          autofocus: true,
-          initialValue: '',
-          onChanged: _setValue,
+        child: Column(
+          children: [
+            const Text('Escreva o motivo do cancelamento da doação.'),
+            TextFormField(
+              autofocus: true,
+              initialValue: '',
+              onChanged: _setValue,
+            ),
+          ],
         ),
       ),
       actions: [
