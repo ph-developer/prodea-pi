@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:prodea/extensions/input_formatters.dart';
+import 'package:prodea/extensions/string.dart';
 import 'package:prodea/injection.dart';
 import 'package:prodea/services/contracts/photo_service.dart';
 import 'package:prodea/stores/donation_store.dart';
@@ -189,9 +190,18 @@ class _DonatePageState extends State<DonatePage> {
   SizedBox _buildSubmitButton() {
     return SizedBox(
       width: double.infinity,
-      child: OutlinedButton(
-        onPressed: donationStore.postDonation,
-        child: const Text('Postar Doação'),
+      child: Observer(
+        builder: (_) {
+          final canSubmit = donationStore.expiration.isNotEmpty &&
+              donationStore.expiration.length == 10 &&
+              donationStore.expiration.isAValidDate() &&
+              donationStore.description.isNotEmpty;
+
+          return OutlinedButton(
+            onPressed: canSubmit ? donationStore.postDonation : null,
+            child: const Text('Postar Doação'),
+          );
+        },
       ),
     );
   }
