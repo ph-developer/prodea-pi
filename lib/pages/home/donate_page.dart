@@ -2,13 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_triple/flutter_triple.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:prodea/extensions/input_formatters.dart';
 import 'package:prodea/injection.dart';
-import 'package:prodea/models/user_info.dart';
 import 'package:prodea/services/contracts/photo_service.dart';
-import 'package:prodea/stores/beneficiaries_store.dart';
 import 'package:prodea/stores/donation_store.dart';
+import 'package:prodea/stores/user_infos_store.dart';
 
 class DonatePage extends StatefulWidget {
   const DonatePage({Key? key}) : super(key: key);
@@ -22,7 +21,7 @@ class _DonatePageState extends State<DonatePage> {
   File? image;
   String? beneficiaryId;
   String expiration = '';
-  final beneficiariesStore = i<BeneficiariesStore>();
+  final userInfosStore = i<UserInfosStore>();
   final donationStore = i<DonationStore>();
   final photoService = i<IPhotoService>();
 
@@ -159,13 +158,12 @@ class _DonatePageState extends State<DonatePage> {
           'Doar para uma entidade específica? Caso não seja selecionada nenhuma entidade específica, a doação ficará disponível para qualquer entidade cadastrada na plataforma.',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        ScopedBuilder(
-          store: beneficiariesStore,
-          onState: (context, List<UserInfo> state) {
+        Observer(
+          builder: (context) {
             return DropdownButton<String?>(
               items: [
                 const DropdownMenuItem(value: null, child: Text('Não')),
-                ...state.map(
+                ...userInfosStore.beneficiaries.map(
                   (userInfo) => DropdownMenuItem(
                     value: userInfo.id,
                     child: Text(userInfo.name),

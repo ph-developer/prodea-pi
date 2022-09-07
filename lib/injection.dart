@@ -15,11 +15,9 @@ import 'package:prodea/services/contracts/notification_service.dart';
 import 'package:prodea/services/contracts/photo_service.dart';
 import 'package:prodea/services/image_picker_photo_service.dart';
 import 'package:prodea/services/seafarer_navigation_service.dart';
-import 'package:prodea/stores/beneficiaries_store.dart';
 import 'package:prodea/stores/donation_store.dart';
 import 'package:prodea/stores/donations_store.dart';
-import 'package:prodea/stores/donors_store.dart';
-import 'package:prodea/stores/users_store.dart';
+import 'package:prodea/stores/user_infos_store.dart';
 
 final i = GetIt.instance;
 
@@ -56,11 +54,9 @@ Future<void> setupInjection() async {
 
   // Stores
   i.registerSingleton<DonationsStore>(DonationsStore(i()));
+  i.registerSingleton<UserInfosStore>(UserInfosStore(i()));
 
   // Old
-  i.registerSingleton<BeneficiariesStore>(BeneficiariesStore(i()));
-  i.registerSingleton<DonorsStore>(DonorsStore(i()));
-  i.registerSingleton<UsersStore>(UsersStore(i()));
   i.registerFactory<DonationStore>(
     () => DonationStore(i(), i()),
   );

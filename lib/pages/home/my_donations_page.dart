@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_triple/flutter_triple.dart';
 import 'package:prodea/components/if.dart';
 import 'package:prodea/dialogs/cancel_reason_dialog.dart';
 import 'package:prodea/dialogs/user_info_dialog.dart';
@@ -8,9 +7,8 @@ import 'package:prodea/extensions/date_time.dart';
 import 'package:prodea/injection.dart';
 import 'package:prodea/models/donation.dart';
 import 'package:prodea/models/dtos/donation_dto.dart';
-import 'package:prodea/models/user_info.dart';
-import 'package:prodea/stores/beneficiaries_store.dart';
 import 'package:prodea/stores/donations_store.dart';
+import 'package:prodea/stores/user_infos_store.dart';
 
 class MyDonationsPage extends StatefulWidget {
   const MyDonationsPage({Key? key}) : super(key: key);
@@ -21,7 +19,7 @@ class MyDonationsPage extends StatefulWidget {
 
 class _MyDonationsPageState extends State<MyDonationsPage> {
   final donationsStore = i<DonationsStore>();
-  final beneficiariesStore = i<BeneficiariesStore>();
+  final userInfosStore = i<UserInfosStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +92,9 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                 if (!donation.isDelivered)
                   Text("Validade: ${donation.expiration}"),
                 if (donation.beneficiaryId != null)
-                  ScopedBuilder(
-                    store: beneficiariesStore,
-                    onState: (context, List<UserInfo> state) {
-                      final beneficiary = beneficiariesStore
+                  Observer(
+                    builder: (context) {
+                      final beneficiary = userInfosStore
                           .getBeneficiaryById(donation.beneficiaryId!);
 
                       return Row(

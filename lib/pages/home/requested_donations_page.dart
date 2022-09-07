@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_triple/flutter_triple.dart';
 import 'package:prodea/components/if.dart';
 import 'package:prodea/dialogs/user_info_dialog.dart';
 import 'package:prodea/extensions/date_time.dart';
 import 'package:prodea/injection.dart';
 import 'package:prodea/models/donation.dart';
 import 'package:prodea/models/dtos/donation_dto.dart';
-import 'package:prodea/models/user_info.dart';
 import 'package:prodea/stores/donations_store.dart';
-import 'package:prodea/stores/donors_store.dart';
+import 'package:prodea/stores/user_infos_store.dart';
 
 class RequestedDonationsPage extends StatefulWidget {
   const RequestedDonationsPage({Key? key}) : super(key: key);
@@ -21,7 +19,7 @@ class RequestedDonationsPage extends StatefulWidget {
 class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
   String cityFilter = '';
   final donationsStore = i<DonationsStore>();
-  final donorsStore = i<DonorsStore>();
+  final userInfosStore = i<UserInfosStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -115,10 +113,10 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
                 if (!donation.isDelivered)
                   Text("Validade: ${donation.expiration}"),
                 if (donation.donorId != null)
-                  ScopedBuilder(
-                    store: donorsStore,
-                    onState: (context, List<UserInfo> state) {
-                      final donor = donorsStore.getDonorById(donation.donorId!);
+                  Observer(
+                    builder: (context) {
+                      final donor =
+                          userInfosStore.getDonorById(donation.donorId!);
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
