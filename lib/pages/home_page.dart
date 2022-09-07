@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prodea/pages/home/available_donations_page.dart';
+import 'package:prodea/pages/home/donate_page.dart';
 import 'package:prodea/pages/home/my_donations_page.dart';
 import 'package:prodea/pages/home/requested_donations_page.dart';
 
@@ -13,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final pageInfos = [
     PageInfo(
-      page: const Center(child: Text('Doar')),
+      page: const DonatePage(),
       icon: Icons.volunteer_activism_rounded,
       title: 'Doar',
       abbrTitle: 'Doar',
