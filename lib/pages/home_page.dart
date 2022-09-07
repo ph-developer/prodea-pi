@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prodea/pages/home/available_donations_page.dart';
 import 'package:prodea/pages/home/my_donations_page.dart';
 import 'package:prodea/pages/home/requested_donations_page.dart';
 
@@ -24,7 +25,7 @@ class _HomePageState extends State<HomePage> {
       abbrTitle: 'Minhas Doações',
     ),
     PageInfo(
-      page: const Center(child: Text('Doações Disponíveis')),
+      page: const AvailableDonationsPage(),
       icon: Icons.local_mall_rounded,
       title: 'Doações Disponíveis',
       abbrTitle: 'Disponíveis',
