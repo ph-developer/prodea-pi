@@ -19,7 +19,9 @@ extension DonationDTO on Donation {
       description: description ?? this.description,
       photoUrl: photoUrl ?? this.photoUrl,
       donorId: donorId ?? this.donorId,
-      beneficiaryId: beneficiaryId ?? this.beneficiaryId,
+      beneficiaryId: beneficiaryId == 'null'
+          ? null
+          : (beneficiaryId ?? this.beneficiaryId),
       expiration: expiration ?? this.expiration,
       cancellation: cancellation ?? this.cancellation,
       isDelivered: isDelivered ?? this.isDelivered,

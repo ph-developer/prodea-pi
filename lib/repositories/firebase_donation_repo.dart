@@ -110,7 +110,7 @@ class FirebaseDonationRepo implements IDonationRepo {
   Future<void> setAsUnrequested(Donation donation) async {
     try {
       final docRef = _collectionRef.doc(donation.id);
-      final temp = donation.copyWith(beneficiaryId: null);
+      final temp = donation.copyWith(beneficiaryId: 'null');
       docRef.set(temp.toMap());
     } catch (e) {
       notificationService

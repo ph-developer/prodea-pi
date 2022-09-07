@@ -1,29 +1,41 @@
 import 'dart:io';
 
-import 'package:flutter_triple/flutter_triple.dart';
+import 'package:mobx/mobx.dart';
 import 'package:prodea/models/donation.dart';
 import 'package:prodea/repositories/contracts/donation_repo.dart';
 import 'package:prodea/services/contracts/notification_service.dart';
 
-class DonationStore extends NotifierStore<Exception, int> {
+part 'donation_store.g.dart';
+
+class DonationStore = _DonationStoreBase with _$DonationStore;
+
+abstract class _DonationStoreBase with Store {
   final IDonationRepo donationRepo;
   final INotificationService notificationService;
 
-  DonationStore(
+  _DonationStoreBase(
     this.donationRepo,
     this.notificationService,
-  ) : super(0);
+  );
 
-  Future<void> postDonation(
-    String description,
-    File? image,
-    String? beneficiaryId,
-    String expiration,
-  ) async {
+  @observable
+  String description = '';
+
+  @observable
+  File? image;
+
+  @observable
+  String? beneficiaryId;
+
+  @observable
+  String expiration = '';
+
+  @action
+  Future<void> postDonation() async {
     String? photoUrl;
 
     if (image != null) {
-      photoUrl = await donationRepo.uploadPhoto(image);
+      photoUrl = await donationRepo.uploadPhoto(image!);
     }
 
     final donation = Donation(

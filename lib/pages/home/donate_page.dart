@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -17,10 +15,6 @@ class DonatePage extends StatefulWidget {
 }
 
 class _DonatePageState extends State<DonatePage> {
-  String description = '';
-  File? image;
-  String? beneficiaryId;
-  String expiration = '';
   final userInfosStore = i<UserInfosStore>();
   final donationStore = i<DonationStore>();
   final photoService = i<IPhotoService>();
@@ -59,11 +53,7 @@ class _DonatePageState extends State<DonatePage> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         TextFormField(
-          onChanged: (value) {
-            setState(() {
-              description = value;
-            });
-          },
+          onChanged: (value) => donationStore.description = value,
           decoration: const InputDecoration(
             hintText: 'Descreva as condições do produto que será doado...',
           ),
@@ -73,80 +63,74 @@ class _DonatePageState extends State<DonatePage> {
   }
 
   Widget _buildPhotoField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Foto',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () async {
-                  final file = await photoService.pickFromCamera();
-
-                  if (file != null) {
-                    setState(() {
-                      image = file;
-                    });
-                  }
-                },
-                child: const Text('Tirar Foto'),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () async {
-                  final file = await photoService.pickFromGallery();
-
-                  if (file != null) {
-                    setState(() {
-                      image = file;
-                    });
-                  }
-                },
-                child: const Text('Escolher da Galeria'),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        image != null
-            ? Card(
-                clipBehavior: Clip.antiAlias,
-                child: Container(
-                  height: 200,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.fitWidth,
-                      image: FileImage(image!),
-                    ),
-                  ),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.close_rounded),
-                          onPressed: () {
-                            setState(() {
-                              image = null;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+    return Observer(
+      builder: (context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Foto',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () async {
+                    final file = await photoService.pickFromCamera();
+                    if (file != null) {
+                      donationStore.image = file;
+                    }
+                  },
+                  child: const Text('Tirar Foto'),
                 ),
-              )
-            : const Text('Nenhuma foto selecionada...'),
-      ],
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () async {
+                    final file = await photoService.pickFromGallery();
+                    if (file != null) {
+                      donationStore.image = file;
+                    }
+                  },
+                  child: const Text('Escolher da Galeria'),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          donationStore.image != null
+              ? Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.fitWidth,
+                        image: FileImage(donationStore.image!),
+                      ),
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.close_rounded),
+                            onPressed: () {
+                              donationStore.image = null;
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : const Text('Nenhuma foto selecionada...'),
+        ],
+      ),
     );
   }
 
@@ -170,13 +154,9 @@ class _DonatePageState extends State<DonatePage> {
                   ),
                 ),
               ],
-              value: beneficiaryId,
+              value: donationStore.beneficiaryId,
               isExpanded: true,
-              onChanged: (value) {
-                setState(() {
-                  beneficiaryId = value;
-                });
-              },
+              onChanged: (value) => donationStore.beneficiaryId = value,
             );
           },
         ),
@@ -194,9 +174,7 @@ class _DonatePageState extends State<DonatePage> {
         ),
         TextFormField(
           onChanged: (value) {
-            setState(() {
-              expiration = value;
-            });
+            donationStore.expiration = value;
           },
           keyboardType: TextInputType.number,
           inputFormatters: [
@@ -212,14 +190,7 @@ class _DonatePageState extends State<DonatePage> {
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton(
-        onPressed: () {
-          donationStore.postDonation(
-            description,
-            image,
-            beneficiaryId,
-            expiration,
-          );
-        },
+        onPressed: donationStore.postDonation,
         child: const Text('Postar Doação'),
       ),
     );
