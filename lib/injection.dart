@@ -13,6 +13,7 @@ import 'package:prodea/services/contracts/navigation_service.dart';
 import 'package:prodea/services/contracts/notification_service.dart';
 import 'package:prodea/services/seafarer_navigation_service.dart';
 import 'package:prodea/stores/auth_store.dart';
+import 'package:prodea/stores/beneficiaries_store.dart';
 import 'package:prodea/stores/my_donations_store.dart';
 
 final i = GetIt.instance;
@@ -44,5 +45,6 @@ Future<void> setupInjection() async {
 
   // Stores
   i.registerSingleton<AuthStore>(AuthStore(i(), i(), i()));
+  i.registerSingleton<BeneficiariesStore>(BeneficiariesStore(i()));
   i.registerFactory<MyDonationsStore>(() => MyDonationsStore(i()));
 }
