@@ -31,7 +31,6 @@ extension DonationDTO on Donation {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'description': description,
       'photoUrl': photoUrl,
       'donorId': donorId,
