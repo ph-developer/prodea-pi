@@ -1,40 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:prodea/injection.dart';
-import 'package:prodea/stores/beneficiaries_store.dart';
+import 'package:prodea/models/user_info.dart';
 
 Future<void> showUserInfoDialog(
   BuildContext context, {
-  required String id,
+  required UserInfo userInfo,
 }) async {
   await showDialog(
     context: context,
-    builder: (_) => UserInfoDialog(id: id),
+    builder: (_) => UserInfoDialog(userInfo: userInfo),
   );
 }
 
 class UserInfoDialog extends StatelessWidget {
-  final beneficiariesStore = i<BeneficiariesStore>();
-  final String id;
+  final UserInfo userInfo;
 
-  UserInfoDialog({required this.id, Key? key}) : super(key: key);
+  const UserInfoDialog({required this.userInfo, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final beneficiary = beneficiariesStore.getBeneficiaryById(id);
-
     return AlertDialog(
-      title: Text(beneficiary.name),
+      title: Text(userInfo.name),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("CNPJ: ${beneficiary.cnpj}"),
-            Text("Endereço: ${beneficiary.address}"),
-            Text("Cidade: ${beneficiary.city}"),
-            Text("Email: ${beneficiary.email}"),
-            Text("Telefone: ${beneficiary.phoneNumber}"),
-            Text("Nome do Responsável: ${beneficiary.responsibleName}"),
-            Text("Sobre: ${beneficiary.about}"),
+            Text("CNPJ: ${userInfo.cnpj}"),
+            Text("Endereço: ${userInfo.address}"),
+            Text("Cidade: ${userInfo.city}"),
+            Text("Email: ${userInfo.email}"),
+            Text("Telefone: ${userInfo.phoneNumber}"),
+            Text("Nome do Responsável: ${userInfo.responsibleName}"),
+            Text("Sobre: ${userInfo.about}"),
           ],
         ),
       ),
