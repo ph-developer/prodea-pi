@@ -15,4 +15,12 @@ class MyDonationsStore extends StreamStore<Error, List<Donation>> {
     if (donation.photoUrl == null) return null;
     return await donationRepo.getPhotoUrl(donation.photoUrl!);
   }
+
+  Future<void> setDonationAsDelivered(Donation donation) async {
+    await donationRepo.setAsDelivered(donation);
+  }
+
+  Future<void> setDonationAsCanceled(Donation donation, String reason) async {
+    await donationRepo.setAsCanceled(donation, reason);
+  }
 }

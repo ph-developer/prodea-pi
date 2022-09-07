@@ -17,26 +17,26 @@ class AvailableDonationsPage extends StatefulWidget {
 
 class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
   String cityFilter = '';
-  final availableDonationsStore = i<AvailableDonationsStore>();
+  final donationsStore = i<AvailableDonationsStore>();
   final donorsStore = i<DonorsStore>();
 
   @override
   void initState() {
     super.initState();
-    availableDonationsStore.fetchData();
+    donationsStore.fetchData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: availableDonationsStore.fetchData,
+        onPressed: donationsStore.fetchData,
         child: const Icon(Icons.refresh_rounded),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ScopedBuilder(
-          store: availableDonationsStore,
+          store: donationsStore,
           onLoading: (context) => const Center(
             child: CircularProgressIndicator(),
           ),
@@ -51,19 +51,16 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8),
-                  child: TextField(
+                  child: TextFormField(
                     onChanged: (value) {
                       setState(() {
                         // TODO
                         cityFilter = value;
                       });
                     },
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.filter_alt_rounded),
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.filter_alt_rounded),
                       hintText: 'Filtrar por cidade...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
                     ),
                   ),
                 ),
@@ -90,7 +87,7 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
       child: Column(
         children: [
           FutureBuilder(
-            future: availableDonationsStore.getDonationPhotoURL(donation),
+            future: donationsStore.getDonationPhotoURL(donation),
             builder: (context, snapshot) {
               if (!snapshot.hasData || snapshot.data == null) {
                 return const SizedBox(
@@ -154,7 +151,7 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: () {
-                      // TODO
+                      donationsStore.setDonationAsRequested(donation);
                     },
                     child: const Text('Solicitar Doação'),
                   ),

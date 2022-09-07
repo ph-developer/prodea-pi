@@ -15,4 +15,8 @@ class AvailableDonationsStore extends StreamStore<Error, List<Donation>> {
     if (donation.photoUrl == null) return null;
     return await donationRepo.getPhotoUrl(donation.photoUrl!);
   }
+
+  Future<void> setDonationAsRequested(Donation donation) async {
+    await donationRepo.setAsRequested(donation);
+  }
 }

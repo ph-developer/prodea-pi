@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_triple/flutter_triple.dart';
+import 'package:prodea/dialogs/cancel_reason_dialog.dart';
 import 'package:prodea/dialogs/user_info_dialog.dart';
 import 'package:prodea/extensions/date_time.dart';
 import 'package:prodea/injection.dart';
@@ -17,26 +18,26 @@ class MyDonationsPage extends StatefulWidget {
 }
 
 class _MyDonationsPageState extends State<MyDonationsPage> {
-  final myDonationsStore = i<MyDonationsStore>();
+  final donationsStore = i<MyDonationsStore>();
   final beneficiariesStore = i<BeneficiariesStore>();
 
   @override
   void initState() {
     super.initState();
-    myDonationsStore.fetchData();
+    donationsStore.fetchData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: myDonationsStore.fetchData,
+        onPressed: donationsStore.fetchData,
         child: const Icon(Icons.refresh_rounded),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ScopedBuilder(
-          store: myDonationsStore,
+          store: donationsStore,
           onLoading: (context) => const Center(
             child: CircularProgressIndicator(),
           ),
@@ -64,7 +65,7 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
       child: Column(
         children: [
           FutureBuilder(
-            future: myDonationsStore.getDonationPhotoURL(donation),
+            future: donationsStore.getDonationPhotoURL(donation),
             builder: (context, snapshot) {
               if (!snapshot.hasData || snapshot.data == null) {
                 return const SizedBox(
@@ -128,7 +129,7 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                     width: double.infinity,
                     child: OutlinedButton(
                       onPressed: () {
-                        // TODO
+                        donationsStore.setDonationAsDelivered(donation);
                       },
                       child: const Text('Marcar como Entregue'),
                     ),
@@ -140,7 +141,10 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                     width: double.infinity,
                     child: OutlinedButton(
                       onPressed: () {
-                        // TODO
+                        showCancelReasonDialog(context, onOk: (reason) {
+                          donationsStore.setDonationAsCanceled(
+                              donation, reason);
+                        });
                       },
                       child: const Text('Cancelar Doação'),
                     ),

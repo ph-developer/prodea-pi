@@ -17,26 +17,27 @@ class RequestedDonationsPage extends StatefulWidget {
 }
 
 class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
-  final requestedDonationsStore = i<RequestedDonationsStore>();
+  String cityFilter = '';
+  final donationsStore = i<RequestedDonationsStore>();
   final donorsStore = i<DonorsStore>();
 
   @override
   void initState() {
     super.initState();
-    requestedDonationsStore.fetchData();
+    donationsStore.fetchData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: requestedDonationsStore.fetchData,
+        onPressed: donationsStore.fetchData,
         child: const Icon(Icons.refresh_rounded),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ScopedBuilder(
-          store: requestedDonationsStore,
+          store: donationsStore,
           onLoading: (context) => const Center(
             child: CircularProgressIndicator(),
           ),
@@ -45,12 +46,33 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
               return const Text('No momento não há doaçoes solicitadas...');
             }
 
-            return ListView.builder(
-              itemCount: state.length,
-              itemBuilder: (context, index) {
-                final donation = state[index];
-                return _buildDonationCard(donation);
-              },
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextFormField(
+                    onChanged: (value) {
+                      setState(() {
+                        // TODO
+                        cityFilter = value;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.filter_alt_rounded),
+                      hintText: 'Filtrar por cidade...',
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: state.length,
+                    itemBuilder: (context, index) {
+                      final donation = state[index];
+                      return _buildDonationCard(donation);
+                    },
+                  ),
+                ),
+              ],
             );
           },
         ),
@@ -64,7 +86,7 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
       child: Column(
         children: [
           FutureBuilder(
-            future: requestedDonationsStore.getDonationPhotoURL(donation),
+            future: donationsStore.getDonationPhotoURL(donation),
             builder: (context, snapshot) {
               if (!snapshot.hasData || snapshot.data == null) {
                 return const SizedBox(
@@ -132,7 +154,7 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
                     width: double.infinity,
                     child: OutlinedButton(
                       onPressed: () {
-                        // TODO
+                        donationsStore.setDonationAsDelivered(donation);
                       },
                       child: const Text('Marcar como Recebida'),
                     ),
@@ -144,7 +166,7 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
                     width: double.infinity,
                     child: OutlinedButton(
                       onPressed: () {
-                        // TODO
+                        donationsStore.setDonationAsUnrequested(donation);
                       },
                       child: const Text('Cancelar Solicitação'),
                     ),
