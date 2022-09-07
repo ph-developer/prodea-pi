@@ -13,13 +13,13 @@ class Donation {
   final DateTime? createdAt;
 
   Donation({
-    required this.id,
+    this.id,
     required this.description,
-    required this.photoUrl,
-    required this.donorId,
-    required this.beneficiaryId,
+    this.photoUrl,
+    this.donorId,
+    this.beneficiaryId,
     required this.expiration,
-    required this.cancellation,
+    this.cancellation,
     required this.isDelivered,
     required this.createdAt,
   });
