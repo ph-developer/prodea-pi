@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:prodea/controllers/auth_controller.dart';
+import 'package:prodea/injection.dart';
+import 'package:prodea/models/user_info.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -8,6 +12,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final authController = i<AuthController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,8 +26,73 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
-      body: const Center(
-        child: Text('profile'),
+      body: Observer(
+        builder: (_) {
+          final userInfo = authController.currentUserInfo;
+
+          if (userInfo == null) return Container();
+
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    userInfo.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "CNPJ: ${userInfo.cnpj}",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 24),
+                  const SizedBox(height: 12),
+                  Text("Endereço: ${userInfo.address}"),
+                  Text("Cidade: ${userInfo.city}"),
+                  const SizedBox(height: 12),
+                  Text("Email: ${userInfo.email}"),
+                  Text("Telefone: ${userInfo.phoneNumber}"),
+                  const SizedBox(height: 12),
+                  Text("Nome do Responsável: ${userInfo.responsibleName}"),
+                  Text("CPF do Responsável: ${userInfo.responsibleCpf}"),
+                  const SizedBox(height: 12),
+                  Text("Sobre: ${userInfo.about}"),
+                  const SizedBox(height: 12),
+                  if (userInfo.isDonor && userInfo.isBeneficiary)
+                    const Text('Perfil: Doador(a) e Beneficiário(a)'),
+                  if (userInfo.isDonor && !userInfo.isBeneficiary)
+                    const Text('Perfil: Doador(a)'),
+                  if (!userInfo.isDonor && userInfo.isBeneficiary)
+                    const Text('Perfil: Beneficiário(a)'),
+                  const SizedBox(height: 12),
+                  if (userInfo.status == AuthorizationStatus.waiting)
+                    const Text(
+                      'Situação: Aguardando Verificação',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  if (userInfo.status == AuthorizationStatus.authorized)
+                    const Text(
+                      'Situação: Autorizado',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  if (userInfo.status == AuthorizationStatus.denied)
+                    const Text(
+                      'Situação: Não Autorizado',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  const SizedBox(height: 12),
+                  OutlinedButton(
+                    onPressed: () {
+                      authController.logout();
+                    },
+                    child: const Text('Sair'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
