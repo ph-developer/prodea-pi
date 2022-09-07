@@ -1,6 +1,8 @@
+import 'package:prodea/pages/admin_page.dart';
 import 'package:prodea/pages/boot_page.dart';
 import 'package:prodea/pages/home_page.dart';
 import 'package:prodea/pages/login_page.dart';
+import 'package:prodea/pages/profile_page.dart';
 import 'package:seafarer/seafarer.dart';
 
 abstract class Routes {
@@ -19,6 +21,14 @@ abstract class Routes {
       SeafarerRoute(
         name: '/home',
         builder: (_, __, ___) => const HomePage(),
+      ),
+      SeafarerRoute(
+        name: '/admin',
+        builder: (_, __, ___) => const AdminPage(),
+      ),
+      SeafarerRoute(
+        name: '/profile',
+        builder: (_, __, ___) => const ProfilePage(),
       ),
     ]);
   }

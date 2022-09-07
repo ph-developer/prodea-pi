@@ -55,4 +55,14 @@ abstract class _UserInfosStoreBase with Store {
   UserInfo getBeneficiaryById(String id) {
     return beneficiaries.firstWhere((userInfo) => userInfo.id == id);
   }
+
+  @action
+  Future<void> setUserAsAuthorized(UserInfo userInfo) async {
+    await userInfoRepo.setStatus(userInfo, AuthorizationStatus.authorized);
+  }
+
+  @action
+  Future<void> setUserAsDenied(UserInfo userInfo) async {
+    await userInfoRepo.setStatus(userInfo, AuthorizationStatus.denied);
+  }
 }

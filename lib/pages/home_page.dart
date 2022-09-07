@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:prodea/injection.dart';
 import 'package:prodea/pages/home/available_donations_page.dart';
 import 'package:prodea/pages/home/donate_page.dart';
 import 'package:prodea/pages/home/my_donations_page.dart';
 import 'package:prodea/pages/home/requested_donations_page.dart';
+import 'package:prodea/services/contracts/navigation_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,6 +14,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final navigationService = i<INavigationService>();
+
   final pageInfos = [
     PageInfo(
       page: const DonatePage(),
@@ -45,15 +49,20 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: pageInfos[currentPageIndex].page,
       appBar: AppBar(
-        leading: Icon(pageInfos[currentPageIndex].icon),
-        title: Text(pageInfos[currentPageIndex].title),
+        title: Row(
+          children: [
+            Icon(pageInfos[currentPageIndex].icon),
+            const SizedBox(width: 12),
+            Text(pageInfos[currentPageIndex].title),
+          ],
+        ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => navigationService.navigate('/profile'),
             icon: const Icon(Icons.person_rounded),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () => navigationService.navigate('/admin'),
             icon: const Icon(Icons.admin_panel_settings_rounded),
           ),
         ],
