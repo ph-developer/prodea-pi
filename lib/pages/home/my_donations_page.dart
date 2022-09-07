@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:intl/intl.dart';
+import 'package:prodea/dialogs/user_info_dialog.dart';
+import 'package:prodea/extensions/date_time.dart';
 import 'package:prodea/injection.dart';
 import 'package:prodea/models/donation.dart';
 import 'package:prodea/models/dtos/donation_dto.dart';
+import 'package:prodea/models/user_info.dart';
+import 'package:prodea/stores/beneficiaries_store.dart';
 import 'package:prodea/stores/my_donations_store.dart';
 
 class MyDonationsPage extends StatefulWidget {
@@ -15,6 +18,7 @@ class MyDonationsPage extends StatefulWidget {
 
 class _MyDonationsPageState extends State<MyDonationsPage> {
   final myDonationsStore = i<MyDonationsStore>();
+  final beneficiariesStore = i<BeneficiariesStore>();
 
   @override
   void initState() {
@@ -88,24 +92,32 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (donation.createdAt != null)
-                  Text(
-                      "Data da Doação: ${DateFormat('d/M/y').format(donation.createdAt!)}"),
+                  Text("Data da Doação: ${donation.createdAt!.toDateStr()}"),
                 if (!donation.isDelivered)
                   Text("Validade: ${donation.expiration}"),
                 if (donation.beneficiaryId != null)
-                  Row(
-                    children: [
-                      Text("Destino: ${donation.beneficiaryId} "),
-                      InkWell(
-                        child: const Icon(
-                          Icons.info_outline_rounded,
-                          size: 16,
-                        ),
-                        onTap: () {
-                          //todo
-                        },
-                      ),
-                    ],
+                  ScopedBuilder(
+                    store: beneficiariesStore,
+                    onState: (context, List<UserInfo> state) {
+                      final beneficiary = beneficiariesStore
+                          .getBeneficiaryById(donation.beneficiaryId!);
+
+                      return Row(
+                        children: [
+                          Text("Destino: ${beneficiary.name} "),
+                          InkWell(
+                            child: const Icon(
+                              Icons.info_outline_rounded,
+                              size: 16,
+                            ),
+                            onTap: () => showUserInfoDialog(
+                              context,
+                              userInfo: beneficiary,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 Text("Situação: ${donation.status}"),
                 if (donation.cancellation == null &&
