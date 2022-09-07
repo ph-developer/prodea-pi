@@ -16,6 +16,7 @@ class AvailableDonationsPage extends StatefulWidget {
 }
 
 class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
+  String cityFilter = '';
   final availableDonationsStore = i<AvailableDonationsStore>();
   final donorsStore = i<DonorsStore>();
 
@@ -46,12 +47,36 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
               );
             }
 
-            return ListView.builder(
-              itemCount: state.length,
-              itemBuilder: (context, index) {
-                final donation = state[index];
-                return _buildDonationCard(donation);
-              },
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        // TODO
+                        cityFilter = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.filter_alt_rounded),
+                      hintText: 'Filtrar por cidade...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: state.length,
+                    itemBuilder: (context, index) {
+                      final donation = state[index];
+                      return _buildDonationCard(donation);
+                    },
+                  ),
+                ),
+              ],
             );
           },
         ),
