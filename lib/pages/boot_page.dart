@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:prodea/controllers/auth_controller.dart';
 import 'package:prodea/injection.dart';
-import 'package:prodea/stores/auth_store.dart';
 import 'package:prodea/stores/beneficiaries_store.dart';
 import 'package:prodea/stores/donors_store.dart';
 import 'package:prodea/stores/users_store.dart';
@@ -13,7 +13,7 @@ class BootPage extends StatefulWidget {
 }
 
 class _BootPageState extends State<BootPage> {
-  final authStore = i<AuthStore>();
+  final authController = i<AuthController>();
   final beneficiariesStore = i<BeneficiariesStore>();
   final usersStore = i<UsersStore>();
   final donorsStore = i<DonorsStore>();
@@ -24,7 +24,7 @@ class _BootPageState extends State<BootPage> {
     beneficiariesStore.fetchData();
     usersStore.fetchData();
     donorsStore.fetchData();
-    authStore.fetchUser();
+    authController.init();
   }
 
   @override

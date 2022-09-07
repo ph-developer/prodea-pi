@@ -1,0 +1,9 @@
+targets:
+  $default:
+    builders:
+      mobx_codegen|mobx_generator:
+        enabled: true
+        generate_for:
+          include:
+            - lib/controllers/*_controller.dart
+            - lib/stores/*_store.dart

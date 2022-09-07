@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:prodea/controllers/auth_controller.dart';
 import 'package:prodea/repositories/contracts/auth_repo.dart';
 import 'package:prodea/repositories/contracts/donation_repo.dart';
 import 'package:prodea/repositories/contracts/user_info_repo.dart';
@@ -14,7 +15,6 @@ import 'package:prodea/services/contracts/notification_service.dart';
 import 'package:prodea/services/contracts/photo_service.dart';
 import 'package:prodea/services/image_picker_photo_service.dart';
 import 'package:prodea/services/seafarer_navigation_service.dart';
-import 'package:prodea/stores/auth_store.dart';
 import 'package:prodea/stores/available_donations_store.dart';
 import 'package:prodea/stores/beneficiaries_store.dart';
 import 'package:prodea/stores/donation_store.dart';
@@ -53,8 +53,8 @@ Future<void> setupInjection() async {
     () => FirebaseUserInfoRepo(i(), i(), i()),
   );
 
-  // Singleton Stores
-  i.registerSingleton<AuthStore>(AuthStore(i(), i(), i()));
+  // Singleton Controllers
+  i.registerSingleton<AuthController>(AuthController(i(), i(), i()));
   i.registerSingleton<BeneficiariesStore>(BeneficiariesStore(i()));
   i.registerSingleton<DonorsStore>(DonorsStore(i()));
   i.registerSingleton<UsersStore>(UsersStore(i()));

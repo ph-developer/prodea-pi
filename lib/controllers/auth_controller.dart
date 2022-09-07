@@ -1,60 +1,73 @@
-import 'package:flutter_triple/flutter_triple.dart';
+import 'package:mobx/mobx.dart';
 import 'package:prodea/models/user.dart';
 import 'package:prodea/models/user_info.dart';
 import 'package:prodea/repositories/contracts/auth_repo.dart';
 import 'package:prodea/repositories/contracts/user_info_repo.dart';
 import 'package:prodea/services/contracts/navigation_service.dart';
 
-class AuthStore extends NotifierStore<Exception, AuthState> {
+part 'auth_controller.g.dart';
+
+class AuthController = _AuthControllerBase with _$AuthController;
+
+abstract class _AuthControllerBase with Store {
   final IAuthRepo authRepo;
   final IUserInfoRepo userInfoRepo;
   final INavigationService navigationService;
 
-  AuthStore(
+  _AuthControllerBase(
     this.authRepo,
     this.userInfoRepo,
     this.navigationService,
-  ) : super(AuthState());
+  );
 
-  bool get isLoggedIn => state.currentUser != null;
+  @observable
+  User? currentUser;
 
-  bool get isAdmin => state.currentUserInfo?.isAdmin == true;
-  bool get isDonor => state.currentUserInfo?.isDonor == true;
-  bool get isBeneficiary => state.currentUserInfo?.isBeneficiary == true;
+  @observable
+  UserInfo? currentUserInfo;
 
+  @computed
+  bool get isLoggedIn => currentUser != null;
+
+  @computed
+  bool get isAdmin => currentUserInfo?.isAdmin == true;
+
+  @computed
+  bool get isDonor => currentUserInfo?.isDonor == true;
+
+  @computed
+  bool get isBeneficiary => currentUserInfo?.isBeneficiary == true;
+
+  @computed
   bool get isAuthorized =>
-      state.currentUserInfo?.status == AuthorizationStatus.authorized;
-  bool get isDenied =>
-      state.currentUserInfo?.status == AuthorizationStatus.denied;
+      currentUserInfo?.status == AuthorizationStatus.authorized;
 
-  void fetchUser() {
+  @computed
+  bool get isDenied => currentUserInfo?.status == AuthorizationStatus.denied;
+
+  @action
+  void init() {
     authRepo.authStateChanged().listen((user) async {
       if (user != null) {
         final userInfo = await userInfoRepo.getCurrentUserInfo();
-        update(AuthState(currentUser: user, currentUserInfo: userInfo));
+        currentUser = user;
+        currentUserInfo = userInfo;
         navigationService.navigate('/home', replace: true);
       } else {
-        update(AuthState());
+        currentUser = null;
+        currentUserInfo = null;
         navigationService.navigate('/login', replace: true);
       }
     });
   }
 
+  @action
   Future<void> login(String email, String password) async {
     await authRepo.login(email, password);
   }
 
+  @action
   Future<void> logout() async {
     await authRepo.logout();
   }
-}
-
-class AuthState {
-  final User? currentUser;
-  final UserInfo? currentUserInfo;
-
-  AuthState({
-    this.currentUser,
-    this.currentUserInfo,
-  });
 }

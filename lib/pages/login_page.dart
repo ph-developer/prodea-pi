@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:prodea/controllers/auth_controller.dart';
 import 'package:prodea/injection.dart';
-import 'package:prodea/stores/auth_store.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -11,7 +11,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final authStore = i<AuthStore>();
+  final authController = i<AuthController>();
   var email = '';
   var password = '';
 
@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: ElevatedButton.icon(
                   icon: const Icon(Icons.login, size: 18),
                   onPressed: () {
-                    authStore.login(email, password);
+                    authController.login(email, password);
                   },
                   label: const Padding(
                     padding: EdgeInsets.all(8),
