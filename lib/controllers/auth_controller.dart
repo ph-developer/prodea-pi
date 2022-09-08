@@ -52,8 +52,8 @@ abstract class _AuthControllerBase with Store {
         final userInfo = await userInfoRepo.getCurrentUserInfo();
         currentUser = user;
         currentUserInfo = userInfo;
-        navigationService.navigate('/home', replace: true);
         if (afterLoginCallback != null) afterLoginCallback();
+        navigationService.navigate('/home', replace: true);
       } else {
         currentUser = null;
         currentUserInfo = null;
@@ -64,7 +64,7 @@ abstract class _AuthControllerBase with Store {
 
   @action
   Future<void> login(String email, String password) async {
-    await authRepo.login(email, password);
+    await authRepo.login(email.trim(), password);
   }
 
   @action

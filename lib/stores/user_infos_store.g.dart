@@ -57,6 +57,24 @@ mixin _$UserInfosStore on _UserInfosStoreBase, Store {
     });
   }
 
+  late final _$setUserAsAuthorizedAsyncAction =
+      AsyncAction('_UserInfosStoreBase.setUserAsAuthorized', context: context);
+
+  @override
+  Future<void> setUserAsAuthorized(UserInfo userInfo) {
+    return _$setUserAsAuthorizedAsyncAction
+        .run(() => super.setUserAsAuthorized(userInfo));
+  }
+
+  late final _$setUserAsDeniedAsyncAction =
+      AsyncAction('_UserInfosStoreBase.setUserAsDenied', context: context);
+
+  @override
+  Future<void> setUserAsDenied(UserInfo userInfo) {
+    return _$setUserAsDeniedAsyncAction
+        .run(() => super.setUserAsDenied(userInfo));
+  }
+
   late final _$_UserInfosStoreBaseActionController =
       ActionController(name: '_UserInfosStoreBase', context: context);
 

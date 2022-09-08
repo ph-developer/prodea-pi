@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prodea/controllers/auth_controller.dart';
 import 'package:prodea/injection.dart';
 import 'package:prodea/pages/home/available_donations_page.dart';
 import 'package:prodea/pages/home/donate_page.dart';
@@ -14,9 +15,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final authController = i<AuthController>();
   final navigationService = i<INavigationService>();
 
-  final pageInfos = [
+  final _pageInfos = [
     PageInfo(
       page: const DonatePage(),
       icon: Icons.volunteer_activism_rounded,
@@ -46,6 +48,17 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final pageInfos = [];
+
+    if (authController.isDonor) {
+      pageInfos.add(_pageInfos[0]);
+      pageInfos.add(_pageInfos[1]);
+    }
+    if (authController.isBeneficiary) {
+      pageInfos.add(_pageInfos[2]);
+      pageInfos.add(_pageInfos[3]);
+    }
+
     return Scaffold(
       body: pageInfos[currentPageIndex].page,
       appBar: AppBar(
@@ -61,10 +74,11 @@ class _HomePageState extends State<HomePage> {
             onPressed: () => navigationService.navigate('/profile'),
             icon: const Icon(Icons.person_rounded),
           ),
-          IconButton(
-            onPressed: () => navigationService.navigate('/admin'),
-            icon: const Icon(Icons.admin_panel_settings_rounded),
-          ),
+          if (authController.isAdmin)
+            IconButton(
+              onPressed: () => navigationService.navigate('/admin'),
+              icon: const Icon(Icons.admin_panel_settings_rounded),
+            ),
         ],
       ),
       bottomNavigationBar: NavigationBar(
