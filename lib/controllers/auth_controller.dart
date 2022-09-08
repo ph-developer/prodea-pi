@@ -53,7 +53,13 @@ abstract class _AuthControllerBase with Store {
         currentUser = user;
         currentUserInfo = userInfo;
         if (afterLoginCallback != null) afterLoginCallback();
-        navigationService.navigate('/home', replace: true);
+        if (isAuthorized) {
+          navigationService.navigate('/home', replace: true);
+        } else if (isDenied) {
+          navigationService.navigate('/denied', replace: true);
+        } else {
+          navigationService.navigate('/waiting', replace: true);
+        }
       } else {
         currentUser = null;
         currentUserInfo = null;
