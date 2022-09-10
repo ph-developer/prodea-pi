@@ -3,6 +3,12 @@ import 'package:prodea/services/contracts/navigation_service.dart';
 import 'package:seafarer/seafarer.dart';
 
 class SeafarerNavigationService implements INavigationService {
+  final Seafarer seafarer;
+
+  SeafarerNavigationService(
+    this.seafarer,
+  );
+
   @override
   void navigate(
     String route, {
