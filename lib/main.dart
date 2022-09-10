@@ -26,23 +26,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'PRODEA',
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: MaterialApp(
+        title: 'PRODEA',
 
-      // Theme
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: const Color(0xFFFFA250),
-        brightness: Brightness.light,
+        // Theme
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          useMaterial3: true,
+          colorSchemeSeed: const Color(0xFFFFA250),
+          // brightness: Brightness.light,
+        ),
+
+        // Notification / Asuka
+        builder: Asuka.builder,
+
+        // Navigation / Seafarer
+        navigatorKey: Routes.seafarer.navigatorKey,
+        onGenerateRoute: Routes.seafarer.generator(),
       ),
-
-      // Notification / Asuka
-      builder: Asuka.builder,
-
-      // Navigation / Seafarer
-      navigatorKey: Routes.seafarer.navigatorKey,
-      onGenerateRoute: Routes.seafarer.generator(),
     );
   }
 }
