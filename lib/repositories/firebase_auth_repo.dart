@@ -23,10 +23,17 @@ class FirebaseAuthRepo implements IAuthRepo {
       return true;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
-        case 'auth/user-not-found':
+        case 'user-disabled':
+          notificationService.notifyError('O usuário foi desabilitado.');
+          break;
+        case 'invalid-email':
+          notificationService
+              .notifyError('O email informado possui um formato inválido.');
+          break;
+        case 'user-not-found':
           notificationService.notifyError('Usuário não encontrado.');
           break;
-        case 'auth/wrong-password':
+        case 'wrong-password':
           notificationService.notifyError('Senha incorreta.');
           break;
         default:
@@ -55,17 +62,17 @@ class FirebaseAuthRepo implements IAuthRepo {
       return true;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
-        case 'auth/email-already-in-use':
+        case 'email-already-in-use':
           notificationService.notifyError('O email informado já está em uso.');
           break;
-        case 'auth/invalid-email':
+        case 'invalid-email':
           notificationService
               .notifyError('O email informado possui um formato inválido.');
           break;
-        case 'auth/operation-not-allowed':
+        case 'operation-not-allowed':
           notificationService.notifyError('Operação não permitida.');
           break;
-        case 'auth/weak-password':
+        case 'weak-password':
           notificationService.notifyError('A senha informada é muito fraca.');
           break;
         default:
