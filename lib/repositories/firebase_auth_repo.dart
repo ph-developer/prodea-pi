@@ -18,6 +18,11 @@ class FirebaseAuthRepo implements IAuthRepo {
 
   @override
   Future<bool> login(String email, String password) async {
+    if (email.isEmpty || password.isEmpty) {
+      notificationService.notifyError('Credenciais inválidas.');
+      return false;
+    }
+
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       return true;
