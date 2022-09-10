@@ -8,7 +8,8 @@ class SeafarerNavigationService implements INavigationService {
     Routes.seafarer.navigate(
       route,
       navigationType:
-          replace ? NavigationType.pushReplace : NavigationType.push,
+          replace ? NavigationType.pushAndRemoveUntil : NavigationType.push,
+      removeUntilPredicate: replace ? (r) => false : null,
     );
   }
 
