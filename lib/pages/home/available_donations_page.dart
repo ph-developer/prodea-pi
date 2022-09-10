@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:prodea/components/if.dart';
+import 'package:prodea/controllers/connection_state_controller.dart';
 import 'package:prodea/dialogs/user_info_dialog.dart';
 import 'package:prodea/extensions/date_time.dart';
 import 'package:prodea/extensions/string.dart';
@@ -18,6 +19,7 @@ class AvailableDonationsPage extends StatefulWidget {
 
 class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
   final cityFilterController = TextEditingController();
+  final connectionStateController = i<ConnectionStateController>();
   final donationsStore = i<DonationsStore>();
   final userInfosStore = i<UserInfosStore>();
 
@@ -168,11 +170,15 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
                   ),
                 SizedBox(
                   width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      donationsStore.setDonationAsRequested(donation);
-                    },
-                    child: const Text('Solicitar Doação'),
+                  child: Observer(
+                    builder: (_) => OutlinedButton(
+                      onPressed: connectionStateController.isConnected
+                          ? () {
+                              donationsStore.setDonationAsRequested(donation);
+                            }
+                          : null,
+                      child: const Text('Solicitar Doação'),
+                    ),
                   ),
                 ),
               ],

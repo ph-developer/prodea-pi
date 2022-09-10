@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prodea/controllers/auth_controller.dart';
+import 'package:prodea/controllers/connection_state_controller.dart';
 import 'package:prodea/repositories/contracts/auth_repo.dart';
 import 'package:prodea/repositories/contracts/donation_repo.dart';
 import 'package:prodea/repositories/contracts/user_info_repo.dart';
@@ -63,6 +64,9 @@ Future<void> setupInjection() async {
 
   // Controllers
   i.registerSingleton<AuthController>(AuthController(i(), i(), i()));
+  i.registerSingleton<ConnectionStateController>(
+    ConnectionStateController(i(), i()),
+  );
 
   // Stores
   i.registerSingleton<DonationsStore>(DonationsStore(i()));

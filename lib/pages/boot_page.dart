@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prodea/controllers/auth_controller.dart';
+import 'package:prodea/controllers/connection_state_controller.dart';
 import 'package:prodea/injection.dart';
 import 'package:prodea/stores/donations_store.dart';
 import 'package:prodea/stores/user_infos_store.dart';
@@ -12,6 +13,7 @@ class BootPage extends StatefulWidget {
 }
 
 class _BootPageState extends State<BootPage> {
+  final connectionStateController = i<ConnectionStateController>();
   final authController = i<AuthController>();
   final donationsStore = i<DonationsStore>();
   final userInfosStore = i<UserInfosStore>();
@@ -19,6 +21,7 @@ class _BootPageState extends State<BootPage> {
   @override
   void initState() {
     super.initState();
+    connectionStateController.init();
     authController.init(() {
       donationsStore.init();
       userInfosStore.init();

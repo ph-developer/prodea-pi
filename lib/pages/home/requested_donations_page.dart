@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:prodea/components/if.dart';
+import 'package:prodea/controllers/connection_state_controller.dart';
 import 'package:prodea/dialogs/user_info_dialog.dart';
 import 'package:prodea/extensions/date_time.dart';
 import 'package:prodea/extensions/string.dart';
@@ -19,6 +20,7 @@ class RequestedDonationsPage extends StatefulWidget {
 
 class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
   final cityFilterController = TextEditingController();
+  final connectionStateController = i<ConnectionStateController>();
   final donationsStore = i<DonationsStore>();
   final userInfosStore = i<UserInfosStore>();
 
@@ -171,11 +173,15 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
                     !donation.isExpired)
                   SizedBox(
                     width: double.infinity,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        donationsStore.setDonationAsDelivered(donation);
-                      },
-                      child: const Text('Marcar como Recebida'),
+                    child: Observer(
+                      builder: (_) => OutlinedButton(
+                        onPressed: connectionStateController.isConnected
+                            ? () {
+                                donationsStore.setDonationAsDelivered(donation);
+                              }
+                            : null,
+                        child: const Text('Marcar como Recebida'),
+                      ),
                     ),
                   ),
                 if (donation.cancellation == null &&
@@ -183,11 +189,16 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
                     !donation.isExpired)
                   SizedBox(
                     width: double.infinity,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        donationsStore.setDonationAsUnrequested(donation);
-                      },
-                      child: const Text('Cancelar Solicitação'),
+                    child: Observer(
+                      builder: (_) => OutlinedButton(
+                        onPressed: connectionStateController.isConnected
+                            ? () {
+                                donationsStore
+                                    .setDonationAsUnrequested(donation);
+                              }
+                            : null,
+                        child: const Text('Cancelar Solicitação'),
+                      ),
                     ),
                   ),
               ],

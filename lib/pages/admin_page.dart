@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:prodea/controllers/connection_state_controller.dart';
+import 'package:prodea/dialogs/no_connection_dialog.dart';
 import 'package:prodea/injection.dart';
 import 'package:prodea/models/user_info.dart';
 import 'package:prodea/stores/user_infos_store.dart';
@@ -12,40 +14,52 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
+  final connectionStateController = i<ConnectionStateController>();
   final userInfosStore = i<UserInfosStore>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: const [
-            Icon(Icons.admin_panel_settings_rounded),
-            SizedBox(width: 12),
-            Text('Administração'),
+    return Observer(
+      builder: (_) => Scaffold(
+        appBar: AppBar(
+          backgroundColor:
+              !connectionStateController.isConnected ? Colors.redAccent : null,
+          title: Row(
+            children: const [
+              Icon(Icons.admin_panel_settings_rounded),
+              SizedBox(width: 12),
+              Text('Administração'),
+            ],
+          ),
+          actions: [
+            if (!connectionStateController.isConnected)
+              IconButton(
+                onPressed: () => showNoConnectionDialog(context),
+                icon: const Icon(Icons.wifi_off_rounded),
+              ),
           ],
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Observer(
-          builder: (context) {
-            final userInfos = userInfosStore.users;
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Observer(
+            builder: (context) {
+              final userInfos = userInfosStore.users;
 
-            if (userInfos.isEmpty) {
-              return const Text(
-                'Infelizmente não há usuários cadastrados...',
+              if (userInfos.isEmpty) {
+                return const Text(
+                  'Infelizmente não há usuários cadastrados...',
+                );
+              }
+
+              return ListView.builder(
+                itemCount: userInfos.length,
+                itemBuilder: (context, index) {
+                  final userInfo = userInfos[index];
+                  return _buildUserInfoCard(userInfo);
+                },
               );
-            }
-
-            return ListView.builder(
-              itemCount: userInfos.length,
-              itemBuilder: (context, index) {
-                final userInfo = userInfos[index];
-                return _buildUserInfoCard(userInfo);
-              },
-            );
-          },
+            },
+          ),
         ),
       ),
     );
@@ -90,9 +104,11 @@ class _AdminPageState extends State<AdminPage> {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: () {
-                    userInfosStore.setUserAsAuthorized(userInfo);
-                  },
+                  onPressed: connectionStateController.isConnected
+                      ? () {
+                          userInfosStore.setUserAsAuthorized(userInfo);
+                        }
+                      : null,
                   child: const Text('Autorizar'),
                 ),
               ),
@@ -101,9 +117,11 @@ class _AdminPageState extends State<AdminPage> {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: () {
-                    userInfosStore.setUserAsDenied(userInfo);
-                  },
+                  onPressed: connectionStateController.isConnected
+                      ? () {
+                          userInfosStore.setUserAsDenied(userInfo);
+                        }
+                      : null,
                   child: const Text('Negar Autorização'),
                 ),
               ),

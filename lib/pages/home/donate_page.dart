@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:prodea/controllers/connection_state_controller.dart';
 import 'package:prodea/extensions/input_formatters.dart';
 import 'package:prodea/extensions/string.dart';
 import 'package:prodea/injection.dart';
@@ -16,6 +17,7 @@ class DonatePage extends StatefulWidget {
 }
 
 class _DonatePageState extends State<DonatePage> {
+  final connectionStateController = i<ConnectionStateController>();
   final userInfosStore = i<UserInfosStore>();
   final donationStore = i<DonationStore>();
   final photoService = i<IPhotoService>();
@@ -193,7 +195,8 @@ class _DonatePageState extends State<DonatePage> {
       child: Observer(
         builder: (_) {
           final isLoading = donationStore.isLoading;
-          final canSubmit = donationStore.expiration.isNotEmpty &&
+          final canSubmit = connectionStateController.isConnected &&
+              donationStore.expiration.isNotEmpty &&
               donationStore.expiration.length == 10 &&
               donationStore.expiration.isAValidDate() &&
               donationStore.description.isNotEmpty;

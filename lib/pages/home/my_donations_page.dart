@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:prodea/components/if.dart';
+import 'package:prodea/controllers/connection_state_controller.dart';
 import 'package:prodea/dialogs/cancel_reason_dialog.dart';
 import 'package:prodea/dialogs/user_info_dialog.dart';
 import 'package:prodea/extensions/date_time.dart';
@@ -18,6 +19,7 @@ class MyDonationsPage extends StatefulWidget {
 }
 
 class _MyDonationsPageState extends State<MyDonationsPage> {
+  final connectionStateController = i<ConnectionStateController>();
   final donationsStore = i<DonationsStore>();
   final userInfosStore = i<UserInfosStore>();
 
@@ -121,11 +123,15 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                     donation.beneficiaryId != null)
                   SizedBox(
                     width: double.infinity,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        donationsStore.setDonationAsDelivered(donation);
-                      },
-                      child: const Text('Marcar como Entregue'),
+                    child: Observer(
+                      builder: (_) => OutlinedButton(
+                        onPressed: connectionStateController.isConnected
+                            ? () {
+                                donationsStore.setDonationAsDelivered(donation);
+                              }
+                            : null,
+                        child: const Text('Marcar como Entregue'),
+                      ),
                     ),
                   ),
                 if (donation.cancellation == null &&
@@ -133,14 +139,18 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                     !donation.isExpired)
                   SizedBox(
                     width: double.infinity,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        showCancelReasonDialog(context, onOk: (reason) {
-                          donationsStore.setDonationAsCanceled(
-                              donation, reason);
-                        });
-                      },
-                      child: const Text('Cancelar Doação'),
+                    child: Observer(
+                      builder: (_) => OutlinedButton(
+                        onPressed: connectionStateController.isConnected
+                            ? () {
+                                showCancelReasonDialog(context, onOk: (reason) {
+                                  donationsStore.setDonationAsCanceled(
+                                      donation, reason);
+                                });
+                              }
+                            : null,
+                        child: const Text('Cancelar Doação'),
+                      ),
                     ),
                   ),
               ],
