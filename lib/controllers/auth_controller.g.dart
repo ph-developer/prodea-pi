@@ -50,6 +50,22 @@ mixin _$AuthController on _AuthControllerBase, Store {
               name: '_AuthControllerBase.isDenied'))
           .value;
 
+  late final _$isLoadingAtom =
+      Atom(name: '_AuthControllerBase.isLoading', context: context);
+
+  @override
+  bool get isLoading {
+    _$isLoadingAtom.reportRead();
+    return super.isLoading;
+  }
+
+  @override
+  set isLoading(bool value) {
+    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
+      super.isLoading = value;
+    });
+  }
+
   late final _$currentUserAtom =
       Atom(name: '_AuthControllerBase.currentUser', context: context);
 
@@ -115,6 +131,7 @@ mixin _$AuthController on _AuthControllerBase, Store {
   @override
   String toString() {
     return '''
+isLoading: ${isLoading},
 currentUser: ${currentUser},
 currentUserInfo: ${currentUserInfo},
 isLoggedIn: ${isLoggedIn},

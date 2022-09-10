@@ -21,6 +21,9 @@ abstract class _AuthControllerBase with Store {
   );
 
   @observable
+  bool isLoading = false;
+
+  @observable
   User? currentUser;
 
   @observable
@@ -65,12 +68,15 @@ abstract class _AuthControllerBase with Store {
         currentUserInfo = null;
         navigationService.navigate('/login', replace: true);
       }
+      isLoading = false;
     });
   }
 
   @action
   Future<void> login(String email, String password) async {
-    await authRepo.login(email.trim(), password);
+    isLoading = true;
+    final result = await authRepo.login(email.trim(), password);
+    if (!result) isLoading = false;
   }
 
   @action

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:prodea/controllers/auth_controller.dart';
 import 'package:prodea/injection.dart';
@@ -55,14 +56,24 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 padding: const EdgeInsets.all(16),
                 alignment: Alignment.center,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.login, size: 18),
-                  onPressed: () {
-                    authController.login(email, password);
-                  },
-                  label: const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Text('Entrar'),
+                child: Observer(
+                  builder: (_) => ElevatedButton.icon(
+                    icon: authController.isLoading
+                        ? const SizedBox(
+                            height: 18,
+                            width: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Icon(Icons.login, size: 18),
+                    onPressed: authController.isLoading
+                        ? null
+                        : () => authController.login(email, password),
+                    label: const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text('Entrar'),
+                    ),
                   ),
                 ),
               ),
