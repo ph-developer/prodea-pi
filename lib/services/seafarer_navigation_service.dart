@@ -4,12 +4,17 @@ import 'package:seafarer/seafarer.dart';
 
 class SeafarerNavigationService implements INavigationService {
   @override
-  void navigate(String route, {bool replace = false}) {
+  void navigate(
+    String route, {
+    bool replace = false,
+    Map<String, dynamic>? params,
+  }) {
     Routes.seafarer.navigate(
       route,
       navigationType:
           replace ? NavigationType.pushAndRemoveUntil : NavigationType.push,
       removeUntilPredicate: replace ? (r) => false : null,
+      params: params,
     );
   }
 

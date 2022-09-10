@@ -58,6 +58,6 @@ Future<void> setupInjection() async {
 
   // Old
   i.registerFactory<DonationStore>(
-    () => DonationStore(i(), i()),
+    () => DonationStore(i(), i(), i()),
   );
 }

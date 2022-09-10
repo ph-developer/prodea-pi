@@ -192,10 +192,24 @@ class _DonatePageState extends State<DonatePage> {
       width: double.infinity,
       child: Observer(
         builder: (_) {
+          final isLoading = donationStore.isLoading;
           final canSubmit = donationStore.expiration.isNotEmpty &&
               donationStore.expiration.length == 10 &&
               donationStore.expiration.isAValidDate() &&
               donationStore.description.isNotEmpty;
+
+          if (isLoading) {
+            return const OutlinedButton(
+              onPressed: null,
+              child: SizedBox(
+                height: 18,
+                width: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              ),
+            );
+          }
 
           return OutlinedButton(
             onPressed: canSubmit ? donationStore.postDonation : null,

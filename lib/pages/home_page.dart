@@ -8,7 +8,9 @@ import 'package:prodea/pages/home/requested_donations_page.dart';
 import 'package:prodea/services/contracts/navigation_service.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final int? pageIndex;
+
+  const HomePage({Key? key, required this.pageIndex}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -45,6 +47,14 @@ class _HomePageState extends State<HomePage> {
     ),
   ];
   var currentPageIndex = 0;
+
+  @override
+  void initState() {
+    if (widget.pageIndex != null) {
+      currentPageIndex = widget.pageIndex!;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

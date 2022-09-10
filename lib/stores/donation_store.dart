@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:mobx/mobx.dart';
 import 'package:prodea/models/donation.dart';
 import 'package:prodea/repositories/contracts/donation_repo.dart';
+import 'package:prodea/services/contracts/navigation_service.dart';
 import 'package:prodea/services/contracts/notification_service.dart';
 
 part 'donation_store.g.dart';
@@ -12,11 +13,16 @@ class DonationStore = _DonationStoreBase with _$DonationStore;
 abstract class _DonationStoreBase with Store {
   final IDonationRepo donationRepo;
   final INotificationService notificationService;
+  final INavigationService navigationService;
 
   _DonationStoreBase(
     this.donationRepo,
     this.notificationService,
+    this.navigationService,
   );
+
+  @observable
+  bool isLoading = false;
 
   @observable
   String description = '';
@@ -32,6 +38,8 @@ abstract class _DonationStoreBase with Store {
 
   @action
   Future<void> postDonation() async {
+    isLoading = true;
+
     String? photoUrl;
 
     if (image != null) {
@@ -52,7 +60,13 @@ abstract class _DonationStoreBase with Store {
 
     if (result != null) {
       notificationService.notifySuccess('Doação postada com sucesso.');
-      // TODO navigate to minhas doações
+      navigationService.navigate(
+        '/home',
+        replace: true,
+        params: {'pageIndex': 1},
+      );
     }
+
+    isLoading = false;
   }
 }

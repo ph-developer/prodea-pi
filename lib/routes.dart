@@ -22,7 +22,15 @@ abstract class Routes {
       ),
       SeafarerRoute(
         name: '/home',
-        builder: (_, __, ___) => const HomePage(),
+        builder: (_, __, params) {
+          final pageIndex = params.param<int>('pageIndex');
+          return HomePage(
+            pageIndex: pageIndex,
+          );
+        },
+        params: [
+          SeafarerParam<int>(name: 'pageIndex', defaultValue: 0),
+        ],
       ),
       SeafarerRoute(
         name: '/admin',

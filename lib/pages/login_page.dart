@@ -56,24 +56,33 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 padding: const EdgeInsets.all(16),
                 alignment: Alignment.center,
-                child: Observer(
-                  builder: (_) => ElevatedButton.icon(
-                    icon: authController.isLoading
-                        ? const SizedBox(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Observer(
+                    builder: (_) {
+                      final isLoading = authController.isLoading;
+
+                      if (isLoading) {
+                        return const OutlinedButton(
+                          onPressed: null,
+                          child: SizedBox(
                             height: 18,
                             width: 18,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                             ),
-                          )
-                        : const Icon(Icons.login, size: 18),
-                    onPressed: authController.isLoading
-                        ? null
-                        : () => authController.login(email, password),
-                    label: const Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text('Entrar'),
-                    ),
+                          ),
+                        );
+                      }
+
+                      return OutlinedButton(
+                        onPressed: () => authController.login(email, password),
+                        child: const Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Text('Entrar'),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
