@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:prodea/controllers/auth_controller.dart';
 import 'package:prodea/controllers/connection_state_controller.dart';
 import 'package:prodea/injection.dart';
@@ -22,10 +23,15 @@ class _BootPageState extends State<BootPage> {
   void initState() {
     super.initState();
     connectionStateController.init();
-    authController.init(() {
-      donationsStore.init();
-      userInfosStore.init();
-    });
+    authController.init(
+      afterLoginCallback: () {
+        donationsStore.init();
+        userInfosStore.init();
+      },
+      afterNavigationCallback: () {
+        FlutterNativeSplash.remove();
+      },
+    );
   }
 
   @override

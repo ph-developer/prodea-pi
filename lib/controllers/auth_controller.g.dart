@@ -118,11 +118,13 @@ mixin _$AuthController on _AuthControllerBase, Store {
       ActionController(name: '_AuthControllerBase', context: context);
 
   @override
-  void init(Function? afterLoginCallback) {
+  void init({Function? afterLoginCallback, Function? afterNavigationCallback}) {
     final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
         name: '_AuthControllerBase.init');
     try {
-      return super.init(afterLoginCallback);
+      return super.init(
+          afterLoginCallback: afterLoginCallback,
+          afterNavigationCallback: afterNavigationCallback);
     } finally {
       _$_AuthControllerBaseActionController.endAction(_$actionInfo);
     }
