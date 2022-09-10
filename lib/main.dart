@@ -1,6 +1,7 @@
 import 'package:asuka/asuka.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'firebase_options.dart';
 import 'injection.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           colorSchemeSeed: const Color(0xFFFFA250),
-          // brightness: Brightness.light,
+          brightness: SchedulerBinding.instance.window.platformBrightness,
         ),
 
         // Notification / Asuka
