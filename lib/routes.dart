@@ -1,9 +1,10 @@
-import 'package:prodea/pages/admin_page.dart';
+import 'package:prodea/pages/admin/admin_page.dart';
+import 'package:prodea/pages/auth/forgot_password_page.dart';
 import 'package:prodea/pages/boot_page.dart';
-import 'package:prodea/pages/home_page.dart';
-import 'package:prodea/pages/login_page.dart';
-import 'package:prodea/pages/profile_page.dart';
-import 'package:prodea/pages/register_page.dart';
+import 'package:prodea/pages/main_page.dart';
+import 'package:prodea/pages/auth/login_page.dart';
+import 'package:prodea/pages/account/profile_page.dart';
+import 'package:prodea/pages/auth/register_page.dart';
 import 'package:prodea/pages/status/denied_page.dart';
 import 'package:prodea/pages/status/waiting_page.dart';
 import 'package:seafarer/seafarer.dart';
@@ -26,10 +27,14 @@ abstract class Routes {
         builder: (_, __, ___) => const RegisterPage(),
       ),
       SeafarerRoute(
-        name: '/home',
+        name: '/forgot-password',
+        builder: (_, __, ___) => const ForgotPasswordPage(),
+      ),
+      SeafarerRoute(
+        name: '/main',
         builder: (_, __, params) {
           final pageIndex = params.param<int>('pageIndex');
-          return HomePage(
+          return MainPage(
             pageIndex: pageIndex,
           );
         },

@@ -63,7 +63,7 @@ abstract class _DonationStoreBase with Store {
     if (result != null) {
       notificationService.notifySuccess('Doação postada com sucesso.');
       navigationService.navigate(
-        '/home',
+        '/main',
         replace: true,
         params: {'pageIndex': 1},
       );

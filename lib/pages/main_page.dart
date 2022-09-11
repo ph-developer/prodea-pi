@@ -4,22 +4,22 @@ import 'package:prodea/controllers/auth_controller.dart';
 import 'package:prodea/controllers/connection_state_controller.dart';
 import 'package:prodea/dialogs/no_connection_dialog.dart';
 import 'package:prodea/injection.dart';
-import 'package:prodea/pages/home/available_donations_page.dart';
-import 'package:prodea/pages/home/donate_page.dart';
-import 'package:prodea/pages/home/my_donations_page.dart';
-import 'package:prodea/pages/home/requested_donations_page.dart';
+import 'package:prodea/pages/main/available_donations_page.dart';
+import 'package:prodea/pages/main/donate_page.dart';
+import 'package:prodea/pages/main/my_donations_page.dart';
+import 'package:prodea/pages/main/requested_donations_page.dart';
 import 'package:prodea/services/contracts/navigation_service.dart';
 
-class HomePage extends StatefulWidget {
+class MainPage extends StatefulWidget {
   final int? pageIndex;
 
-  const HomePage({Key? key, required this.pageIndex}) : super(key: key);
+  const MainPage({Key? key, required this.pageIndex}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MainPageState extends State<MainPage> {
   final authController = i<AuthController>();
   final connectionStateController = i<ConnectionStateController>();
   final navigationService = i<INavigationService>();

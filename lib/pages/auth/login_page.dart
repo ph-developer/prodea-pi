@@ -119,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
             Expanded(
               child: OutlinedButton(
                 onPressed: !isLoading
-                    ? authController.navigateToPasswordRecoveryPage
+                    ? authController.navigateToForgotPasswordPage
                     : null,
                 child: const Text('Recuperar Senha'),
               ),

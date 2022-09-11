@@ -115,6 +115,16 @@ mixin _$AuthController on _AuthControllerBase, Store {
         .run(() => super.register(email, password, userInfo));
   }
 
+  late final _$sendPasswordResetEmailAsyncAction = AsyncAction(
+      '_AuthControllerBase.sendPasswordResetEmail',
+      context: context);
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) {
+    return _$sendPasswordResetEmailAsyncAction
+        .run(() => super.sendPasswordResetEmail(email));
+  }
+
   late final _$logoutAsyncAction =
       AsyncAction('_AuthControllerBase.logout', context: context);
 
@@ -151,11 +161,11 @@ mixin _$AuthController on _AuthControllerBase, Store {
   }
 
   @override
-  void navigateToPasswordRecoveryPage() {
+  void navigateToForgotPasswordPage() {
     final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
-        name: '_AuthControllerBase.navigateToPasswordRecoveryPage');
+        name: '_AuthControllerBase.navigateToForgotPasswordPage');
     try {
-      return super.navigateToPasswordRecoveryPage();
+      return super.navigateToForgotPasswordPage();
     } finally {
       _$_AuthControllerBaseActionController.endAction(_$actionInfo);
     }

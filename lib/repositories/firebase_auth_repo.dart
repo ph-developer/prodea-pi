@@ -92,6 +92,39 @@ class FirebaseAuthRepo implements IAuthRepo {
   }
 
   @override
+  Future<bool> sendPasswordResetEmail(String email) async {
+    try {
+      await auth.sendPasswordResetEmail(email: email);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'auth/invalid-email':
+          notificationService
+              .notifyError('O email informado possui um formato inválido.');
+          break;
+        case 'auth/user-not-found':
+          notificationService
+              .notifyError('O email informado não possui cadastro.');
+          break;
+        case 'auth/missing-android-pkg-name':
+        case 'auth/missing-ios-bundle-id':
+        case 'auth/missing-continue-uri':
+        case 'auth/invalid-continue-uri':
+        case 'auth/unauthorized-continue-uri':
+          notificationService.notifyError('Ocorreu um erro interno.');
+          break;
+        default:
+          notificationService.notifyError('Ocorreu um erro inesperado.');
+          break;
+      }
+    } catch (e) {
+      notificationService.notifyError('Ocorreu um erro inesperado.');
+    }
+
+    return false;
+  }
+
+  @override
   Future<void> logout() async {
     await auth.signOut();
   }

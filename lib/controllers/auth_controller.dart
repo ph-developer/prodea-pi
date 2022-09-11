@@ -59,7 +59,7 @@ abstract class _AuthControllerBase with Store {
         currentUserInfo = userInfo;
         if (afterLoginCallback != null) afterLoginCallback();
         if (isAuthorized) {
-          navigationService.navigate('/home', replace: true);
+          navigationService.navigate('/main', replace: true);
         } else if (isDenied) {
           navigationService.navigate('/denied', replace: true);
         } else {
@@ -94,6 +94,16 @@ abstract class _AuthControllerBase with Store {
   }
 
   @action
+  Future<void> sendPasswordResetEmail(String email) async {
+    isLoading = true;
+    final result = await authRepo.sendPasswordResetEmail(email);
+    if (result) {
+      navigationService.navigate('/login', replace: true);
+      isLoading = false;
+    }
+  }
+
+  @action
   Future<void> logout() async {
     await authRepo.logout();
   }
@@ -104,8 +114,8 @@ abstract class _AuthControllerBase with Store {
   }
 
   @action
-  void navigateToPasswordRecoveryPage() {
-    navigationService.navigate('/password-recovery', replace: true);
+  void navigateToForgotPasswordPage() {
+    navigationService.navigate('/forgot-password', replace: true);
   }
 
   @action
