@@ -20,76 +20,121 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 48),
+        padding: const EdgeInsets.all(36),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                alignment: Alignment.center,
-                child: SvgPicture.asset(
-                  'assets/logo.svg',
-                  height: 100,
-                ),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Email'),
-                onChanged: (value) {
-                  setState(() {
-                    email = value;
-                  });
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Senha'),
-                obscureText: true,
-                enableSuggestions: false,
-                autocorrect: false,
-                onChanged: (value) {
-                  setState(() {
-                    password = value;
-                  });
-                },
-              ),
-              Container(
-                padding: const EdgeInsets.all(16),
-                alignment: Alignment.center,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Observer(
-                    builder: (_) {
-                      final isLoading = authController.isLoading;
-
-                      if (isLoading) {
-                        return const OutlinedButton(
-                          onPressed: null,
-                          child: SizedBox(
-                            height: 18,
-                            width: 18,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
-                          ),
-                        );
-                      }
-
-                      return OutlinedButton(
-                        onPressed: () => authController.login(email, password),
-                        child: const Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Text('Entrar'),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
+              _buildLogo(),
+              _buildEmailField(),
+              const SizedBox(height: 12),
+              _buildPasswordField(),
+              const SizedBox(height: 24),
+              _buildSubmitButton(),
+              const SizedBox(height: 24),
+              _buildNavigationButtons(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return Container(
+      alignment: Alignment.center,
+      child: SvgPicture.asset(
+        'assets/logo.svg',
+        height: 100,
+      ),
+    );
+  }
+
+  Widget _buildEmailField() {
+    return TextFormField(
+      decoration: const InputDecoration(
+        labelText: 'Email',
+      ),
+      onChanged: (value) {
+        setState(() {
+          email = value;
+        });
+      },
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return TextFormField(
+      decoration: const InputDecoration(
+        labelText: 'Senha',
+      ),
+      obscureText: true,
+      enableSuggestions: false,
+      autocorrect: false,
+      onChanged: (value) {
+        setState(() {
+          password = value;
+        });
+      },
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: Observer(
+        builder: (_) {
+          final isLoading = authController.isLoading;
+
+          if (isLoading) {
+            return const OutlinedButton(
+              onPressed: null,
+              child: SizedBox(
+                height: 18,
+                width: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              ),
+            );
+          }
+
+          return OutlinedButton(
+            onPressed: () => authController.login(email, password),
+            child: const Text('Entrar'),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildNavigationButtons() {
+    return Observer(
+      builder: (_) {
+        final isLoading = authController.isLoading;
+
+        return Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                onPressed: !isLoading
+                    ? authController.navigateToPasswordRecoveryPage
+                    : null,
+                child: const Text('Recuperar Senha'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: OutlinedButton(
+                onPressed:
+                    !isLoading ? authController.navigateToRegisterPage : null,
+                child: const Text('Solicitar Cadastro'),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

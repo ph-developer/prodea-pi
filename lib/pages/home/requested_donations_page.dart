@@ -104,7 +104,7 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
       child: Column(
         children: [
           If(
-            condition: () => donation.photoUrl != null,
+            condition: donation.photoUrl != null,
             child: FutureBuilder(
               future: donationsStore.getDonationPhotoURL(donation),
               builder: (context, snapshot) {

@@ -3,6 +3,7 @@ import 'package:prodea/pages/boot_page.dart';
 import 'package:prodea/pages/home_page.dart';
 import 'package:prodea/pages/login_page.dart';
 import 'package:prodea/pages/profile_page.dart';
+import 'package:prodea/pages/register_page.dart';
 import 'package:prodea/pages/status/denied_page.dart';
 import 'package:prodea/pages/status/waiting_page.dart';
 import 'package:seafarer/seafarer.dart';
@@ -19,6 +20,10 @@ abstract class Routes {
       SeafarerRoute(
         name: '/login',
         builder: (_, __, ___) => const LoginPage(),
+      ),
+      SeafarerRoute(
+        name: '/register',
+        builder: (_, __, ___) => const RegisterPage(),
       ),
       SeafarerRoute(
         name: '/home',

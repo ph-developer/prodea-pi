@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:prodea/components/if.dart';
 import 'package:prodea/controllers/connection_state_controller.dart';
 import 'package:prodea/extensions/input_formatters.dart';
 import 'package:prodea/extensions/string.dart';
@@ -48,92 +49,79 @@ class _DonatePageState extends State<DonatePage> {
   }
 
   Widget _buildDescriptionField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Descrição',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        TextFormField(
-          onChanged: (value) => donationStore.description = value,
-          decoration: const InputDecoration(
-            hintText: 'Descreva as condições do produto que será doado...',
-          ),
-        ),
-      ],
+    return TextFormField(
+      onChanged: (value) => donationStore.description = value,
+      decoration: const InputDecoration(
+        labelText: 'Descrição',
+        hintText: 'Descreva as condições do produto que será doado...',
+      ),
     );
   }
 
   Widget _buildPhotoField() {
-    return Observer(
-      builder: (context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Foto',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () async {
-                    final file = await photoService.pickFromCamera();
-                    if (file != null) {
-                      donationStore.image = file;
-                    }
-                  },
-                  child: const Text('Tirar Foto'),
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () async {
+                  final file = await photoService.pickFromCamera();
+                  if (file != null) donationStore.image = file;
+                },
+                child: const Text('Tirar Foto'),
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () async {
-                    final file = await photoService.pickFromGallery();
-                    if (file != null) {
-                      donationStore.image = file;
-                    }
-                  },
-                  child: const Text('Escolher da Galeria'),
-                ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () async {
+                  final file = await photoService.pickFromGallery();
+                  if (file != null) donationStore.image = file;
+                },
+                child: const Text('Escolher Foto da Galeria'),
               ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          donationStore.image != null
-              ? Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.fitWidth,
-                        image: FileImage(donationStore.image!),
-                      ),
-                    ),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.close_rounded),
-                            onPressed: () {
-                              donationStore.image = null;
-                            },
-                          ),
-                        ],
-                      ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        If(
+          condition: donationStore.image != null,
+          elseChild: const Text('Nenhuma foto selecionada...'),
+          child: Card(
+            clipBehavior: Clip.antiAlias,
+            child: Observer(
+              builder: (_) {
+                return Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.fitWidth,
+                      image: FileImage(donationStore.image!),
                     ),
                   ),
-                )
-              : const Text('Nenhuma foto selecionada...'),
-        ],
-      ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.close_rounded),
+                          onPressed: () {
+                            donationStore.image = null;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -141,15 +129,17 @@ class _DonatePageState extends State<DonatePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Doar para uma entidade específica? Caso não seja selecionada nenhuma entidade específica, a doação ficará disponível para qualquer entidade cadastrada na plataforma.',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
         Observer(
           builder: (context) {
-            return DropdownButton<String?>(
+            return DropdownButtonFormField<String?>(
+              decoration: const InputDecoration(
+                labelText: 'Doar para uma entidade específica?',
+              ),
               items: [
-                const DropdownMenuItem(value: null, child: Text('Não')),
+                const DropdownMenuItem(
+                  value: null,
+                  child: Text('Não'),
+                ),
                 ...userInfosStore.beneficiaries.map(
                   (userInfo) => DropdownMenuItem(
                     value: userInfo.id,
@@ -163,28 +153,30 @@ class _DonatePageState extends State<DonatePage> {
             );
           },
         ),
+        const SizedBox(height: 8),
+        const Text(
+          'Caso não seja selecionada nenhuma entidade específica, a doação '
+          'ficará disponível para qualquer entidade cadastrada na plataforma.',
+          style: TextStyle(
+            fontStyle: FontStyle.italic,
+          ),
+        ),
       ],
     );
   }
 
   Widget _buildExpirationField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Prazo de validade da doação',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        TextFormField(
-          onChanged: (value) {
-            donationStore.expiration = value;
-          },
-          keyboardType: TextInputType.number,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            dateMaskInputFormatter,
-          ],
-        ),
+    return TextFormField(
+      decoration: const InputDecoration(
+        labelText: 'Prazo de validade da doação',
+      ),
+      onChanged: (value) {
+        donationStore.expiration = value;
+      },
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        dateMaskInputFormatter,
       ],
     );
   }

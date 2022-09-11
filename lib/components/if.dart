@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class If extends StatelessWidget {
-  final bool Function() condition;
+  final bool condition;
   final Widget child;
   final Widget? elseChild;
 
@@ -14,12 +14,12 @@ class If extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (condition()) {
+    if (condition) {
       return child;
-    } else if (elseChild != null) {
-      return elseChild!;
-    } else {
-      return Container();
     }
+    if (elseChild != null) {
+      return elseChild!;
+    }
+    return Container();
   }
 }

@@ -83,7 +83,33 @@ abstract class _AuthControllerBase with Store {
   }
 
   @action
+  Future<void> register(
+    String email,
+    String password,
+    UserInfo userInfo,
+  ) async {
+    isLoading = true;
+    final result = await authRepo.register(email, password, userInfo);
+    if (!result) isLoading = false;
+  }
+
+  @action
   Future<void> logout() async {
     await authRepo.logout();
+  }
+
+  @action
+  void navigateToLoginPage() {
+    navigationService.navigate('/login', replace: true);
+  }
+
+  @action
+  void navigateToPasswordRecoveryPage() {
+    navigationService.navigate('/password-recovery', replace: true);
+  }
+
+  @action
+  void navigateToRegisterPage() {
+    navigationService.navigate('/register', replace: true);
   }
 }

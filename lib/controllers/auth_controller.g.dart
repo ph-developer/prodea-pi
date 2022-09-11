@@ -106,6 +106,15 @@ mixin _$AuthController on _AuthControllerBase, Store {
     return _$loginAsyncAction.run(() => super.login(email, password));
   }
 
+  late final _$registerAsyncAction =
+      AsyncAction('_AuthControllerBase.register', context: context);
+
+  @override
+  Future<void> register(String email, String password, UserInfo userInfo) {
+    return _$registerAsyncAction
+        .run(() => super.register(email, password, userInfo));
+  }
+
   late final _$logoutAsyncAction =
       AsyncAction('_AuthControllerBase.logout', context: context);
 
@@ -125,6 +134,39 @@ mixin _$AuthController on _AuthControllerBase, Store {
       return super.init(
           afterLoginCallback: afterLoginCallback,
           afterNavigationCallback: afterNavigationCallback);
+    } finally {
+      _$_AuthControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void navigateToLoginPage() {
+    final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
+        name: '_AuthControllerBase.navigateToLoginPage');
+    try {
+      return super.navigateToLoginPage();
+    } finally {
+      _$_AuthControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void navigateToPasswordRecoveryPage() {
+    final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
+        name: '_AuthControllerBase.navigateToPasswordRecoveryPage');
+    try {
+      return super.navigateToPasswordRecoveryPage();
+    } finally {
+      _$_AuthControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void navigateToRegisterPage() {
+    final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
+        name: '_AuthControllerBase.navigateToRegisterPage');
+    try {
+      return super.navigateToRegisterPage();
     } finally {
       _$_AuthControllerBaseActionController.endAction(_$actionInfo);
     }

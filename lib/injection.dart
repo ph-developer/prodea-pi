@@ -7,11 +7,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:prodea/controllers/auth_controller.dart';
 import 'package:prodea/controllers/connection_state_controller.dart';
 import 'package:prodea/repositories/contracts/auth_repo.dart';
+import 'package:prodea/repositories/contracts/city_repo.dart';
 import 'package:prodea/repositories/contracts/donation_repo.dart';
 import 'package:prodea/repositories/contracts/user_info_repo.dart';
 import 'package:prodea/repositories/firebase_auth_repo.dart';
 import 'package:prodea/repositories/firebase_donation_repo.dart';
 import 'package:prodea/repositories/firebase_user_info_repo.dart';
+import 'package:prodea/repositories/local_city_repo.dart';
 import 'package:prodea/routes.dart';
 import 'package:prodea/services/asuka_notification_service.dart';
 import 'package:prodea/services/connectivity_connection_service.dart';
@@ -21,8 +23,10 @@ import 'package:prodea/services/contracts/notification_service.dart';
 import 'package:prodea/services/contracts/photo_service.dart';
 import 'package:prodea/services/image_picker_photo_service.dart';
 import 'package:prodea/services/seafarer_navigation_service.dart';
+import 'package:prodea/stores/cities_store.dart';
 import 'package:prodea/stores/donation_store.dart';
 import 'package:prodea/stores/donations_store.dart';
+import 'package:prodea/stores/user_info_store.dart';
 import 'package:prodea/stores/user_infos_store.dart';
 import 'package:seafarer/seafarer.dart';
 
@@ -61,6 +65,9 @@ Future<void> setupInjection() async {
   i.registerFactory<IUserInfoRepo>(
     () => FirebaseUserInfoRepo(i(), i(), i()),
   );
+  i.registerFactory<ICityRepo>(
+    () => LocalCityRepo(),
+  );
 
   // Controllers
   i.registerSingleton<AuthController>(AuthController(i(), i(), i()));
@@ -71,9 +78,11 @@ Future<void> setupInjection() async {
   // Stores
   i.registerSingleton<DonationsStore>(DonationsStore(i()));
   i.registerSingleton<UserInfosStore>(UserInfosStore(i()));
-
-  // Old
+  i.registerSingleton<CitiesStore>(CitiesStore(i()));
   i.registerFactory<DonationStore>(
     () => DonationStore(i(), i(), i()),
+  );
+  i.registerFactory<UserInfoStore>(
+    () => UserInfoStore(),
   );
 }
