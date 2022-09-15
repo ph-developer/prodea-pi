@@ -5,7 +5,7 @@ import 'package:prodea/models/user_info.dart';
 void main() {
   final tModel = UserInfo(
     id: 'id',
-    email: 'email',
+    _email: 'email',
     cnpj: 'cnpj',
     name: 'name',
     address: 'address',
@@ -41,7 +41,7 @@ void main() {
     // act
     final result1 = tModel.copyWith(
       id: 'id2',
-      email: 'email2',
+      _email: 'email2',
     );
     final result2 = tModel.copyWith(
       status: AuthorizationStatus.denied,
@@ -49,7 +49,7 @@ void main() {
     // assert
     expect(result1, isA<UserInfo>());
     expect(result1.id, 'id2');
-    expect(result1.email, 'email2');
+    expect(result1._email, 'email2');
     expect(result2, isA<UserInfo>());
     expect(result2.status, AuthorizationStatus.denied);
   });
@@ -60,7 +60,7 @@ void main() {
     // assert
     expect(result, isA<Map<String, dynamic>>());
     expect(result['id'], tModel.id);
-    expect(result['email'], tModel.email);
+    expect(result['email'], tModel._email);
     expect(result['status'], tModel.status.statusCode);
   });
 
@@ -70,7 +70,7 @@ void main() {
     // assert
     expect(result, isA<UserInfo>());
     expect(result.id, tMap['id']);
-    expect(result.email, tMap['email']);
+    expect(result._email, tMap['email']);
     expect(result.status.statusCode, tMap['status']);
   });
 }

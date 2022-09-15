@@ -2,11 +2,11 @@ import 'package:asuka/asuka.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'firebase_options.dart';
-import 'injection.dart';
-import 'routes.dart';
+import 'src/app.dart';
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -16,22 +16,22 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await setupInjection();
-  Routes.setupRoutes();
-
   runApp(
-    const MyApp(),
+    ModularApp(
+      module: AppModule(),
+      child: const AppWidget(),
+    ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class AppWidget extends StatelessWidget {
+  const AppWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'PRODEA',
 
         // Theme
@@ -45,9 +45,9 @@ class MyApp extends StatelessWidget {
         // Notification / Asuka
         builder: Asuka.builder,
 
-        // Navigation / Seafarer
-        navigatorKey: Routes.seafarer.navigatorKey,
-        onGenerateRoute: Routes.seafarer.generator(),
+        // Navigation / Modular
+        routeInformationParser: Modular.routeInformationParser,
+        routerDelegate: Modular.routerDelegate,
       ),
     );
   }

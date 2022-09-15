@@ -5,5 +5,5 @@ targets:
         enabled: true
         generate_for:
           include:
-            - lib/controllers/*_controller.dart
-            - lib/stores/*_store.dart
+            - lib/**/controllers/*_controller.dart
+            - lib/**/stores/*_store.dart
