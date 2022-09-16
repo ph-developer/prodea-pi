@@ -93,30 +93,18 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   Widget _buildNavigationButtons() {
-    return Observer(
-      builder: (_) {
-        final isLoading = _authController.isLoading;
+    return SizedBox(
+      width: double.infinity,
+      child: Observer(
+        builder: (_) {
+          final isLoading = _authController.isLoading;
 
-        return Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed:
-                    !isLoading ? _authController.navigateToLoginPage : null,
-                child: const Text('Voltar'),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: OutlinedButton(
-                onPressed:
-                    !isLoading ? _authController.navigateToRegisterPage : null,
-                child: const Text('Solicitar Cadastro'),
-              ),
-            ),
-          ],
-        );
-      },
+          return OutlinedButton(
+            onPressed: !isLoading ? _authController.navigateToLoginPage : null,
+            child: const Text('Voltar'),
+          );
+        },
+      ),
     );
   }
 }
