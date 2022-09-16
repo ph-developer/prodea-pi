@@ -9,7 +9,6 @@ import '../../controllers/connection_state_controller.dart';
 import '../../dialogs/user_info_dialog.dart';
 import '../../stores/donations_store.dart';
 import '../../stores/user_infos_store.dart';
-import '../../widgets/if.dart';
 
 class AvailableDonationsPage extends StatefulWidget {
   const AvailableDonationsPage({Key? key}) : super(key: key);
@@ -105,9 +104,8 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          If(
-            condition: donation.photoUrl != null,
-            child: FutureBuilder(
+          if (donation.photoUrl != null)
+            FutureBuilder(
               future: _donationsStore.getDonationPhotoURL(donation),
               builder: (context, snapshot) {
                 if (!snapshot.hasData || snapshot.data == null) {
@@ -130,7 +128,6 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
                 }
               },
             ),
-          ),
           ListTile(
             title: Text(donation.description),
             subtitle: Column(

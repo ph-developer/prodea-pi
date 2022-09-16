@@ -8,7 +8,6 @@ import '../../../../core/input_formatters.dart';
 import '../../controllers/connection_state_controller.dart';
 import '../../stores/donation_store.dart';
 import '../../stores/user_infos_store.dart';
-import '../../widgets/if.dart';
 
 class DonatePage extends StatefulWidget {
   const DonatePage({Key? key}) : super(key: key);
@@ -81,39 +80,39 @@ class _DonatePageState extends State<DonatePage> {
         const SizedBox(height: 8),
         Observer(
           builder: (_) {
-            return If(
-              condition: _donationStore.image != null,
-              elseChild: const Text('Nenhuma foto selecionada...'),
-              child: Card(
-                clipBehavior: Clip.antiAlias,
-                child: Observer(
-                  builder: (_) {
-                    return Container(
-                      height: 200,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.fitWidth,
-                          image: FileImage(_donationStore.image!),
-                        ),
+            if (_donationStore.image == null) {
+              return const Text('Nenhuma foto selecionada...');
+            }
+
+            return Card(
+              clipBehavior: Clip.antiAlias,
+              child: Observer(
+                builder: (_) {
+                  return Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.fitWidth,
+                        image: FileImage(_donationStore.image!),
                       ),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.close_rounded),
-                              onPressed: () {
-                                _donationStore.image = null;
-                              },
-                            ),
-                          ],
-                        ),
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.close_rounded),
+                            onPressed: () {
+                              _donationStore.image = null;
+                            },
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             );
           },
