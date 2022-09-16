@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/input_formatters.dart';
 import '../../controllers/auth_controller.dart';
-import '../../stores/cities_store.dart';
+import '../../dialogs/city_select_dialog.dart';
 import '../../stores/user_info_store.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -19,8 +19,14 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final AuthController _authController = Modular.get();
   final UserInfoStore _userInfoStore = Modular.get();
-  final CitiesStore _citiesStore = Modular.get();
+  final _cityController = TextEditingController(text: '');
   var _password = '';
+
+  @override
+  void dispose() {
+    _cityController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,31 +142,22 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _buildCityField() {
-    return Observer(
-      builder: (_) {
-        return DropdownButtonFormField<String>(
-          decoration: const InputDecoration(
-            labelText: 'Cidade',
-          ),
-          items: [
-            const DropdownMenuItem(
-              value: '',
-              child: Text(''),
-            ),
-            ..._citiesStore.cities.map(
-              (city) {
-                return DropdownMenuItem(
-                  value: city,
-                  child: Text(city),
-                );
-              },
-            ),
-          ],
-          value: _userInfoStore.city,
-          isExpanded: true,
-          onChanged: (value) => _userInfoStore.city = value!,
+    return TextFormField(
+      decoration: const InputDecoration(
+        labelText: 'Cidade',
+      ),
+      keyboardType: TextInputType.none,
+      controller: _cityController,
+      onTap: () {
+        showCitySelectDialog(
+          context,
+          onSelect: (value) {
+            _userInfoStore.address = value;
+            _cityController.text = value;
+          },
         );
       },
+      readOnly: true,
     );
   }
 
