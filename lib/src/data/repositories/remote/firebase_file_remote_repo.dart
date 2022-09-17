@@ -25,10 +25,10 @@ class FirebaseFileRemoteRepo implements IFileRepo {
   }
 
   @override
-  Future<String> getFileDownloadUrl(String path) {
+  Future<String> getFileDownloadUrl(String path) async {
     try {
       final fileRef = _storage.ref(path);
-      final downloadUrl = fileRef.getDownloadURL();
+      final downloadUrl = await fileRef.getDownloadURL();
 
       return downloadUrl;
     } catch (e) {

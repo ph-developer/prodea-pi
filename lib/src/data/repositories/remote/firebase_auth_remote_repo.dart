@@ -32,6 +32,8 @@ class FirebaseAuthRemoteRepo implements IAuthRepo {
         case 'wrong-password':
           throw LoginFailure('Credenciais inválidas');
       }
+    } catch (e) {
+      throw LoginFailure();
     }
     throw LoginFailure();
   }
@@ -61,6 +63,8 @@ class FirebaseAuthRemoteRepo implements IAuthRepo {
         case 'weak-password':
           throw RegisterFailure('A senha informada é muito fraca.');
       }
+    } catch (e) {
+      throw RegisterFailure();
     }
     throw RegisterFailure();
   }
@@ -70,19 +74,21 @@ class FirebaseAuthRemoteRepo implements IAuthRepo {
     try {
       await _auth.sendPasswordResetEmail(email: email);
       return true;
-    } on FirebaseAuthException catch (e) {
-      switch (e.code) {
-        case 'auth/invalid-email':
-          throw PasswordResetFailure(
-            'O email informado possui um formato inválido.',
-          );
-        case 'auth/user-not-found':
-          throw PasswordResetFailure(
-            'O email informado não possui cadastro.',
-          );
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        switch (e.code) {
+          case 'auth/invalid-email':
+            throw PasswordResetFailure(
+              'O email informado possui um formato inválido.',
+            );
+          case 'auth/user-not-found':
+            throw PasswordResetFailure(
+              'O email informado não possui cadastro.',
+            );
+        }
       }
+      throw PasswordResetFailure();
     }
-    throw PasswordResetFailure();
   }
 
   @override
@@ -91,7 +97,7 @@ class FirebaseAuthRemoteRepo implements IAuthRepo {
       await _auth.signOut();
       return true;
     } catch (e) {
-      throw LoginFailure();
+      throw LogoutFailure();
     }
   }
 
