@@ -1,13 +1,14 @@
 import 'dart:io';
 
 import '../../../../core/errors/failures.dart';
-import '../../../../core/helpers/notification.dart';
+import '../../services/notification_service.dart';
 import '../../services/photo_service.dart';
 
 class PickPhotoFromGallery {
+  final INotificationService _notificationService;
   final IPhotoService _photoService;
 
-  PickPhotoFromGallery(this._photoService);
+  PickPhotoFromGallery(this._photoService, this._notificationService);
 
   Future<File?> call() async {
     try {
@@ -15,7 +16,7 @@ class PickPhotoFromGallery {
 
       return photo;
     } on Failure catch (failure) {
-      NotificationHelper.notifyError(failure.message);
+      _notificationService.notifyError(failure.message);
       return null;
     }
   }

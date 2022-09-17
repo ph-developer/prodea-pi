@@ -4,9 +4,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../domain/entities/user.dart';
 import '../../domain/entities/user_info.dart';
-import '../../../core/errors/failures.dart';
 import '../../../core/helpers/navigation.dart';
-import '../../../core/helpers/notification.dart';
 import '../../domain/usecases/auth/do_login.dart';
 import '../../domain/usecases/auth/do_logout.dart';
 import '../../domain/usecases/auth/do_register.dart';
@@ -67,24 +65,20 @@ abstract class _AuthControllerBase with Store {
   void init({Function? afterLoginCallback, Function? afterNavigationCallback}) {
     _getCurrentUser().listen((user) async {
       if (user != null) {
-        try {
-          final userInfo = await _getUserInfoById(user.id);
-          currentUser = user;
-          currentUserInfo = userInfo;
-          afterLoginCallback?.call();
-          if (isAuthorized) {
-            if (isDonor) {
-              NavigationHelper.goTo('/main/donate', replace: true);
-            } else if (isBeneficiary) {
-              NavigationHelper.goTo('/main/available-donations', replace: true);
-            }
-          } else if (isDenied) {
-            NavigationHelper.goTo('/denied', replace: true);
-          } else {
-            NavigationHelper.goTo('/waiting', replace: true);
+        final userInfo = await _getUserInfoById(user.id);
+        currentUser = user;
+        currentUserInfo = userInfo;
+        afterLoginCallback?.call();
+        if (isAuthorized) {
+          if (isDonor) {
+            NavigationHelper.goTo('/main/donate', replace: true);
+          } else if (isBeneficiary) {
+            NavigationHelper.goTo('/main/available-donations', replace: true);
           }
-        } on Failure catch (failure) {
-          NotificationHelper.notifyError(failure.message);
+        } else if (isDenied) {
+          NavigationHelper.goTo('/denied', replace: true);
+        } else {
+          NavigationHelper.goTo('/waiting', replace: true);
         }
       } else {
         currentUser = null;
@@ -98,13 +92,9 @@ abstract class _AuthControllerBase with Store {
 
   @action
   Future<void> login(String email, String password) async {
-    try {
-      isLoading = true;
-      await _doLogin(email, password);
-    } on Failure catch (failure) {
-      NotificationHelper.notifyError(failure.message);
-      isLoading = false;
-    }
+    isLoading = true;
+    await _doLogin(email, password);
+    isLoading = false;
   }
 
   @action
@@ -113,39 +103,23 @@ abstract class _AuthControllerBase with Store {
     String password,
     UserInfo userInfo,
   ) async {
-    try {
-      isLoading = true;
-      await _doRegister(email, password, userInfo);
-    } on Failure catch (failure) {
-      NotificationHelper.notifyError(failure.message);
-      await logout();
-      isLoading = false;
-    }
+    isLoading = true;
+    await _doRegister(email, password, userInfo);
+    isLoading = false;
   }
 
   @action
   Future<void> sendPasswordResetEmail(String email) async {
-    try {
-      isLoading = true;
-      await _sendPasswordResetEmail(email);
-
-      NavigationHelper.goTo('/login', replace: true);
-      NotificationHelper.notifySuccess(
-          'Solicitação de redefinição de senha enviada com sucesso.');
-    } on Failure catch (failure) {
-      NotificationHelper.notifyError(failure.message);
-    }
+    isLoading = true;
+    final result = await _sendPasswordResetEmail(email);
+    if (result) NavigationHelper.goTo('/login', replace: true);
     isLoading = false;
   }
 
   @action
   Future<void> logout() async {
-    try {
-      isLoading = true;
-      await _doLogout();
-    } on Failure catch (failure) {
-      NotificationHelper.notifyError(failure.message);
-    }
+    isLoading = true;
+    await _doLogout();
     isLoading = false;
   }
 

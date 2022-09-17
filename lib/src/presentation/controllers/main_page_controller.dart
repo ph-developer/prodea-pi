@@ -5,9 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../../core/errors/failures.dart';
 import '../../../core/helpers/navigation.dart';
-import '../../../core/helpers/notification.dart';
 import '../../domain/usecases/auth/get_current_user.dart';
 import '../../domain/usecases/user_infos/get_user_info_by_id.dart';
 
@@ -73,24 +71,20 @@ abstract class _MainPageControllerBase with Store {
         currentPageIndex = pageIndex >= 0 ? pageIndex : 0;
       }),
       _getCurrentUser().listen((user) async {
-        try {
-          pageInfos = ObservableList.of([]);
-          if (user != null) {
-            final userInfo = await _getUserInfoById(user.id);
+        pageInfos = ObservableList.of([]);
+        if (user != null) {
+          final userInfo = await _getUserInfoById(user.id);
 
-            if (userInfo != null) {
-              if (userInfo.isDonor) {
-                pageInfos.add(_pageInfos[0]);
-                pageInfos.add(_pageInfos[1]);
-              }
-              if (userInfo.isBeneficiary) {
-                pageInfos.add(_pageInfos[2]);
-                pageInfos.add(_pageInfos[3]);
-              }
+          if (userInfo != null) {
+            if (userInfo.isDonor) {
+              pageInfos.add(_pageInfos[0]);
+              pageInfos.add(_pageInfos[1]);
+            }
+            if (userInfo.isBeneficiary) {
+              pageInfos.add(_pageInfos[2]);
+              pageInfos.add(_pageInfos[3]);
             }
           }
-        } on Failure catch (failure) {
-          NotificationHelper.notifyError(failure.message);
         }
       }),
     ]);

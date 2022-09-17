@@ -1,19 +1,25 @@
 import 'dart:io';
 
-import '../../../../core/helpers/notification.dart';
 import '../../dtos/donation_dto.dart';
 import '../../entities/donation.dart';
 import '../../../../core/errors/failures.dart';
 import '../../repositories/auth_repo.dart';
 import '../../repositories/donation_repo.dart';
 import '../../repositories/file_repo.dart';
+import '../../services/notification_service.dart';
 
 class CreateDonation {
+  final INotificationService _notificationService;
   final IAuthRepo _authRepo;
   final IDonationRepo _donationRepo;
   final IFileRepo _fileRepo;
 
-  CreateDonation(this._authRepo, this._donationRepo, this._fileRepo);
+  CreateDonation(
+    this._authRepo,
+    this._donationRepo,
+    this._fileRepo,
+    this._notificationService,
+  );
 
   Future<Donation?> call(Donation donation, File? image) async {
     try {
@@ -26,7 +32,7 @@ class CreateDonation {
       final user = await _authRepo.getCurrentUser().first;
 
       if (user == null) {
-        NotificationHelper.notifyError('Usuário não autenticado.');
+        _notificationService.notifyError('Usuário não autenticado.');
         return null;
       }
 
@@ -39,9 +45,11 @@ class CreateDonation {
 
       final createdDonation = await _donationRepo.create(newDonation);
 
+      _notificationService.notifySuccess('Doação postada com sucesso.');
+
       return createdDonation;
     } on Failure catch (failure) {
-      NotificationHelper.notifyError(failure.message);
+      _notificationService.notifyError(failure.message);
       return null;
     }
   }

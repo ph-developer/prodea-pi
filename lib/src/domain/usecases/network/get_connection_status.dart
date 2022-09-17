@@ -1,11 +1,12 @@
 import '../../../../core/errors/failures.dart';
-import '../../../../core/helpers/notification.dart';
 import '../../services/network_service.dart';
+import '../../services/notification_service.dart';
 
 class GetConnectionStatus {
+  final INotificationService _notificationService;
   final INetworkService _networkService;
 
-  GetConnectionStatus(this._networkService);
+  GetConnectionStatus(this._networkService, this._notificationService);
 
   Future<bool> call() async {
     try {
@@ -13,7 +14,7 @@ class GetConnectionStatus {
 
       return connectionStatus;
     } on Failure catch (failure) {
-      NotificationHelper.notifyError(failure.message);
+      _notificationService.notifyError(failure.message);
       return false;
     }
   }

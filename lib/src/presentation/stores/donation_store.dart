@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:mobx/mobx.dart';
 
 import '../../../core/helpers/navigation.dart';
-import '../../../core/helpers/notification.dart';
 import '../../domain/entities/donation.dart';
 import '../../domain/usecases/donations/create_donation.dart';
 import '../../domain/usecases/photo/pick_photo_from_camera.dart';
@@ -56,7 +55,6 @@ abstract class _DonationStoreBase with Store {
     final createdDonation = await _createDonation(donation, image);
 
     if (createdDonation != null) {
-      NotificationHelper.notifySuccess('Doação postada com sucesso.');
       NavigationHelper.goTo('/main/my-donations', replace: true);
     }
 

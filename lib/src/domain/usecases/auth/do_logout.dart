@@ -1,11 +1,12 @@
-import '../../../../core/helpers/notification.dart';
 import '../../../../core/errors/failures.dart';
 import '../../repositories/auth_repo.dart';
+import '../../services/notification_service.dart';
 
 class DoLogout {
+  final INotificationService _notificationService;
   final IAuthRepo _authRepo;
 
-  DoLogout(this._authRepo);
+  DoLogout(this._authRepo, this._notificationService);
 
   Future<bool> call() async {
     try {
@@ -13,7 +14,7 @@ class DoLogout {
 
       return result;
     } on Failure catch (failure) {
-      NotificationHelper.notifyError(failure.message);
+      _notificationService.notifyError(failure.message);
       return false;
     }
   }

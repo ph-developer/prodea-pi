@@ -1,12 +1,13 @@
 import '../../../../core/errors/failures.dart';
-import '../../../../core/helpers/notification.dart';
 import '../../entities/donation.dart';
 import '../../repositories/file_repo.dart';
+import '../../services/notification_service.dart';
 
 class GetDonationPhotoUrl {
+  final INotificationService _notificationService;
   final IFileRepo _fileRepo;
 
-  GetDonationPhotoUrl(this._fileRepo);
+  GetDonationPhotoUrl(this._fileRepo, this._notificationService);
 
   Future<String?> call(Donation donation) async {
     try {
@@ -20,7 +21,7 @@ class GetDonationPhotoUrl {
 
       return fileUrl;
     } on Failure catch (failure) {
-      NotificationHelper.notifyError(failure.message);
+      _notificationService.notifyError(failure.message);
       return null;
     }
   }

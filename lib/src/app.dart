@@ -10,6 +10,7 @@ import 'data/repositories/remote/firebase_auth_remote_repo.dart';
 import 'data/repositories/remote/firebase_donation_remote_repo.dart';
 import 'data/repositories/remote/firebase_file_remote_repo.dart';
 import 'data/repositories/remote/firebase_user_info_remote_repo.dart';
+import 'data/services/asuka_notification_service.dart';
 import 'data/services/connectivity_network_service.dart';
 import 'data/services/image_picker_photo_service.dart';
 import 'domain/repositories/auth_repo.dart';
@@ -18,6 +19,7 @@ import 'domain/repositories/donation_repo.dart';
 import 'domain/repositories/file_repo.dart';
 import 'domain/repositories/user_info_repo.dart';
 import 'domain/services/network_service.dart';
+import 'domain/services/notification_service.dart';
 import 'domain/services/photo_service.dart';
 import 'domain/usecases/auth/do_login.dart';
 import 'domain/usecases/auth/do_logout.dart';
@@ -87,38 +89,41 @@ class AppModule extends Module {
         //! Services
         Bind.factory<INetworkService>((i) => ConnectivityNetworkService(i())),
         Bind.factory<IPhotoService>((i) => ImagePickerPhotoService(i())),
+        Bind.factory<INotificationService>((i) => AsukaNotificationService()),
 
         //! Usecases
-        Bind.factory<DoLogin>((i) => DoLogin(i())),
-        Bind.factory<DoLogout>((i) => DoLogout(i())),
-        Bind.factory<DoRegister>((i) => DoRegister(i(), i())),
+        Bind.factory<DoLogin>((i) => DoLogin(i(), i())),
+        Bind.factory<DoLogout>((i) => DoLogout(i(), i())),
+        Bind.factory<DoRegister>((i) => DoRegister(i(), i(), i())),
         Bind.factory<GetCurrentUser>((i) => GetCurrentUser(i())),
         Bind.factory<SendPasswordResetEmail>(
-            (i) => SendPasswordResetEmail(i())),
+            (i) => SendPasswordResetEmail(i(), i())),
         Bind.factory<GetCityNames>((i) => GetCityNames(i())),
-        Bind.factory<CreateDonation>((i) => CreateDonation(i(), i(), i())),
+        Bind.factory<CreateDonation>((i) => CreateDonation(i(), i(), i(), i())),
         Bind.factory<GetAvailableDonations>((i) => GetAvailableDonations(i())),
-        Bind.factory<GetDonationPhotoUrl>((i) => GetDonationPhotoUrl(i())),
+        Bind.factory<GetDonationPhotoUrl>((i) => GetDonationPhotoUrl(i(), i())),
         Bind.factory<GetMyDonations>((i) => GetMyDonations(i(), i())),
         Bind.factory<GetRequestedDonations>(
             (i) => GetRequestedDonations(i(), i())),
-        Bind.factory<SetDonationAsCanceled>((i) => SetDonationAsCanceled(i())),
+        Bind.factory<SetDonationAsCanceled>(
+            (i) => SetDonationAsCanceled(i(), i())),
         Bind.factory<SetDonationAsDelivered>(
-            (i) => SetDonationAsDelivered(i())),
+            (i) => SetDonationAsDelivered(i(), i())),
         Bind.factory<SetDonationAsRequested>(
-            (i) => SetDonationAsRequested(i(), i())),
+            (i) => SetDonationAsRequested(i(), i(), i())),
         Bind.factory<SetDonationAsUnrequested>(
-            (i) => SetDonationAsUnrequested(i())),
-        Bind.factory<GetConnectionStatus>((i) => GetConnectionStatus(i())),
-        Bind.factory<PickPhotoFromCamera>((i) => PickPhotoFromCamera(i())),
-        Bind.factory<PickPhotoFromGallery>((i) => PickPhotoFromGallery(i())),
+            (i) => SetDonationAsUnrequested(i(), i())),
+        Bind.factory<GetConnectionStatus>((i) => GetConnectionStatus(i(), i())),
+        Bind.factory<PickPhotoFromCamera>((i) => PickPhotoFromCamera(i(), i())),
+        Bind.factory<PickPhotoFromGallery>(
+            (i) => PickPhotoFromGallery(i(), i())),
         Bind.factory<GetBeneficiariesInfo>((i) => GetBeneficiariesInfo(i())),
         Bind.factory<GetCommonUsersInfo>((i) => GetCommonUsersInfo(i())),
         Bind.factory<GetDonorsInfo>((i) => GetDonorsInfo(i())),
-        Bind.factory<GetUserInfoById>((i) => GetUserInfoById(i())),
+        Bind.factory<GetUserInfoById>((i) => GetUserInfoById(i(), i())),
         Bind.factory<SetUserInfoAsAuthorized>(
-            (i) => SetUserInfoAsAuthorized(i())),
-        Bind.factory<SetUserInfoAsDenied>((i) => SetUserInfoAsDenied(i())),
+            (i) => SetUserInfoAsAuthorized(i(), i())),
+        Bind.factory<SetUserInfoAsDenied>((i) => SetUserInfoAsDenied(i(), i())),
 
         //! Controllers
         Bind.singleton<AuthController>(
