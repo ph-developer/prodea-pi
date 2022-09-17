@@ -27,12 +27,6 @@ class LogoutFailure extends Failure {
   ]) : super(message);
 }
 
-class GetCitiesFailure extends Failure {
-  GetCitiesFailure([
-    String message = 'Ocorreu um erro ao carregar a lista de cidades.',
-  ]) : super(message);
-}
-
 class UploadFileFailure extends Failure {
   UploadFileFailure([
     String message = 'Ocorreu um erro ao fazer o upload do arquivo.',
