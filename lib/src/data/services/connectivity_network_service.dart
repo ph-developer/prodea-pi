@@ -8,6 +8,7 @@ import '../../domain/services/network_service.dart';
 
 class ConnectivityNetworkService implements INetworkService {
   final Connectivity _connectivity;
+  final _dnsList = ['1.1.1.1', '208.69.38.205', 'cloud.google.com/dns'];
 
   ConnectivityNetworkService(this._connectivity);
 
@@ -24,11 +25,12 @@ class ConnectivityNetworkService implements INetworkService {
     final hasConnection = await _checkConnection();
     if (!hasConnection) return false;
 
-    var status = await _lookupInternetAddress('1.1.1.1');
-    if (!status) status = await _lookupInternetAddress('208.69.38.205');
-    if (!status) status = await _lookupInternetAddress('cloud.google.com/dns');
+    for (var dns in _dnsList) {
+      final status = await _lookupInternetAddress(dns);
+      if (status) return true;
+    }
 
-    return status;
+    return false;
   }
 
   Future<bool> _checkConnection() async {
