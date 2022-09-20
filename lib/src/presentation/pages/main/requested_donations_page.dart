@@ -9,7 +9,7 @@ import '../../../domain/entities/donation.dart';
 import '../../controllers/connection_state_controller.dart';
 import '../../dialogs/user_info_dialog.dart';
 import '../../stores/donations_store.dart';
-import '../../stores/user_infos_store.dart';
+import '../../stores/users_store.dart';
 
 class RequestedDonationsPage extends StatefulWidget {
   const RequestedDonationsPage({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class RequestedDonationsPage extends StatefulWidget {
 class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
   final ConnectionStateController _connectionStateController = Modular.get();
   final DonationsStore _donationsStore = Modular.get();
-  final UserInfosStore _userInfosStore = Modular.get();
+  final UsersStore _usersStore = Modular.get();
   final _cityFilterController = TextEditingController();
 
   @override
@@ -43,7 +43,7 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
           builder: (context) {
             final donations = _cityFilterController.text.isNotEmpty
                 ? _donationsStore.requestedDonations
-                    .where((donation) => _userInfosStore
+                    .where((donation) => _usersStore
                         .getDonorById(donation.donorId!)
                         .city
                         .includes(_cityFilterController.text))
@@ -139,8 +139,7 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
                 if (donation.donorId != null)
                   Observer(
                     builder: (context) {
-                      final donor =
-                          _userInfosStore.getDonorById(donation.donorId!);
+                      final donor = _usersStore.getDonorById(donation.donorId!);
 
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,9 +152,9 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
                                   Icons.info_outline_rounded,
                                   size: 16,
                                 ),
-                                onTap: () => showUserInfoDialog(
+                                onTap: () => showUserDialog(
                                   context,
-                                  userInfo: donor,
+                                  user: donor,
                                 ),
                               ),
                             ],

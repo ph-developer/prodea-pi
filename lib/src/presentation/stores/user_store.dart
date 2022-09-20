@@ -2,13 +2,13 @@
 
 import 'package:mobx/mobx.dart';
 
-import '../../domain/entities/user_info.dart';
+import '../../domain/entities/user.dart';
 
-part 'user_info_store.g.dart';
+part 'user_store.g.dart';
 
-class UserInfoStore = _UserInfoStoreBase with _$UserInfoStore;
+class UserStore = _UserStoreBase with _$UserStore;
 
-abstract class _UserInfoStoreBase with Store {
+abstract class _UserStoreBase with Store {
   @observable
   String email = '';
 
@@ -43,7 +43,7 @@ abstract class _UserInfoStoreBase with Store {
   bool isBeneficiary = false;
 
   @computed
-  UserInfo get userInfo => UserInfo(
+  User get user => User(
         id: null,
         email: email,
         cnpj: cnpj,

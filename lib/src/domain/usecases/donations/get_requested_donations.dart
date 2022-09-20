@@ -13,9 +13,9 @@ class GetRequestedDonations {
   }
 
   Future<List<Donation>> _filterList(List<Donation> list) async {
-    final user = await _authRepo.getCurrentUser().first;
-    if (user == null) return [];
-    final beneficiaryId = user.id;
+    final beneficiaryId = await _authRepo.getCurrentUserId();
+
+    if (beneficiaryId == null) return [];
 
     return list
         .where((donation) => donation.beneficiaryId == beneficiaryId)

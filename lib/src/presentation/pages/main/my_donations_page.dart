@@ -9,7 +9,7 @@ import '../../controllers/connection_state_controller.dart';
 import '../../dialogs/cancel_reason_dialog.dart';
 import '../../dialogs/user_info_dialog.dart';
 import '../../stores/donations_store.dart';
-import '../../stores/user_infos_store.dart';
+import '../../stores/users_store.dart';
 
 class MyDonationsPage extends StatefulWidget {
   const MyDonationsPage({Key? key}) : super(key: key);
@@ -21,7 +21,7 @@ class MyDonationsPage extends StatefulWidget {
 class _MyDonationsPageState extends State<MyDonationsPage> {
   final ConnectionStateController _connectionStateController = Modular.get();
   final DonationsStore _donationsStore = Modular.get();
-  final UserInfosStore _userInfosStore = Modular.get();
+  final UsersStore _usersStore = Modular.get();
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +94,7 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                 if (donation.beneficiaryId != null)
                   Observer(
                     builder: (context) {
-                      final beneficiary = _userInfosStore
+                      final beneficiary = _usersStore
                           .getBeneficiaryById(donation.beneficiaryId!);
 
                       return Row(
@@ -105,9 +105,9 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                               Icons.info_outline_rounded,
                               size: 16,
                             ),
-                            onTap: () => showUserInfoDialog(
+                            onTap: () => showUserDialog(
                               context,
-                              userInfo: beneficiary,
+                              user: beneficiary,
                             ),
                           ),
                         ],

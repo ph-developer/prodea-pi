@@ -1,6 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart' hide UserInfo, User;
+import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../../domain/entities/user.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../domain/repositories/auth_repo.dart';
 
@@ -10,19 +9,14 @@ class FirebaseAuthRemoteRepo implements IAuthRepo {
   FirebaseAuthRemoteRepo(this._auth);
 
   @override
-  Future<User> login(String email, String password) async {
+  Future<String> login(String email, String password) async {
     try {
       final result = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      if (result.user != null) {
-        return User(
-          id: result.user!.uid,
-          email: result.user!.email!,
-        );
-      }
+      if (result.user != null) return result.user!.uid;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'user-disabled':
@@ -39,19 +33,14 @@ class FirebaseAuthRemoteRepo implements IAuthRepo {
   }
 
   @override
-  Future<User> register(String email, String password) async {
+  Future<String> register(String email, String password) async {
     try {
       final result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      if (result.user != null) {
-        return User(
-          id: result.user!.uid,
-          email: result.user!.email!,
-        );
-      }
+      if (result.user != null) return result.user!.uid;
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'email-already-in-use':
@@ -102,14 +91,18 @@ class FirebaseAuthRemoteRepo implements IAuthRepo {
   }
 
   @override
-  Stream<User?> getCurrentUser() {
-    return _auth.authStateChanges().map((user) {
-      if (user == null) return null;
+  Future<String?> getCurrentUserId() async {
+    var user = _auth.currentUser;
 
-      return User(
-        id: user.uid,
-        email: user.email!,
-      );
+    user ??= await _auth.authStateChanges().first;
+
+    return user?.uid;
+  }
+
+  @override
+  Stream<String?> currentUserIdChanged() {
+    return _auth.authStateChanges().map((user) {
+      return user?.uid;
     });
   }
 }

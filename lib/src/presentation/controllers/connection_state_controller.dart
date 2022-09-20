@@ -13,6 +13,7 @@ class ConnectionStateController = _ConnectionStateControllerBase
 
 abstract class _ConnectionStateControllerBase with Store {
   final GetConnectionStatus _getConnectionStatus;
+  final List<StreamSubscription> _subscriptions = [];
 
   _ConnectionStateControllerBase(this._getConnectionStatus);
 
@@ -20,8 +21,15 @@ abstract class _ConnectionStateControllerBase with Store {
   bool isConnected = true;
 
   void init() {
-    Timer.periodic(const Duration(seconds: 15), (timer) async {
-      isConnected = await _getConnectionStatus();
-    });
+    for (var subscription in _subscriptions) {
+      subscription.cancel();
+    }
+    _subscriptions.clear();
+
+    _subscriptions.addAll([
+      _getConnectionStatus().listen((connectionStatus) {
+        isConnected = connectionStatus;
+      }),
+    ]);
   }
 }

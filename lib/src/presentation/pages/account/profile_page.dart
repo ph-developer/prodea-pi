@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../../domain/entities/user_info.dart';
+import '../../../domain/entities/user.dart';
 import '../../controllers/auth_controller.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -29,9 +29,9 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: Observer(
         builder: (_) {
-          final userInfo = _authController.currentUserInfo;
+          final user = _authController.currentUser;
 
-          if (userInfo == null) return Container();
+          if (user == null) return Container();
 
           return Padding(
             padding: const EdgeInsets.all(16),
@@ -40,44 +40,44 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    userInfo.name,
+                    user.name,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    "CNPJ: ${userInfo.cnpj}",
+                    "CNPJ: ${user.cnpj}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 24),
                   const SizedBox(height: 12),
-                  Text("Endereço: ${userInfo.address}"),
-                  Text("Cidade: ${userInfo.city}"),
+                  Text("Endereço: ${user.address}"),
+                  Text("Cidade: ${user.city}"),
                   const SizedBox(height: 12),
-                  Text("Email: ${userInfo.email}"),
-                  Text("Telefone: ${userInfo.phoneNumber}"),
+                  Text("Email: ${user.email}"),
+                  Text("Telefone: ${user.phoneNumber}"),
                   const SizedBox(height: 12),
-                  Text("Nome do Responsável: ${userInfo.responsibleName}"),
-                  Text("CPF do Responsável: ${userInfo.responsibleCpf}"),
+                  Text("Nome do Responsável: ${user.responsibleName}"),
+                  Text("CPF do Responsável: ${user.responsibleCpf}"),
                   const SizedBox(height: 12),
-                  Text("Sobre: ${userInfo.about}"),
+                  Text("Sobre: ${user.about}"),
                   const SizedBox(height: 12),
-                  if (userInfo.isDonor && userInfo.isBeneficiary)
+                  if (user.isDonor && user.isBeneficiary)
                     const Text('Perfil: Doador(a) e Beneficiário(a)'),
-                  if (userInfo.isDonor && !userInfo.isBeneficiary)
+                  if (user.isDonor && !user.isBeneficiary)
                     const Text('Perfil: Doador(a)'),
-                  if (!userInfo.isDonor && userInfo.isBeneficiary)
+                  if (!user.isDonor && user.isBeneficiary)
                     const Text('Perfil: Beneficiário(a)'),
                   const SizedBox(height: 12),
-                  if (userInfo.status == AuthorizationStatus.waiting)
+                  if (user.status == AuthorizationStatus.waiting)
                     const Text(
                       'Situação: Aguardando Verificação',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  if (userInfo.status == AuthorizationStatus.authorized)
+                  if (user.status == AuthorizationStatus.authorized)
                     const Text(
                       'Situação: Autorizado',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  if (userInfo.status == AuthorizationStatus.denied)
+                  if (user.status == AuthorizationStatus.denied)
                     const Text(
                       'Situação: Não Autorizado',
                       style: TextStyle(fontWeight: FontWeight.bold),

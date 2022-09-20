@@ -5,11 +5,21 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'presentation/pages/account/profile_page.dart';
+import 'presentation/pages/admin/admin_page.dart';
+import 'presentation/pages/auth/forgot_password_page.dart';
+import 'presentation/pages/auth/login_page.dart';
+import 'presentation/pages/main/available_donations_page.dart';
+import 'presentation/pages/main/donate_page.dart';
+import 'presentation/pages/main/my_donations_page.dart';
+import 'presentation/pages/main/requested_donations_page.dart';
+import 'presentation/pages/main_page.dart';
+import 'presentation/pages/status/denied_page.dart';
 import 'data/repositories/local/json_city_local_repo.dart';
 import 'data/repositories/remote/firebase_auth_remote_repo.dart';
 import 'data/repositories/remote/firebase_donation_remote_repo.dart';
 import 'data/repositories/remote/firebase_file_remote_repo.dart';
-import 'data/repositories/remote/firebase_user_info_remote_repo.dart';
+import 'data/repositories/remote/firebase_user_remote_repo.dart';
 import 'data/services/asuka_notification_service.dart';
 import 'data/services/connectivity_network_service.dart';
 import 'data/services/image_picker_photo_service.dart';
@@ -17,7 +27,7 @@ import 'domain/repositories/auth_repo.dart';
 import 'domain/repositories/city_repo.dart';
 import 'domain/repositories/donation_repo.dart';
 import 'domain/repositories/file_repo.dart';
-import 'domain/repositories/user_info_repo.dart';
+import 'domain/repositories/user_repo.dart';
 import 'domain/services/network_service.dart';
 import 'domain/services/notification_service.dart';
 import 'domain/services/photo_service.dart';
@@ -39,33 +49,23 @@ import 'domain/usecases/donations/set_donation_as_unrequested.dart';
 import 'domain/usecases/network/get_connection_status.dart';
 import 'domain/usecases/photo/pick_photo_from_camera.dart';
 import 'domain/usecases/photo/pick_photo_from_gallery.dart';
-import 'domain/usecases/user_infos/get_beneficiaries_info.dart';
-import 'domain/usecases/user_infos/get_common_users_info.dart';
-import 'domain/usecases/user_infos/get_donors_info.dart';
-import 'domain/usecases/user_infos/get_user_info_by_id.dart';
-import 'domain/usecases/user_infos/set_user_info_as_authorized.dart';
-import 'domain/usecases/user_infos/set_user_info_as_denied.dart';
+import 'domain/usecases/user/get_beneficiaries.dart';
+import 'domain/usecases/user/get_common_users.dart';
+import 'domain/usecases/user/get_donors.dart';
+import 'domain/usecases/user/get_user_by_id.dart';
+import 'domain/usecases/user/set_user_as_authorized.dart';
+import 'domain/usecases/user/set_user_as_denied.dart';
 import 'presentation/controllers/auth_controller.dart';
 import 'presentation/controllers/connection_state_controller.dart';
 import 'presentation/controllers/main_page_controller.dart';
-import 'presentation/pages/account/profile_page.dart';
-import 'presentation/pages/admin/admin_page.dart';
-import 'presentation/pages/auth/forgot_password_page.dart';
-import 'presentation/pages/auth/login_page.dart';
 import 'presentation/pages/auth/register_page.dart';
 import 'presentation/pages/boot_page.dart';
-import 'presentation/pages/main/available_donations_page.dart';
-import 'presentation/pages/main/donate_page.dart';
-import 'presentation/pages/main/my_donations_page.dart';
-import 'presentation/pages/main/requested_donations_page.dart';
-import 'presentation/pages/main_page.dart';
-import 'presentation/pages/status/denied_page.dart';
 import 'presentation/pages/status/waiting_page.dart';
 import 'presentation/stores/cities_store.dart';
 import 'presentation/stores/donation_store.dart';
 import 'presentation/stores/donations_store.dart';
-import 'presentation/stores/user_info_store.dart';
-import 'presentation/stores/user_infos_store.dart';
+import 'presentation/stores/user_store.dart';
+import 'presentation/stores/users_store.dart';
 
 class AppModule extends Module {
   @override
@@ -84,7 +84,7 @@ class AppModule extends Module {
         Bind.factory<ICityRepo>((i) => JsonCityLocalRepo()),
         Bind.factory<IDonationRepo>((i) => FirebaseDonationRemoteRepo(i())),
         Bind.factory<IFileRepo>((i) => FirebaseFileRemoteRepo(i())),
-        Bind.factory<IUserInfoRepo>((i) => FirebaseUserInfoRemoteRepo(i())),
+        Bind.factory<IUserRepo>((i) => FirebaseUserRemoteRepo(i())),
 
         //! Services
         Bind.factory<INetworkService>((i) => ConnectivityNetworkService(i())),
@@ -92,10 +92,10 @@ class AppModule extends Module {
         Bind.factory<INotificationService>((i) => AsukaNotificationService()),
 
         //! Usecases
-        Bind.factory<DoLogin>((i) => DoLogin(i(), i())),
+        Bind.factory<DoLogin>((i) => DoLogin(i(), i(), i())),
         Bind.factory<DoLogout>((i) => DoLogout(i(), i())),
         Bind.factory<DoRegister>((i) => DoRegister(i(), i(), i())),
-        Bind.factory<GetCurrentUser>((i) => GetCurrentUser(i())),
+        Bind.factory<GetCurrentUser>((i) => GetCurrentUser(i(), i(), i())),
         Bind.factory<SendPasswordResetEmail>(
             (i) => SendPasswordResetEmail(i(), i())),
         Bind.factory<GetCityNames>((i) => GetCityNames(i())),
@@ -117,13 +117,12 @@ class AppModule extends Module {
         Bind.factory<PickPhotoFromCamera>((i) => PickPhotoFromCamera(i(), i())),
         Bind.factory<PickPhotoFromGallery>(
             (i) => PickPhotoFromGallery(i(), i())),
-        Bind.factory<GetBeneficiariesInfo>((i) => GetBeneficiariesInfo(i())),
-        Bind.factory<GetCommonUsersInfo>((i) => GetCommonUsersInfo(i())),
-        Bind.factory<GetDonorsInfo>((i) => GetDonorsInfo(i())),
-        Bind.factory<GetUserInfoById>((i) => GetUserInfoById(i(), i())),
-        Bind.factory<SetUserInfoAsAuthorized>(
-            (i) => SetUserInfoAsAuthorized(i(), i())),
-        Bind.factory<SetUserInfoAsDenied>((i) => SetUserInfoAsDenied(i(), i())),
+        Bind.factory<GetBeneficiaries>((i) => GetBeneficiaries(i())),
+        Bind.factory<GetCommonUsers>((i) => GetCommonUsers(i())),
+        Bind.factory<GetDonors>((i) => GetDonors(i())),
+        Bind.factory<GetUserById>((i) => GetUserById(i(), i())),
+        Bind.factory<SetUserAsAuthorized>((i) => SetUserAsAuthorized(i(), i())),
+        Bind.factory<SetUserAsDenied>((i) => SetUserAsDenied(i(), i())),
 
         //! Controllers
         Bind.singleton<AuthController>(
@@ -137,9 +136,8 @@ class AppModule extends Module {
         Bind.factory<DonationStore>((i) => DonationStore(i(), i(), i())),
         Bind.singleton<DonationsStore>(
             (i) => DonationsStore(i(), i(), i(), i(), i(), i(), i(), i())),
-        Bind.factory<UserInfoStore>((i) => UserInfoStore()),
-        Bind.singleton<UserInfosStore>(
-            (i) => UserInfosStore(i(), i(), i(), i(), i())),
+        Bind.factory<UserStore>((i) => UserStore()),
+        Bind.singleton<UsersStore>((i) => UsersStore(i(), i(), i(), i(), i())),
       ];
 
   @override

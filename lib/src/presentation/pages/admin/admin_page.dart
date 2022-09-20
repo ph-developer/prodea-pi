@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../../domain/entities/user_info.dart';
+import '../../../domain/entities/user.dart';
 import '../../controllers/connection_state_controller.dart';
 import '../../dialogs/no_connection_dialog.dart';
-import '../../stores/user_infos_store.dart';
+import '../../stores/users_store.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -16,7 +16,7 @@ class AdminPage extends StatefulWidget {
 
 class _AdminPageState extends State<AdminPage> {
   final ConnectionStateController _connectionStateController = Modular.get();
-  final UserInfosStore _userInfosStore = Modular.get();
+  final UsersStore _usersStore = Modular.get();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class _AdminPageState extends State<AdminPage> {
           padding: const EdgeInsets.all(16),
           child: Observer(
             builder: (context) {
-              final userInfos = _userInfosStore.commonUsers;
+              final userInfos = _usersStore.commonUsers;
 
               if (userInfos.isEmpty) {
                 return const Text(
@@ -56,7 +56,7 @@ class _AdminPageState extends State<AdminPage> {
                 itemCount: userInfos.length,
                 itemBuilder: (context, index) {
                   final userInfo = userInfos[index];
-                  return _buildUserInfoCard(userInfo);
+                  return _buildUserCard(userInfo);
                 },
               );
             },
@@ -66,61 +66,61 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
-  Widget _buildUserInfoCard(UserInfo userInfo) {
+  Widget _buildUserCard(User user) {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: ListTile(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(userInfo.name),
-            Text("CNPJ: ${userInfo.cnpj}"),
+            Text(user.name),
+            Text("CNPJ: ${user.cnpj}"),
           ],
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Endereço: ${userInfo.address}"),
-            Text("Cidade: ${userInfo.city}"),
-            Text("Email: ${userInfo.email}"),
-            Text("Telefone: ${userInfo.phoneNumber}"),
-            Text("Nome do Responsável: ${userInfo.responsibleName}"),
-            Text("CPF do Responsável: ${userInfo.responsibleCpf}"),
-            Text("Sobre: ${userInfo.about}"),
-            if (userInfo.isDonor && userInfo.isBeneficiary)
+            Text("Endereço: ${user.address}"),
+            Text("Cidade: ${user.city}"),
+            Text("Email: ${user.email}"),
+            Text("Telefone: ${user.phoneNumber}"),
+            Text("Nome do Responsável: ${user.responsibleName}"),
+            Text("CPF do Responsável: ${user.responsibleCpf}"),
+            Text("Sobre: ${user.about}"),
+            if (user.isDonor && user.isBeneficiary)
               const Text('Perfil: Doador(a) e Beneficiário(a)'),
-            if (userInfo.isDonor && !userInfo.isBeneficiary)
+            if (user.isDonor && !user.isBeneficiary)
               const Text('Perfil: Doador(a)'),
-            if (!userInfo.isDonor && userInfo.isBeneficiary)
+            if (!user.isDonor && user.isBeneficiary)
               const Text('Perfil: Beneficiário(a)'),
-            if (userInfo.status == AuthorizationStatus.waiting)
+            if (user.status == AuthorizationStatus.waiting)
               const Text('Situação: Aguardando Verificação'),
-            if (userInfo.status == AuthorizationStatus.authorized)
+            if (user.status == AuthorizationStatus.authorized)
               const Text('Situação: Autorizado'),
-            if (userInfo.status == AuthorizationStatus.denied)
+            if (user.status == AuthorizationStatus.denied)
               const Text('Situação: Não Autorizado'),
             const SizedBox(height: 8),
-            if (userInfo.status == AuthorizationStatus.waiting ||
-                userInfo.status == AuthorizationStatus.denied)
+            if (user.status == AuthorizationStatus.waiting ||
+                user.status == AuthorizationStatus.denied)
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: _connectionStateController.isConnected
                       ? () {
-                          _userInfosStore.setUserAsAuthorized(userInfo);
+                          _usersStore.setUserAsAuthorized(user);
                         }
                       : null,
                   child: const Text('Autorizar'),
                 ),
               ),
-            if (userInfo.status == AuthorizationStatus.waiting ||
-                userInfo.status == AuthorizationStatus.authorized)
+            if (user.status == AuthorizationStatus.waiting ||
+                user.status == AuthorizationStatus.authorized)
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: _connectionStateController.isConnected
                       ? () {
-                          _userInfosStore.setUserAsDenied(userInfo);
+                          _usersStore.setUserAsDenied(user);
                         }
                       : null,
                   child: const Text('Negar Autorização'),

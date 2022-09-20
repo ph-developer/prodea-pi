@@ -3,14 +3,13 @@
 import 'package:mobx/mobx.dart';
 
 import '../../domain/entities/user.dart';
-import '../../domain/entities/user_info.dart';
 import '../../../core/helpers/navigation.dart';
 import '../../domain/usecases/auth/do_login.dart';
 import '../../domain/usecases/auth/do_logout.dart';
 import '../../domain/usecases/auth/do_register.dart';
 import '../../domain/usecases/auth/get_current_user.dart';
 import '../../domain/usecases/auth/send_password_reset_email.dart';
-import '../../domain/usecases/user_infos/get_user_info_by_id.dart';
+import '../../domain/usecases/user/get_user_by_id.dart';
 
 part 'auth_controller.g.dart';
 
@@ -18,7 +17,7 @@ class AuthController = _AuthControllerBase with _$AuthController;
 
 abstract class _AuthControllerBase with Store {
   final GetCurrentUser _getCurrentUser;
-  final GetUserInfoById _getUserInfoById;
+  final GetUserById _getUserById;
   final DoLogin _doLogin;
   final DoRegister _doRegister;
   final DoLogout _doLogout;
@@ -26,7 +25,7 @@ abstract class _AuthControllerBase with Store {
 
   _AuthControllerBase(
     this._getCurrentUser,
-    this._getUserInfoById,
+    this._getUserById,
     this._doLogin,
     this._doRegister,
     this._doLogout,
@@ -39,35 +38,30 @@ abstract class _AuthControllerBase with Store {
   @observable
   User? currentUser;
 
-  @observable
-  UserInfo? currentUserInfo;
-
   @computed
   bool get isLoggedIn => currentUser != null;
 
   @computed
-  bool get isAdmin => currentUserInfo?.isAdmin == true;
+  bool get isAdmin => currentUser?.isAdmin == true;
 
   @computed
-  bool get isDonor => currentUserInfo?.isDonor == true;
+  bool get isDonor => currentUser?.isDonor == true;
 
   @computed
-  bool get isBeneficiary => currentUserInfo?.isBeneficiary == true;
+  bool get isBeneficiary => currentUser?.isBeneficiary == true;
 
   @computed
   bool get isAuthorized =>
-      currentUserInfo?.status == AuthorizationStatus.authorized;
+      currentUser?.status == AuthorizationStatus.authorized;
 
   @computed
-  bool get isDenied => currentUserInfo?.status == AuthorizationStatus.denied;
+  bool get isDenied => currentUser?.status == AuthorizationStatus.denied;
 
   @action
   void init({Function? afterLoginCallback, Function? afterNavigationCallback}) {
     _getCurrentUser().listen((user) async {
       if (user != null) {
-        final userInfo = await _getUserInfoById(user.id);
         currentUser = user;
-        currentUserInfo = userInfo;
         afterLoginCallback?.call();
         if (isAuthorized) {
           if (isDonor) {
@@ -82,7 +76,6 @@ abstract class _AuthControllerBase with Store {
         }
       } else {
         currentUser = null;
-        currentUserInfo = null;
         NavigationHelper.goTo('/login', replace: true);
       }
       isLoading = false;
@@ -98,11 +91,7 @@ abstract class _AuthControllerBase with Store {
   }
 
   @action
-  Future<void> register(
-    String email,
-    String password,
-    UserInfo userInfo,
-  ) async {
+  Future<void> register(String email, String password, User userInfo) async {
     isLoading = true;
     await _doRegister(email, password, userInfo);
     isLoading = false;

@@ -24,7 +24,7 @@ class _DeniedPageState extends State<DeniedPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Olá ${_authController.currentUserInfo?.name}!"),
+                Text("Olá ${_authController.currentUser?.name}!"),
                 const SizedBox(height: 12),
                 const Text('Infelizmente seu cadastro foi negado.'),
                 const Text('Em breve entraremos em contato...'),

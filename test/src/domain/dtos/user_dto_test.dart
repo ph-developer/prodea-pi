@@ -6,6 +6,18 @@ void main() {
   const tModel = User(
     id: 'id',
     email: 'email',
+    cnpj: 'cnpj',
+    name: 'name',
+    address: 'address',
+    city: 'city',
+    phoneNumber: 'phoneNumber',
+    about: 'about',
+    responsibleName: 'responsibleName',
+    responsibleCpf: 'responsibleCpf',
+    isDonor: true,
+    isBeneficiary: true,
+    isAdmin: true,
+    status: AuthorizationStatus.authorized,
   );
 
   group('copyWith', () {
@@ -13,15 +25,17 @@ void main() {
       // act
       final result1 = tModel.copyWith(
         id: 'id2',
+        email: 'email2',
       );
       final result2 = tModel.copyWith(
-        email: 'email2',
+        status: AuthorizationStatus.denied,
       );
       // assert
       expect(result1, isA<User>());
       expect(result1.id, 'id2');
+      expect(result1.email, 'email2');
       expect(result2, isA<User>());
-      expect(result2.email, 'email2');
+      expect(result2.status, AuthorizationStatus.denied);
     });
   });
 }

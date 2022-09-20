@@ -7,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/input_formatters.dart';
 import '../../controllers/auth_controller.dart';
 import '../../dialogs/city_select_dialog.dart';
-import '../../stores/user_info_store.dart';
+import '../../stores/user_store.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final AuthController _authController = Modular.get();
-  final UserInfoStore _userInfoStore = Modular.get();
+  final UserStore _userStore = Modular.get();
   final _cityController = TextEditingController(text: '');
   var _password = '';
 
@@ -89,7 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
         labelText: 'Email',
       ),
       keyboardType: TextInputType.emailAddress,
-      onChanged: (value) => _userInfoStore.email = value,
+      onChanged: (value) => _userStore.email = value,
     );
   }
 
@@ -114,7 +114,7 @@ class _RegisterPageState extends State<RegisterPage> {
       decoration: const InputDecoration(
         labelText: 'CNPJ',
       ),
-      onChanged: (value) => _userInfoStore.cnpj = value,
+      onChanged: (value) => _userStore.cnpj = value,
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
@@ -128,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
       decoration: const InputDecoration(
         labelText: 'Nome da Empresa/Entidade',
       ),
-      onChanged: (value) => _userInfoStore.name = value,
+      onChanged: (value) => _userStore.name = value,
     );
   }
 
@@ -137,7 +137,7 @@ class _RegisterPageState extends State<RegisterPage> {
       decoration: const InputDecoration(
         labelText: 'Endereço (Rua, Número e Bairro)',
       ),
-      onChanged: (value) => _userInfoStore.address = value,
+      onChanged: (value) => _userStore.address = value,
     );
   }
 
@@ -152,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
         showCitySelectDialog(
           context,
           onSelect: (value) {
-            _userInfoStore.address = value;
+            _userStore.address = value;
             _cityController.text = value;
           },
         );
@@ -166,7 +166,7 @@ class _RegisterPageState extends State<RegisterPage> {
       decoration: const InputDecoration(
         labelText: 'Telefone',
       ),
-      onChanged: (value) => _userInfoStore.phoneNumber = value,
+      onChanged: (value) => _userStore.phoneNumber = value,
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
@@ -180,7 +180,7 @@ class _RegisterPageState extends State<RegisterPage> {
       decoration: const InputDecoration(
         labelText: 'Sobre a Empresa/Entidade',
       ),
-      onChanged: (value) => _userInfoStore.about = value,
+      onChanged: (value) => _userStore.about = value,
     );
   }
 
@@ -189,7 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
       decoration: const InputDecoration(
         labelText: 'Nome Completo do Responsável',
       ),
-      onChanged: (value) => _userInfoStore.responsibleName = value,
+      onChanged: (value) => _userStore.responsibleName = value,
     );
   }
 
@@ -198,7 +198,7 @@ class _RegisterPageState extends State<RegisterPage> {
       decoration: const InputDecoration(
         labelText: 'CPF do Responsável',
       ),
-      onChanged: (value) => _userInfoStore.responsibleCpf = value,
+      onChanged: (value) => _userStore.responsibleCpf = value,
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
@@ -219,9 +219,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Observer(
                   builder: (_) {
                     return Checkbox(
-                      value: _userInfoStore.isDonor,
-                      onChanged: (value) =>
-                          _userInfoStore.isDonor = value == true,
+                      value: _userStore.isDonor,
+                      onChanged: (value) => _userStore.isDonor = value == true,
                     );
                   },
                 ),
@@ -251,9 +250,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Observer(
                   builder: (_) {
                     return Checkbox(
-                      value: _userInfoStore.isBeneficiary,
+                      value: _userStore.isBeneficiary,
                       onChanged: (value) =>
-                          _userInfoStore.isBeneficiary = value == true,
+                          _userStore.isBeneficiary = value == true,
                     );
                   },
                 ),
@@ -279,16 +278,16 @@ class _RegisterPageState extends State<RegisterPage> {
         builder: (_) {
           final isLoading = _authController.isLoading;
           final canSubmit = _password.isNotEmpty &&
-              _userInfoStore.email.isNotEmpty &&
-              _userInfoStore.cnpj.isNotEmpty &&
-              _userInfoStore.name.isNotEmpty &&
-              _userInfoStore.address.isNotEmpty &&
-              _userInfoStore.city.isNotEmpty &&
-              _userInfoStore.phoneNumber.isNotEmpty &&
-              _userInfoStore.about.isNotEmpty &&
-              _userInfoStore.responsibleName.isNotEmpty &&
-              _userInfoStore.responsibleCpf.isNotEmpty &&
-              (_userInfoStore.isBeneficiary || _userInfoStore.isDonor);
+              _userStore.email.isNotEmpty &&
+              _userStore.cnpj.isNotEmpty &&
+              _userStore.name.isNotEmpty &&
+              _userStore.address.isNotEmpty &&
+              _userStore.city.isNotEmpty &&
+              _userStore.phoneNumber.isNotEmpty &&
+              _userStore.about.isNotEmpty &&
+              _userStore.responsibleName.isNotEmpty &&
+              _userStore.responsibleCpf.isNotEmpty &&
+              (_userStore.isBeneficiary || _userStore.isDonor);
 
           if (isLoading) {
             return const OutlinedButton(
@@ -306,9 +305,9 @@ class _RegisterPageState extends State<RegisterPage> {
           return OutlinedButton(
             onPressed: canSubmit
                 ? () => _authController.register(
-                      _userInfoStore.email,
+                      _userStore.email,
                       _password,
-                      _userInfoStore.userInfo,
+                      _userStore.user,
                     )
                 : null,
             child: const Text('Solicitar Cadastro'),

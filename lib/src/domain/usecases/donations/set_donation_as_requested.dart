@@ -18,14 +18,12 @@ class SetDonationAsRequested {
 
   Future<Donation?> call(Donation donation) async {
     try {
-      final user = await _authRepo.getCurrentUser().first;
+      final beneficiaryId = await _authRepo.getCurrentUserId();
 
-      if (user == null) {
+      if (beneficiaryId == null) {
         _notificationService.notifyError('Usuário não autenticado.');
         return null;
       }
-
-      final beneficiaryId = user.id;
 
       final newDonation = donation.copyWith(
         beneficiaryId: beneficiaryId,

@@ -82,22 +82,6 @@ mixin _$AuthController on _AuthControllerBase, Store {
     });
   }
 
-  late final _$currentUserInfoAtom =
-      Atom(name: '_AuthControllerBase.currentUserInfo', context: context);
-
-  @override
-  UserInfo? get currentUserInfo {
-    _$currentUserInfoAtom.reportRead();
-    return super.currentUserInfo;
-  }
-
-  @override
-  set currentUserInfo(UserInfo? value) {
-    _$currentUserInfoAtom.reportWrite(value, super.currentUserInfo, () {
-      super.currentUserInfo = value;
-    });
-  }
-
   late final _$loginAsyncAction =
       AsyncAction('_AuthControllerBase.login', context: context);
 
@@ -110,7 +94,7 @@ mixin _$AuthController on _AuthControllerBase, Store {
       AsyncAction('_AuthControllerBase.register', context: context);
 
   @override
-  Future<void> register(String email, String password, UserInfo userInfo) {
+  Future<void> register(String email, String password, User userInfo) {
     return _$registerAsyncAction
         .run(() => super.register(email, password, userInfo));
   }
@@ -187,7 +171,6 @@ mixin _$AuthController on _AuthControllerBase, Store {
     return '''
 isLoading: ${isLoading},
 currentUser: ${currentUser},
-currentUserInfo: ${currentUserInfo},
 isLoggedIn: ${isLoggedIn},
 isAdmin: ${isAdmin},
 isDonor: ${isDonor},

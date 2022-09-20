@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_info_store.dart';
+part of 'user_store.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,17 +8,15 @@ part of 'user_info_store.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$UserInfoStore on _UserInfoStoreBase, Store {
-  Computed<UserInfo>? _$userInfoComputed;
+mixin _$UserStore on _UserStoreBase, Store {
+  Computed<User>? _$userComputed;
 
   @override
-  UserInfo get userInfo =>
-      (_$userInfoComputed ??= Computed<UserInfo>(() => super.userInfo,
-              name: '_UserInfoStoreBase.userInfo'))
-          .value;
+  User get user => (_$userComputed ??=
+          Computed<User>(() => super.user, name: '_UserStoreBase.user'))
+      .value;
 
-  late final _$emailAtom =
-      Atom(name: '_UserInfoStoreBase.email', context: context);
+  late final _$emailAtom = Atom(name: '_UserStoreBase.email', context: context);
 
   @override
   String get email {
@@ -33,8 +31,7 @@ mixin _$UserInfoStore on _UserInfoStoreBase, Store {
     });
   }
 
-  late final _$cnpjAtom =
-      Atom(name: '_UserInfoStoreBase.cnpj', context: context);
+  late final _$cnpjAtom = Atom(name: '_UserStoreBase.cnpj', context: context);
 
   @override
   String get cnpj {
@@ -49,8 +46,7 @@ mixin _$UserInfoStore on _UserInfoStoreBase, Store {
     });
   }
 
-  late final _$nameAtom =
-      Atom(name: '_UserInfoStoreBase.name', context: context);
+  late final _$nameAtom = Atom(name: '_UserStoreBase.name', context: context);
 
   @override
   String get name {
@@ -66,7 +62,7 @@ mixin _$UserInfoStore on _UserInfoStoreBase, Store {
   }
 
   late final _$addressAtom =
-      Atom(name: '_UserInfoStoreBase.address', context: context);
+      Atom(name: '_UserStoreBase.address', context: context);
 
   @override
   String get address {
@@ -81,8 +77,7 @@ mixin _$UserInfoStore on _UserInfoStoreBase, Store {
     });
   }
 
-  late final _$cityAtom =
-      Atom(name: '_UserInfoStoreBase.city', context: context);
+  late final _$cityAtom = Atom(name: '_UserStoreBase.city', context: context);
 
   @override
   String get city {
@@ -98,7 +93,7 @@ mixin _$UserInfoStore on _UserInfoStoreBase, Store {
   }
 
   late final _$phoneNumberAtom =
-      Atom(name: '_UserInfoStoreBase.phoneNumber', context: context);
+      Atom(name: '_UserStoreBase.phoneNumber', context: context);
 
   @override
   String get phoneNumber {
@@ -113,8 +108,7 @@ mixin _$UserInfoStore on _UserInfoStoreBase, Store {
     });
   }
 
-  late final _$aboutAtom =
-      Atom(name: '_UserInfoStoreBase.about', context: context);
+  late final _$aboutAtom = Atom(name: '_UserStoreBase.about', context: context);
 
   @override
   String get about {
@@ -130,7 +124,7 @@ mixin _$UserInfoStore on _UserInfoStoreBase, Store {
   }
 
   late final _$responsibleNameAtom =
-      Atom(name: '_UserInfoStoreBase.responsibleName', context: context);
+      Atom(name: '_UserStoreBase.responsibleName', context: context);
 
   @override
   String get responsibleName {
@@ -146,7 +140,7 @@ mixin _$UserInfoStore on _UserInfoStoreBase, Store {
   }
 
   late final _$responsibleCpfAtom =
-      Atom(name: '_UserInfoStoreBase.responsibleCpf', context: context);
+      Atom(name: '_UserStoreBase.responsibleCpf', context: context);
 
   @override
   String get responsibleCpf {
@@ -162,7 +156,7 @@ mixin _$UserInfoStore on _UserInfoStoreBase, Store {
   }
 
   late final _$isDonorAtom =
-      Atom(name: '_UserInfoStoreBase.isDonor', context: context);
+      Atom(name: '_UserStoreBase.isDonor', context: context);
 
   @override
   bool get isDonor {
@@ -178,7 +172,7 @@ mixin _$UserInfoStore on _UserInfoStoreBase, Store {
   }
 
   late final _$isBeneficiaryAtom =
-      Atom(name: '_UserInfoStoreBase.isBeneficiary', context: context);
+      Atom(name: '_UserStoreBase.isBeneficiary', context: context);
 
   @override
   bool get isBeneficiary {
@@ -207,7 +201,7 @@ responsibleName: ${responsibleName},
 responsibleCpf: ${responsibleCpf},
 isDonor: ${isDonor},
 isBeneficiary: ${isBeneficiary},
-userInfo: ${userInfo}
+user: ${user}
     ''';
   }
 }

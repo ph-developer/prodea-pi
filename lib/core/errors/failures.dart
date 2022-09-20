@@ -51,22 +51,22 @@ class UpdateDonationFailure extends Failure {
   ]) : super(message);
 }
 
-class GetUserInfoFailure extends Failure {
-  GetUserInfoFailure([
+class GetUserFailure extends Failure {
+  GetUserFailure([
     String message =
         'Ocorreu um erro ao carregar os dados cadastrais do usuário.',
   ]) : super(message);
 }
 
-class CreateUserInfoFailure extends Failure {
-  CreateUserInfoFailure([
+class CreateUserFailure extends Failure {
+  CreateUserFailure([
     String message =
         'Ocorreu um erro ao salvar os dados cadastrais do usuário.',
   ]) : super(message);
 }
 
-class UpdateUserInfoFailure extends Failure {
-  UpdateUserInfoFailure([
+class UpdateUserFailure extends Failure {
+  UpdateUserFailure([
     String message =
         'Ocorreu um erro ao atualizar os dados cadastrais do usuário.',
   ]) : super(message);

@@ -24,7 +24,7 @@ class _WaitingPageState extends State<WaitingPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Olá ${_authController.currentUserInfo?.name}!"),
+                Text("Olá ${_authController.currentUser?.name}!"),
                 const SizedBox(height: 12),
                 const Text('Sua solicitação de cadastro encontra-se em fase'),
                 const Text(' de análise no momento.'),

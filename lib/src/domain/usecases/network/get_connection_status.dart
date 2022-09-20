@@ -8,7 +8,13 @@ class GetConnectionStatus {
 
   GetConnectionStatus(this._networkService, this._notificationService);
 
-  Future<bool> call() async {
+  Stream<bool> call() async* {
+    yield await _checkConnection();
+    yield* Stream.periodic(const Duration(seconds: 15))
+        .asyncMap((_) async => await _checkConnection());
+  }
+
+  Future<bool> _checkConnection() async {
     try {
       final connectionStatus = await _networkService.isConnected();
 

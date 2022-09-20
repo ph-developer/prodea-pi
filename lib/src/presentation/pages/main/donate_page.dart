@@ -7,7 +7,7 @@ import '../../../../core/extensions/string.dart';
 import '../../../../core/input_formatters.dart';
 import '../../controllers/connection_state_controller.dart';
 import '../../stores/donation_store.dart';
-import '../../stores/user_infos_store.dart';
+import '../../stores/users_store.dart';
 
 class DonatePage extends StatefulWidget {
   const DonatePage({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class DonatePage extends StatefulWidget {
 
 class _DonatePageState extends State<DonatePage> {
   final ConnectionStateController _connectionStateController = Modular.get();
-  final UserInfosStore _userInfosStore = Modular.get();
+  final UsersStore _usersStore = Modular.get();
   final DonationStore _donationStore = Modular.get();
 
   @override
@@ -136,7 +136,7 @@ class _DonatePageState extends State<DonatePage> {
                   value: null,
                   child: Text('Não'),
                 ),
-                ..._userInfosStore.beneficiaries.map(
+                ..._usersStore.beneficiaries.map(
                   (userInfo) => DropdownMenuItem(
                     value: userInfo.id,
                     child: Text(userInfo.name),

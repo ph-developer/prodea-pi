@@ -7,7 +7,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../../core/helpers/navigation.dart';
 import '../../domain/usecases/auth/get_current_user.dart';
-import '../../domain/usecases/user_infos/get_user_info_by_id.dart';
+import '../../domain/usecases/user/get_user_by_id.dart';
 
 part 'main_page_controller.g.dart';
 
@@ -15,7 +15,7 @@ class MainPageController = _MainPageControllerBase with _$MainPageController;
 
 abstract class _MainPageControllerBase with Store {
   final GetCurrentUser _getCurrentUser;
-  final GetUserInfoById _getUserInfoById;
+  final GetUserById _getUserById;
   final List<StreamSubscription> _subscriptions = [];
   final _pageInfos = [
     PageInfo(
@@ -44,7 +44,7 @@ abstract class _MainPageControllerBase with Store {
     ),
   ];
 
-  _MainPageControllerBase(this._getCurrentUser, this._getUserInfoById);
+  _MainPageControllerBase(this._getCurrentUser, this._getUserById);
 
   @observable
   ObservableList<PageInfo> pageInfos = ObservableList.of([]);
@@ -73,17 +73,13 @@ abstract class _MainPageControllerBase with Store {
       _getCurrentUser().listen((user) async {
         pageInfos = ObservableList.of([]);
         if (user != null) {
-          final userInfo = await _getUserInfoById(user.id);
-
-          if (userInfo != null) {
-            if (userInfo.isDonor) {
-              pageInfos.add(_pageInfos[0]);
-              pageInfos.add(_pageInfos[1]);
-            }
-            if (userInfo.isBeneficiary) {
-              pageInfos.add(_pageInfos[2]);
-              pageInfos.add(_pageInfos[3]);
-            }
+          if (user.isDonor) {
+            pageInfos.add(_pageInfos[0]);
+            pageInfos.add(_pageInfos[1]);
+          }
+          if (user.isBeneficiary) {
+            pageInfos.add(_pageInfos[2]);
+            pageInfos.add(_pageInfos[3]);
           }
         }
       }),

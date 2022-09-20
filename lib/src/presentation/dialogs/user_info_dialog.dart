@@ -1,37 +1,37 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/user_info.dart';
+import '../../domain/entities/user.dart';
 
-Future<void> showUserInfoDialog(
+Future<void> showUserDialog(
   BuildContext context, {
-  required UserInfo userInfo,
+  required User user,
 }) async {
   await showDialog(
     context: context,
-    builder: (_) => UserInfoDialog(userInfo: userInfo),
+    builder: (_) => UserDialog(user: user),
   );
 }
 
-class UserInfoDialog extends StatelessWidget {
-  final UserInfo userInfo;
+class UserDialog extends StatelessWidget {
+  final User user;
 
-  const UserInfoDialog({required this.userInfo, Key? key}) : super(key: key);
+  const UserDialog({required this.user, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(userInfo.name),
+      title: Text(user.name),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("CNPJ: ${userInfo.cnpj}"),
-            Text("Endereço: ${userInfo.address}"),
-            Text("Cidade: ${userInfo.city}"),
-            Text("Email: ${userInfo.email}"),
-            Text("Telefone: ${userInfo.phoneNumber}"),
-            Text("Nome do Responsável: ${userInfo.responsibleName}"),
-            Text("Sobre: ${userInfo.about}"),
+            Text("CNPJ: ${user.cnpj}"),
+            Text("Endereço: ${user.address}"),
+            Text("Cidade: ${user.city}"),
+            Text("Email: ${user.email}"),
+            Text("Telefone: ${user.phoneNumber}"),
+            Text("Nome do Responsável: ${user.responsibleName}"),
+            Text("Sobre: ${user.about}"),
           ],
         ),
       ),

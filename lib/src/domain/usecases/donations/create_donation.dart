@@ -29,14 +29,12 @@ class CreateDonation {
         photoUrl = await _fileRepo.uploadFile('donation', image);
       }
 
-      final user = await _authRepo.getCurrentUser().first;
+      final donorId = await _authRepo.getCurrentUserId();
 
-      if (user == null) {
+      if (donorId == null) {
         _notificationService.notifyError('Usuário não autenticado.');
         return null;
       }
-
-      final donorId = user.id;
 
       var newDonation = donation.copyWith(
         donorId: donorId,

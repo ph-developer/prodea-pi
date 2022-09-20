@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:prodea/core/errors/failures.dart';
 import 'package:prodea/src/data/repositories/remote/firebase_auth_remote_repo.dart';
-import 'package:prodea/src/domain/entities/user.dart';
 
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
@@ -20,8 +19,6 @@ void main() {
   late UserCredential nullCredentialMock;
   late FirebaseAuth authMock;
   late FirebaseAuthRemoteRepo firebaseAuthRemoteRepo;
-
-  const tUser = User(id: 'test', email: 'test@test.dev');
 
   setUp(() {
     userMock = MockFirebaseUser();
@@ -39,7 +36,8 @@ void main() {
   });
 
   group('login', () {
-    test('deve retornar um User quando o login for bem sucedido.', () async {
+    test('deve retornar o id do usuário quando o login for bem sucedido.',
+        () async {
       // arrange
       when(() => authMock.signInWithEmailAndPassword(
             email: any(named: 'email'),
@@ -49,9 +47,7 @@ void main() {
       final result =
           await firebaseAuthRemoteRepo.login('test@test.dev', 'test');
       // assert
-      expect(result, isA<User>());
-      expect(result.id, equals('test'));
-      expect(result.email, equals('test@test.dev'));
+      expect(result, isA<String>());
     });
 
     test('deve disparar uma LoginFailure quando o usuário estiver bloqueado.',
@@ -132,7 +128,8 @@ void main() {
   });
 
   group('register', () {
-    test('deve retornar um User quando o registro for bem sucedido.', () async {
+    test('deve retornar o id do usuário quando o registro for bem sucedido.',
+        () async {
       // arrange
       when(() => authMock.createUserWithEmailAndPassword(
             email: any(named: 'email'),
@@ -142,9 +139,7 @@ void main() {
       final result =
           await firebaseAuthRemoteRepo.register('test@test.dev', 'test');
       // assert
-      expect(result, isA<User>());
-      expect(result.id, equals('test'));
-      expect(result.email, equals('test@test.dev'));
+      expect(result, isA<String>());
     });
 
     test('deve disparar uma RegisterFailure quando o email estiver em uso.',
@@ -290,15 +285,40 @@ void main() {
     });
   });
 
-  group('getCurrentUser', () {
-    test('deve retornar um User quando o usuário efetuar o login.', () {
+  group('getCurrentUserId', () {
+    test('deve retornar o id do usuário se ele estiver autenticado.', () async {
+      // arrange
+      when(() => authMock.currentUser).thenAnswer((_) => null);
+      when(authMock.authStateChanges)
+          .thenAnswer((_) => Stream<firebase.User?>.fromIterable([userMock]));
+      // act
+      final result = await firebaseAuthRemoteRepo.getCurrentUserId();
+      // assert
+      expect(result, isA<String>());
+    });
+
+    test('deve retornar null quando o usuário não estiver autenticado.',
+        () async {
+      // arrange
+      when(() => authMock.currentUser).thenAnswer((_) => null);
+      when(authMock.authStateChanges)
+          .thenAnswer((_) => Stream<firebase.User?>.fromIterable([null]));
+      // act
+      final result = await firebaseAuthRemoteRepo.getCurrentUserId();
+      // assert
+      expect(result, isNull);
+    });
+  });
+
+  group('currentUserIdChanged', () {
+    test('deve retornar o id do usuário quando efetuar o login.', () {
       // arrange
       when(authMock.authStateChanges)
           .thenAnswer((_) => Stream<firebase.User?>.fromIterable([userMock]));
       // act
-      final stream = firebaseAuthRemoteRepo.getCurrentUser();
+      final stream = firebaseAuthRemoteRepo.currentUserIdChanged();
       // assert
-      expect(stream, emits(tUser));
+      expect(stream, emits(isA<String>()));
     });
 
     test('deve retornar null quando o usuário efetuar o logout.', () {
@@ -306,7 +326,7 @@ void main() {
       when(authMock.authStateChanges)
           .thenAnswer((_) => Stream<firebase.User?>.fromIterable([null]));
       // act
-      final stream = firebaseAuthRemoteRepo.getCurrentUser();
+      final stream = firebaseAuthRemoteRepo.currentUserIdChanged();
       // assert
       expect(stream, emits(null));
     });
