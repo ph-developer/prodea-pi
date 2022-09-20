@@ -10,7 +10,11 @@ class SendPasswordResetEmail {
 
   Future<bool> call(String email) async {
     try {
-      // TODO validate fields
+      if (email.isEmpty) {
+        _notificationService
+            .notifyError('O campo email não pode ficar em branco.');
+        return false;
+      }
 
       final result = await _authRepo.sendPasswordResetEmail(email);
 

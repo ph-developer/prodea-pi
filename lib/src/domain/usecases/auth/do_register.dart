@@ -14,11 +14,19 @@ class DoRegister {
 
   Future<User?> call(String email, String password, User userData) async {
     try {
-      // TODO validate fields
+      if (email.isEmpty) {
+        _notificationService
+            .notifyError('O campo email não pode ficar em branco.');
+        return null;
+      }
 
-      final loggedUser = await _authRepo.register(email, password);
+      if (password.isEmpty) {
+        _notificationService
+            .notifyError('O campo senha não pode ficar em branco.');
+        return null;
+      }
 
-      final userId = loggedUser;
+      final userId = await _authRepo.register(email, password);
 
       var newUserData = userData.copyWith(
         id: userId,

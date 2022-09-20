@@ -290,7 +290,7 @@ void main() {
       // arrange
       when(() => authMock.currentUser).thenAnswer((_) => null);
       when(authMock.authStateChanges)
-          .thenAnswer((_) => Stream<firebase.User?>.fromIterable([userMock]));
+          .thenAnswer((_) => Stream.fromIterable([userMock]));
       // act
       final result = await firebaseAuthRemoteRepo.getCurrentUserId();
       // assert
@@ -302,7 +302,7 @@ void main() {
       // arrange
       when(() => authMock.currentUser).thenAnswer((_) => null);
       when(authMock.authStateChanges)
-          .thenAnswer((_) => Stream<firebase.User?>.fromIterable([null]));
+          .thenAnswer((_) => Stream.fromIterable([null]));
       // act
       final result = await firebaseAuthRemoteRepo.getCurrentUserId();
       // assert
@@ -314,7 +314,7 @@ void main() {
     test('deve retornar o id do usuário quando efetuar o login.', () {
       // arrange
       when(authMock.authStateChanges)
-          .thenAnswer((_) => Stream<firebase.User?>.fromIterable([userMock]));
+          .thenAnswer((_) => Stream.fromIterable([userMock]));
       // act
       final stream = firebaseAuthRemoteRepo.currentUserIdChanged();
       // assert
@@ -324,7 +324,7 @@ void main() {
     test('deve retornar null quando o usuário efetuar o logout.', () {
       // arrange
       when(authMock.authStateChanges)
-          .thenAnswer((_) => Stream<firebase.User?>.fromIterable([null]));
+          .thenAnswer((_) => Stream.fromIterable([null]));
       // act
       final stream = firebaseAuthRemoteRepo.currentUserIdChanged();
       // assert

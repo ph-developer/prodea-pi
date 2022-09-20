@@ -18,6 +18,8 @@ class DoLogin {
         return null;
       }
 
+      // todo is a valid email
+
       final userId = await _authRepo.login(email, password);
       final user = await _userRepo.getById(userId);
 
