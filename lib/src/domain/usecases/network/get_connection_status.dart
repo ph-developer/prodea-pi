@@ -8,9 +8,9 @@ class GetConnectionStatus {
 
   GetConnectionStatus(this._networkService, this._notificationService);
 
-  Stream<bool> call() async* {
+  Stream<bool> call([int checkInterval = 15]) async* {
     yield await _checkConnection();
-    yield* Stream.periodic(const Duration(seconds: 15))
+    yield* Stream.periodic(Duration(seconds: checkInterval))
         .asyncMap((_) async => await _checkConnection());
   }
 

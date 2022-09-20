@@ -71,8 +71,8 @@ void main() {
   });
 
   test(
-      'deve emitir null quando o usuário efetuar o login e ocorrer algum erro.',
-      () {
+      'deve emitir null e notificar quando o usuário efetuar o login e ocorrer algum erro.',
+      () async {
     // arrange
     when(authRepoMock.currentUserIdChanged)
         .thenAnswer((_) => Stream.fromIterable(['id']));
@@ -81,5 +81,7 @@ void main() {
     final stream = usecase();
     // assert
     expect(stream, emits(null));
+    await untilCalled(() => notificationServiceMock.notifyError(any()));
+    verify(() => notificationServiceMock.notifyError(any())).called(1);
   });
 }
