@@ -36,6 +36,5 @@ class Donation extends Equatable {
         expiration,
         cancellation,
         isDelivered,
-        createdAt,
       ];
 }

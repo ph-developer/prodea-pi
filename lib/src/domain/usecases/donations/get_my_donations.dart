@@ -9,7 +9,11 @@ class GetMyDonations {
   GetMyDonations(this._authRepo, this._donationRepo);
 
   Stream<List<Donation>> call() {
-    return _donationRepo.getDonations().asyncMap(_filterList).map(_orderList);
+    return _donationRepo
+        .getDonations()
+        .asBroadcastStream()
+        .asyncMap(_filterList)
+        .map(_orderList);
   }
 
   Future<List<Donation>> _filterList(List<Donation> list) async {
