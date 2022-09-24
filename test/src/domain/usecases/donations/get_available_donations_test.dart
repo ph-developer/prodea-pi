@@ -49,16 +49,18 @@ void main() {
   });
 
   test(
-      'deve emitir uma lista de doações que não estão canceladas, expiradas ou com beneficiário definido.',
-      () {
-    // arrange
-    when(donationRepoMock.getDonations).thenAnswer((_) => Stream.fromIterable([
-          [tDonationOk, tDonationWrong1, tDonationWrong2, tDonationWrong3]
-        ]));
-    // act
-    final stream = usecase();
-    // assert
-    expect(stream, emits(isA<List<Donation>>()));
-    expect(stream, emits([tDonationOk]));
-  });
+    'deve emitir uma lista de doações que não estão canceladas, expiradas ou com beneficiário definido.',
+    () {
+      // arrange
+      when(donationRepoMock.getDonations)
+          .thenAnswer((_) => Stream.fromIterable([
+                [tDonationOk, tDonationWrong1, tDonationWrong2, tDonationWrong3]
+              ]));
+      // act
+      final stream = usecase();
+      // assert
+      expect(stream, emits(isA<List<Donation>>()));
+      expect(stream, emits([tDonationOk]));
+    },
+  );
 }

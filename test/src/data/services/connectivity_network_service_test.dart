@@ -16,36 +16,42 @@ void main() {
   });
 
   group('isConnected', () {
-    test('deve retornar true quando tiver conexão com a internet.', () async {
-      // arrange
-      when(() => connectivityMock.checkConnectivity())
-          .thenAnswer((_) async => ConnectivityResult.wifi);
-      // act
-      final result = await connectivityNetworkService.isConnected();
-      // assert
-      expect(result, true);
-    });
-
-    test('deve retornar false quando tiver não conexão com a internet.',
-        () async {
-      // arrange
-      when(() => connectivityMock.checkConnectivity())
-          .thenAnswer((_) async => ConnectivityResult.none);
-      // act
-      final result = await connectivityNetworkService.isConnected();
-      // assert
-      expect(result, false);
-    });
+    test(
+      'deve retornar true quando tiver conexão com a internet.',
+      () async {
+        // arrange
+        when(() => connectivityMock.checkConnectivity())
+            .thenAnswer((_) async => ConnectivityResult.wifi);
+        // act
+        final result = await connectivityNetworkService.isConnected();
+        // assert
+        expect(result, true);
+      },
+    );
 
     test(
-        'deve disparar uma InternetConnectionFailure quando ocorrer algum erro.',
-        () {
-      // arrange
-      when(() => connectivityMock.checkConnectivity()).thenThrow(Exception());
-      // act
-      final result = connectivityNetworkService.isConnected();
-      // assert
-      expect(result, throwsA(isA<InternetConnectionFailure>()));
-    });
+      'deve retornar false quando tiver não conexão com a internet.',
+      () async {
+        // arrange
+        when(() => connectivityMock.checkConnectivity())
+            .thenAnswer((_) async => ConnectivityResult.none);
+        // act
+        final result = await connectivityNetworkService.isConnected();
+        // assert
+        expect(result, false);
+      },
+    );
+
+    test(
+      'deve disparar uma InternetConnectionFailure quando ocorrer algum erro.',
+      () {
+        // arrange
+        when(() => connectivityMock.checkConnectivity()).thenThrow(Exception());
+        // act
+        final result = connectivityNetworkService.isConnected();
+        // assert
+        expect(result, throwsA(isA<InternetConnectionFailure>()));
+      },
+    );
   });
 }

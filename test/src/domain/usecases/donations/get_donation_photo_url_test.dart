@@ -35,31 +35,40 @@ void main() {
     usecase = GetDonationPhotoUrl(fileRepoMock, notificationServiceMock);
   });
 
-  test('deve retornar a url da imagem se a doação tiver foto.', () async {
-    // arrange
-    when(() => fileRepoMock.getFileDownloadUrl('photoUrl'))
-        .thenAnswer((_) async => 'url');
-    // act
-    final result = await usecase(tDonationWithPhoto);
-    // assert
-    expect(result, 'url');
-  });
+  test(
+    'deve retornar a url da imagem se a doação tiver foto.',
+    () async {
+      // arrange
+      when(() => fileRepoMock.getFileDownloadUrl('photoUrl'))
+          .thenAnswer((_) async => 'url');
+      // act
+      final result = await usecase(tDonationWithPhoto);
+      // assert
+      expect(result, 'url');
+    },
+  );
 
-  test('deve retornar null se a doação não tiver foto.', () async {
-    // act
-    final result = await usecase(tDonationWithoutPhoto);
-    // assert
-    expect(result, null);
-  });
+  test(
+    'deve retornar null se a doação não tiver foto.',
+    () async {
+      // act
+      final result = await usecase(tDonationWithoutPhoto);
+      // assert
+      expect(result, null);
+    },
+  );
 
-  test('deve retornar null e notificar quando algum erro ocorrer.', () async {
-    // arrange
-    when(() => fileRepoMock.getFileDownloadUrl('photoUrl'))
-        .thenThrow(GetFileDownloadUrlFailure());
-    // act
-    final result = await usecase(tDonationWithPhoto);
-    // assert
-    expect(result, null);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+  test(
+    'deve retornar null e notificar quando algum erro ocorrer.',
+    () async {
+      // arrange
+      when(() => fileRepoMock.getFileDownloadUrl('photoUrl'))
+          .thenThrow(GetFileDownloadUrlFailure());
+      // act
+      final result = await usecase(tDonationWithPhoto);
+      // assert
+      expect(result, null);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 }

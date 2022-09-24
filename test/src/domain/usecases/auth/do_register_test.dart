@@ -45,47 +45,54 @@ void main() {
     registerFallbackValue(tUser);
   });
 
-  test('deve retornar um User quando o registro for bem sucedido.', () async {
-    // arrange
-    when(() => authRepoMock.register(any(), any()))
-        .thenAnswer((_) async => 'id');
-    when(() => userRepoMock.create(any())).thenAnswer((_) async => tUser);
-    // act
-    final result = await usecase('test@test.dev', 'test', tUser);
-    // assert
-    expect(result, tUser);
-    verifyNever(() => notificationServiceMock.notifyError(any()));
-  });
+  test(
+    'deve retornar um User quando o registro for bem sucedido.',
+    () async {
+      // arrange
+      when(() => authRepoMock.register(any(), any()))
+          .thenAnswer((_) async => 'id');
+      when(() => userRepoMock.create(any())).thenAnswer((_) async => tUser);
+      // act
+      final result = await usecase('test@test.dev', 'test', tUser);
+      // assert
+      expect(result, tUser);
+      verifyNever(() => notificationServiceMock.notifyError(any()));
+    },
+  );
 
   test(
-      'deve retornar null e notificar um erro quando o email estiver em branco.',
-      () async {
-    // act
-    final result = await usecase('', 'test', tUser);
-    // assert
-    expect(result, null);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+    'deve retornar null e notificar um erro quando o email estiver em branco.',
+    () async {
+      // act
+      final result = await usecase('', 'test', tUser);
+      // assert
+      expect(result, null);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 
   test(
-      'deve retornar null e notificar um erro quando a senha estiver em branco.',
-      () async {
-    // act
-    final result = await usecase('test@test.dev', '', tUser);
-    // assert
-    expect(result, null);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+    'deve retornar null e notificar um erro quando a senha estiver em branco.',
+    () async {
+      // act
+      final result = await usecase('test@test.dev', '', tUser);
+      // assert
+      expect(result, null);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 
-  test('deve retornar null e notificar um erro quando ocorrer algum erro.',
-      () async {
-    // arrange
-    when(() => authRepoMock.register(any(), any()))
-        .thenThrow(RegisterFailure());
-    // act
-    final result = await usecase('test@test.dev', 'test', tUser);
-    // assert
-    expect(result, null);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+  test(
+    'deve retornar null e notificar um erro quando ocorrer algum erro.',
+    () async {
+      // arrange
+      when(() => authRepoMock.register(any(), any()))
+          .thenThrow(RegisterFailure());
+      // act
+      final result = await usecase('test@test.dev', 'test', tUser);
+      // assert
+      expect(result, null);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 }

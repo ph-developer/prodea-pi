@@ -18,15 +18,18 @@ void main() {
     usecase = GetCities(cityRepoMock);
   });
 
-  test('deve emitir uma lista de cidades ordenada por nome.', () {
-    // arrange
-    when(cityRepoMock.getCities).thenAnswer((_) => Stream.fromIterable([
-          [tCity1, tCity2]
-        ]));
-    // act
-    final stream = usecase();
-    // assert
-    expect(stream, emits(isA<List<City>>()));
-    expect(stream, emits([tCity2, tCity1]));
-  });
+  test(
+    'deve emitir uma lista de cidades ordenada por nome.',
+    () {
+      // arrange
+      when(cityRepoMock.getCities).thenAnswer((_) => Stream.fromIterable([
+            [tCity1, tCity2]
+          ]));
+      // act
+      final stream = usecase();
+      // assert
+      expect(stream, emits(isA<List<City>>()));
+      expect(stream, emits([tCity2, tCity1]));
+    },
+  );
 }

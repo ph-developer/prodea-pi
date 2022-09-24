@@ -21,40 +21,44 @@ void main() {
   });
 
   test(
-      'deve retornar true e notificar quando o email de redefinição de senha for enviado.',
-      () async {
-    // arrange
-    when(() => authRepoMock.sendPasswordResetEmail(any()))
-        .thenAnswer((_) async => true);
-    // act
-    final result = await usecase('test@test.dev');
-    // assert
-    expect(result, true);
-    verify(() => notificationServiceMock.notifySuccess(any())).called(1);
-    verifyNever(() => notificationServiceMock.notifyError(any()));
-  });
+    'deve retornar true e notificar quando o email de redefinição de senha for enviado.',
+    () async {
+      // arrange
+      when(() => authRepoMock.sendPasswordResetEmail(any()))
+          .thenAnswer((_) async => true);
+      // act
+      final result = await usecase('test@test.dev');
+      // assert
+      expect(result, true);
+      verify(() => notificationServiceMock.notifySuccess(any())).called(1);
+      verifyNever(() => notificationServiceMock.notifyError(any()));
+    },
+  );
 
   test(
-      'deve retornar false e notificar um erro quando o email estiver em branco.',
-      () async {
-    // act
-    final result = await usecase('');
-    // assert
-    expect(result, false);
-    verifyNever(() => notificationServiceMock.notifySuccess(any()));
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+    'deve retornar false e notificar um erro quando o email estiver em branco.',
+    () async {
+      // act
+      final result = await usecase('');
+      // assert
+      expect(result, false);
+      verifyNever(() => notificationServiceMock.notifySuccess(any()));
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 
-  test('deve retornar false e notificar um erro quando ocorrer algum erro.',
-      () async {
-    // arrange
-    when(() => authRepoMock.sendPasswordResetEmail(any()))
-        .thenThrow(PasswordResetFailure());
-    // act
-    final result = await usecase('test@test.dev');
-    // assert
-    expect(result, false);
-    verifyNever(() => notificationServiceMock.notifySuccess(any()));
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+  test(
+    'deve retornar false e notificar um erro quando ocorrer algum erro.',
+    () async {
+      // arrange
+      when(() => authRepoMock.sendPasswordResetEmail(any()))
+          .thenThrow(PasswordResetFailure());
+      // act
+      final result = await usecase('test@test.dev');
+      // assert
+      expect(result, false);
+      verifyNever(() => notificationServiceMock.notifySuccess(any()));
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 }

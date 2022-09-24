@@ -11,7 +11,7 @@ import 'package:prodea/src/domain/usecases/donations/set_donation_as_requested.d
 import 'package:prodea/src/domain/usecases/donations/set_donation_as_unrequested.dart';
 import 'package:prodea/src/presentation/stores/donations_store.dart';
 
-import '../mobx_helpers.dart';
+import '../../../test_helpers/mobx.dart';
 
 class MockGetRequestedDonations extends Mock implements GetRequestedDonations {}
 
@@ -80,101 +80,124 @@ void main() {
     );
   });
 
-  test('deve inicializar a store, populando as listas de doações.', () async {
-    // arrange
-    when(getRequestedDonationsMock)
-        .thenAnswer((_) => Stream.fromIterable([tDonationList]));
-    when(getAvailableDonationsMock)
-        .thenAnswer((_) => Stream.fromIterable([tDonationList]));
-    when(getMyDonationsMock)
-        .thenAnswer((_) => Stream.fromIterable([tDonationList]));
-    final requestedDonationsChanged = MockCallable<List<Donation>>();
-    final availableDonationsChanged = MockCallable<List<Donation>>();
-    final myDonationsChanged = MockCallable<List<Donation>>();
-    whenReaction((_) => store.requestedDonations, requestedDonationsChanged);
-    whenReaction((_) => store.availableDonations, availableDonationsChanged);
-    whenReaction((_) => store.myDonations, myDonationsChanged);
-    // assert
-    expect(store.requestedDonations, equals([]));
-    expect(store.availableDonations, equals([]));
-    expect(store.myDonations, equals([]));
-    // act
-    store.init();
-    await untilCalled(() => requestedDonationsChanged(tDonationList));
-    await untilCalled(() => availableDonationsChanged(tDonationList));
-    await untilCalled(() => myDonationsChanged(tDonationList));
-    // assert
-    expect(store.requestedDonations, tDonationList);
-    expect(store.availableDonations, tDonationList);
-    expect(store.myDonations, tDonationList);
-  });
+  test(
+    'deve inicializar a store, populando as listas de doações.',
+    () async {
+      // arrange
+      when(getRequestedDonationsMock)
+          .thenAnswer((_) => Stream.fromIterable([tDonationList]));
+      when(getAvailableDonationsMock)
+          .thenAnswer((_) => Stream.fromIterable([tDonationList]));
+      when(getMyDonationsMock)
+          .thenAnswer((_) => Stream.fromIterable([tDonationList]));
+      final requestedDonationsChanged = MockCallable<List<Donation>>();
+      final availableDonationsChanged = MockCallable<List<Donation>>();
+      final myDonationsChanged = MockCallable<List<Donation>>();
+      whenReaction((_) => store.requestedDonations, requestedDonationsChanged);
+      whenReaction((_) => store.availableDonations, availableDonationsChanged);
+      whenReaction((_) => store.myDonations, myDonationsChanged);
+      // assert
+      expect(store.requestedDonations, equals([]));
+      expect(store.availableDonations, equals([]));
+      expect(store.myDonations, equals([]));
+      // act
+      store.init();
+      await untilCalled(() => requestedDonationsChanged(tDonationList));
+      await untilCalled(() => availableDonationsChanged(tDonationList));
+      await untilCalled(() => myDonationsChanged(tDonationList));
+      // assert
+      expect(store.requestedDonations, tDonationList);
+      expect(store.availableDonations, tDonationList);
+      expect(store.myDonations, tDonationList);
+    },
+  );
 
-  test('deve retornar o url da foto da doação caso ela tenha.', () async {
-    // arrange
-    when(() => getDonationPhotoUrlMock(tDonationWithPhoto))
-        .thenAnswer((_) async => 'photo');
-    // act
-    final result = await store.getDonationPhotoURL(tDonationWithPhoto);
-    // assert
-    expect(result, 'photo');
-  });
+  test(
+    'deve retornar o url da foto da doação caso ela tenha.',
+    () async {
+      // arrange
+      when(() => getDonationPhotoUrlMock(tDonationWithPhoto))
+          .thenAnswer((_) async => 'photo');
+      // act
+      final result = await store.getDonationPhotoURL(tDonationWithPhoto);
+      // assert
+      expect(result, 'photo');
+    },
+  );
 
-  test('deve retornar null caso a doação não tenha foto.', () async {
-    // arrange
-    when(() => getDonationPhotoUrlMock(tDonationWithoutPhoto))
-        .thenAnswer((_) async => null);
-    // act
-    final result = await store.getDonationPhotoURL(tDonationWithoutPhoto);
-    // assert
-    expect(result, null);
-  });
+  test(
+    'deve retornar null caso a doação não tenha foto.',
+    () async {
+      // arrange
+      when(() => getDonationPhotoUrlMock(tDonationWithoutPhoto))
+          .thenAnswer((_) async => null);
+      // act
+      final result = await store.getDonationPhotoURL(tDonationWithoutPhoto);
+      // assert
+      expect(result, null);
+    },
+  );
 
-  test('deve chamar a usecase para marcar a doação como entregue.', () async {
-    // arrange
-    when(() => setDonationAsDeliveredMock(tDonationWithPhoto))
-        .thenAnswer((_) async => tDonationWithPhoto);
-    // act
-    await store.setDonationAsDelivered(tDonationWithPhoto);
-    // assert
-    verify(() => setDonationAsDeliveredMock(tDonationWithPhoto)).called(1);
-  });
+  test(
+    'deve chamar a usecase para marcar a doação como entregue.',
+    () async {
+      // arrange
+      when(() => setDonationAsDeliveredMock(tDonationWithPhoto))
+          .thenAnswer((_) async => tDonationWithPhoto);
+      // act
+      await store.setDonationAsDelivered(tDonationWithPhoto);
+      // assert
+      verify(() => setDonationAsDeliveredMock(tDonationWithPhoto)).called(1);
+    },
+  );
 
-  test('deve chamar a usecase para marcar a doação como solicitada.', () async {
-    // arrange
-    when(() => setDonationAsRequestedMock(tDonationWithPhoto))
-        .thenAnswer((_) async => tDonationWithPhoto);
-    // act
-    await store.setDonationAsRequested(tDonationWithPhoto);
-    // assert
-    verify(() => setDonationAsRequestedMock(tDonationWithPhoto)).called(1);
-  });
+  test(
+    'deve chamar a usecase para marcar a doação como solicitada.',
+    () async {
+      // arrange
+      when(() => setDonationAsRequestedMock(tDonationWithPhoto))
+          .thenAnswer((_) async => tDonationWithPhoto);
+      // act
+      await store.setDonationAsRequested(tDonationWithPhoto);
+      // assert
+      verify(() => setDonationAsRequestedMock(tDonationWithPhoto)).called(1);
+    },
+  );
 
-  test('deve chamar a usecase para marcar a doação como não solicitada.',
-      () async {
-    // arrange
-    when(() => setDonationAsUnrequestedMock(tDonationWithPhoto))
-        .thenAnswer((_) async => tDonationWithPhoto);
-    // act
-    await store.setDonationAsUnrequested(tDonationWithPhoto);
-    // assert
-    verify(() => setDonationAsUnrequestedMock(tDonationWithPhoto)).called(1);
-  });
+  test(
+    'deve chamar a usecase para marcar a doação como não solicitada.',
+    () async {
+      // arrange
+      when(() => setDonationAsUnrequestedMock(tDonationWithPhoto))
+          .thenAnswer((_) async => tDonationWithPhoto);
+      // act
+      await store.setDonationAsUnrequested(tDonationWithPhoto);
+      // assert
+      verify(() => setDonationAsUnrequestedMock(tDonationWithPhoto)).called(1);
+    },
+  );
 
-  test('deve chamar a usecase para marcar a doação como cancelada.', () async {
-    // arrange
-    when(() => setDonationAsCanceledMock(tDonationWithPhoto, 'reason'))
-        .thenAnswer((_) async => tDonationWithPhoto);
-    // act
-    await store.setDonationAsCanceled(tDonationWithPhoto, 'reason');
-    // assert
-    verify(() => setDonationAsCanceledMock(tDonationWithPhoto, 'reason'))
-        .called(1);
-  });
+  test(
+    'deve chamar a usecase para marcar a doação como cancelada.',
+    () async {
+      // arrange
+      when(() => setDonationAsCanceledMock(tDonationWithPhoto, 'reason'))
+          .thenAnswer((_) async => tDonationWithPhoto);
+      // act
+      await store.setDonationAsCanceled(tDonationWithPhoto, 'reason');
+      // assert
+      verify(() => setDonationAsCanceledMock(tDonationWithPhoto, 'reason'))
+          .called(1);
+    },
+  );
 
-  test('deve retornar uma string.', () {
-    // act
-    final result = store.toString();
-    // assert
-    expect(result, isA<String>());
-  });
+  test(
+    'deve retornar uma string.',
+    () {
+      // act
+      final result = store.toString();
+      // assert
+      expect(result, isA<String>());
+    },
+  );
 }

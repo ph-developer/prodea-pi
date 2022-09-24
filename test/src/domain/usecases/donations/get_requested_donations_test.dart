@@ -36,31 +36,37 @@ void main() {
   });
 
   test(
-      'deve emitir uma lista de doações onde o beneficiário é o usuário autenticado.',
-      () {
-    // arrange
-    when(authRepoMock.getCurrentUserId).thenAnswer((_) async => tBeneficiaryId);
-    when(donationRepoMock.getDonations).thenAnswer((_) => Stream.fromIterable([
-          [tDonationOk, tDonationWrong]
-        ]));
-    // act
-    final stream = usecase();
-    // assert
-    expect(stream, emits(isA<List<Donation>>()));
-    expect(stream, emits([tDonationOk]));
-  });
+    'deve emitir uma lista de doações onde o beneficiário é o usuário autenticado.',
+    () {
+      // arrange
+      when(authRepoMock.getCurrentUserId)
+          .thenAnswer((_) async => tBeneficiaryId);
+      when(donationRepoMock.getDonations)
+          .thenAnswer((_) => Stream.fromIterable([
+                [tDonationOk, tDonationWrong]
+              ]));
+      // act
+      final stream = usecase();
+      // assert
+      expect(stream, emits(isA<List<Donation>>()));
+      expect(stream, emits([tDonationOk]));
+    },
+  );
 
-  test('deve emitir uma lista vazia quando o usuário não estiver autenticado.',
-      () {
-    // arrange
-    when(authRepoMock.getCurrentUserId).thenAnswer((_) async => null);
-    when(donationRepoMock.getDonations).thenAnswer((_) => Stream.fromIterable([
-          [tDonationOk, tDonationWrong]
-        ]));
-    // act
-    final stream = usecase();
-    // assert
-    expect(stream, emits(isA<List<Donation>>()));
-    expect(stream, emits([]));
-  });
+  test(
+    'deve emitir uma lista vazia quando o usuário não estiver autenticado.',
+    () {
+      // arrange
+      when(authRepoMock.getCurrentUserId).thenAnswer((_) async => null);
+      when(donationRepoMock.getDonations)
+          .thenAnswer((_) => Stream.fromIterable([
+                [tDonationOk, tDonationWrong]
+              ]));
+      // act
+      final stream = usecase();
+      // assert
+      expect(stream, emits(isA<List<Donation>>()));
+      expect(stream, emits([]));
+    },
+  );
 }

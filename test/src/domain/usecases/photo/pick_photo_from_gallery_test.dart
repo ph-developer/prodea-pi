@@ -29,31 +29,40 @@ void main() {
     tFile = File.fromRawPath(fileBytes.buffer.asUint8List());
   });
 
-  test('deve retornar um File quando uma foto for selecionada.', () async {
-    // arrange
-    when(photoServiceMock.pickFromGallery).thenAnswer((_) async => tFile);
-    // act
-    final result = await usecase();
-    // assert
-    expect(result, tFile);
-  });
+  test(
+    'deve retornar um File quando uma foto for selecionada.',
+    () async {
+      // arrange
+      when(photoServiceMock.pickFromGallery).thenAnswer((_) async => tFile);
+      // act
+      final result = await usecase();
+      // assert
+      expect(result, tFile);
+    },
+  );
 
-  test('deve retornar null quando nenhuma foto for selecionada.', () async {
-    // arrange
-    when(photoServiceMock.pickFromGallery).thenAnswer((_) async => null);
-    // act
-    final result = await usecase();
-    // assert
-    expect(result, null);
-  });
+  test(
+    'deve retornar null quando nenhuma foto for selecionada.',
+    () async {
+      // arrange
+      when(photoServiceMock.pickFromGallery).thenAnswer((_) async => null);
+      // act
+      final result = await usecase();
+      // assert
+      expect(result, null);
+    },
+  );
 
-  test('deve retornar null e notificar quando algum erro ocorrer.', () async {
-    // arrange
-    when(photoServiceMock.pickFromGallery).thenThrow(PhotoPickFailure());
-    // act
-    final result = await usecase();
-    // assert
-    expect(result, null);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+  test(
+    'deve retornar null e notificar quando algum erro ocorrer.',
+    () async {
+      // arrange
+      when(photoServiceMock.pickFromGallery).thenThrow(PhotoPickFailure());
+      // act
+      final result = await usecase();
+      // assert
+      expect(result, null);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 }

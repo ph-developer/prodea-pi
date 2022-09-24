@@ -12,11 +12,14 @@ void main() {
   });
 
   group('getCities', () {
-    test('deve retornar uma lista de cidades.', () async {
-      // act
-      final stream = jsonCityLocalRepo.getCities();
-      // assert
-      expect(stream, emits(isA<List<City>>()));
-    });
+    test(
+      'deve retornar uma lista de cidades.',
+      () async {
+        // act
+        final stream = jsonCityLocalRepo.getCities();
+        // assert
+        expect(stream, emits(isA<List<City>>()));
+      },
+    );
   });
 }

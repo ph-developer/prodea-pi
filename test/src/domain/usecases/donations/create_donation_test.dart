@@ -62,48 +62,56 @@ void main() {
     tFile = File.fromRawPath(fileBytes.buffer.asUint8List());
   });
 
-  test('deve retornar a doação e notificar quando obtiver sucesso.', () async {
-    // arrange
-    when(() => fileRepoMock.uploadFile('donation', tFile))
-        .thenAnswer((_) async => tPhotoUrl);
-    when(authRepoMock.getCurrentUserId).thenAnswer((_) async => tDonorId);
-    when(() => donationRepoMock.create(tFinalDonation))
-        .thenAnswer((_) async => tFinalDonation);
-    // act
-    final result = await usecase(tDonation, tFile);
-    // assert
-    expect(result, isA<Donation>());
-    expect(result, tFinalDonation);
-    verifyNever(() => notificationServiceMock.notifyError(any()));
-    verify(() => notificationServiceMock.notifySuccess(any())).called(1);
-  });
+  test(
+    'deve retornar a doação e notificar quando obtiver sucesso.',
+    () async {
+      // arrange
+      when(() => fileRepoMock.uploadFile('donation', tFile))
+          .thenAnswer((_) async => tPhotoUrl);
+      when(authRepoMock.getCurrentUserId).thenAnswer((_) async => tDonorId);
+      when(() => donationRepoMock.create(tFinalDonation))
+          .thenAnswer((_) async => tFinalDonation);
+      // act
+      final result = await usecase(tDonation, tFile);
+      // assert
+      expect(result, isA<Donation>());
+      expect(result, tFinalDonation);
+      verifyNever(() => notificationServiceMock.notifyError(any()));
+      verify(() => notificationServiceMock.notifySuccess(any())).called(1);
+    },
+  );
 
-  test('deve retornar null e notificar quando o usuário não estiver logado.',
-      () async {
-    // arrange
-    when(() => fileRepoMock.uploadFile('donation', tFile))
-        .thenAnswer((_) async => tPhotoUrl);
-    when(authRepoMock.getCurrentUserId).thenAnswer((_) async => null);
-    // act
-    final result = await usecase(tDonation, tFile);
-    // assert
-    expect(result, null);
-    verifyNever(() => notificationServiceMock.notifySuccess(any()));
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+  test(
+    'deve retornar null e notificar quando o usuário não estiver logado.',
+    () async {
+      // arrange
+      when(() => fileRepoMock.uploadFile('donation', tFile))
+          .thenAnswer((_) async => tPhotoUrl);
+      when(authRepoMock.getCurrentUserId).thenAnswer((_) async => null);
+      // act
+      final result = await usecase(tDonation, tFile);
+      // assert
+      expect(result, null);
+      verifyNever(() => notificationServiceMock.notifySuccess(any()));
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 
-  test('deve retornar null e notificar quando ocerrer algum erro.', () async {
-    // arrange
-    when(() => fileRepoMock.uploadFile('donation', tFile))
-        .thenAnswer((_) async => tPhotoUrl);
-    when(authRepoMock.getCurrentUserId).thenAnswer((_) async => tDonorId);
-    when(() => donationRepoMock.create(tFinalDonation))
-        .thenThrow(CreateDonationFailure());
-    // act
-    final result = await usecase(tDonation, tFile);
-    // assert
-    expect(result, null);
-    verifyNever(() => notificationServiceMock.notifySuccess(any()));
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+  test(
+    'deve retornar null e notificar quando ocerrer algum erro.',
+    () async {
+      // arrange
+      when(() => fileRepoMock.uploadFile('donation', tFile))
+          .thenAnswer((_) async => tPhotoUrl);
+      when(authRepoMock.getCurrentUserId).thenAnswer((_) async => tDonorId);
+      when(() => donationRepoMock.create(tFinalDonation))
+          .thenThrow(CreateDonationFailure());
+      // act
+      final result = await usecase(tDonation, tFile);
+      // assert
+      expect(result, null);
+      verifyNever(() => notificationServiceMock.notifySuccess(any()));
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 }

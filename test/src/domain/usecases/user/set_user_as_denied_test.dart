@@ -54,25 +54,32 @@ void main() {
     usecase = SetUserAsDenied(userRepoMock, notificationServiceMock);
   });
 
-  test('deve retornar o usuário negado quando obtiver sucesso.', () async {
-    // arrange
-    when(() => userRepoMock.update(tDeniedUser))
-        .thenAnswer((_) async => tDeniedUser);
-    // act
-    final result = await usecase(tUser);
-    // assert
-    expect(result, isA<User>());
-    expect(result, tDeniedUser);
-    verifyNever(() => notificationServiceMock.notifyError(any()));
-  });
+  test(
+    'deve retornar o usuário negado quando obtiver sucesso.',
+    () async {
+      // arrange
+      when(() => userRepoMock.update(tDeniedUser))
+          .thenAnswer((_) async => tDeniedUser);
+      // act
+      final result = await usecase(tUser);
+      // assert
+      expect(result, isA<User>());
+      expect(result, tDeniedUser);
+      verifyNever(() => notificationServiceMock.notifyError(any()));
+    },
+  );
 
-  test('deve retornar null e notificar quando algum erro ocorrer.', () async {
-    // arrange
-    when(() => userRepoMock.update(tDeniedUser)).thenThrow(UpdateUserFailure());
-    // act
-    final result = await usecase(tUser);
-    // assert
-    expect(result, null);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+  test(
+    'deve retornar null e notificar quando algum erro ocorrer.',
+    () async {
+      // arrange
+      when(() => userRepoMock.update(tDeniedUser))
+          .thenThrow(UpdateUserFailure());
+      // act
+      final result = await usecase(tUser);
+      // assert
+      expect(result, null);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 }

@@ -25,68 +25,84 @@ void main() {
   });
 
   group('pickFromCamera', () {
-    test('deve retornar um arquivo quando uma imagem for selecionada.',
-        () async {
-      // arrange
-      when(() => imagePickerMock.pickImage(source: ImageSource.camera))
-          .thenAnswer((_) async => tXFile);
-      // act
-      final result = await imagePickerPhotoService.pickFromCamera();
-      // assert
-      expect(result, isA<File>());
-    });
+    test(
+      'deve retornar um arquivo quando uma imagem for selecionada.',
+      () async {
+        // arrange
+        when(() => imagePickerMock.pickImage(source: ImageSource.camera))
+            .thenAnswer((_) async => tXFile);
+        // act
+        final result = await imagePickerPhotoService.pickFromCamera();
+        // assert
+        expect(result, isA<File>());
+      },
+    );
 
-    test('deve retornar null quando uma imagem não for selecionada.', () async {
-      // arrange
-      when(() => imagePickerMock.pickImage(source: ImageSource.camera))
-          .thenAnswer((_) async => null);
-      // act
-      final result = await imagePickerPhotoService.pickFromCamera();
-      // assert
-      expect(result, isNull);
-    });
+    test(
+      'deve retornar null quando uma imagem não for selecionada.',
+      () async {
+        // arrange
+        when(() => imagePickerMock.pickImage(source: ImageSource.camera))
+            .thenAnswer((_) async => null);
+        // act
+        final result = await imagePickerPhotoService.pickFromCamera();
+        // assert
+        expect(result, isNull);
+      },
+    );
 
-    test('deve disparar uma PhotoPickFailure quando ocorrer algum erro.', () {
-      // arrange
-      when(() => imagePickerMock.pickImage(source: ImageSource.camera))
-          .thenThrow(Exception());
-      // act
-      final result = imagePickerPhotoService.pickFromCamera();
-      // assert
-      expect(result, throwsA(isA<PhotoPickFailure>()));
-    });
+    test(
+      'deve disparar uma PhotoPickFailure quando ocorrer algum erro.',
+      () {
+        // arrange
+        when(() => imagePickerMock.pickImage(source: ImageSource.camera))
+            .thenThrow(Exception());
+        // act
+        final result = imagePickerPhotoService.pickFromCamera();
+        // assert
+        expect(result, throwsA(isA<PhotoPickFailure>()));
+      },
+    );
   });
 
   group('pickFromGallery', () {
-    test('deve retornar um arquivo quando uma imagem for selecionada.',
-        () async {
-      // arrange
-      when(() => imagePickerMock.pickImage(source: ImageSource.gallery))
-          .thenAnswer((_) async => tXFile);
-      // act
-      final result = await imagePickerPhotoService.pickFromGallery();
-      // assert
-      expect(result, isA<File>());
-    });
+    test(
+      'deve retornar um arquivo quando uma imagem for selecionada.',
+      () async {
+        // arrange
+        when(() => imagePickerMock.pickImage(source: ImageSource.gallery))
+            .thenAnswer((_) async => tXFile);
+        // act
+        final result = await imagePickerPhotoService.pickFromGallery();
+        // assert
+        expect(result, isA<File>());
+      },
+    );
 
-    test('deve retornar null quando uma imagem não for selecionada.', () async {
-      // arrange
-      when(() => imagePickerMock.pickImage(source: ImageSource.gallery))
-          .thenAnswer((_) async => null);
-      // act
-      final result = await imagePickerPhotoService.pickFromGallery();
-      // assert
-      expect(result, isNull);
-    });
+    test(
+      'deve retornar null quando uma imagem não for selecionada.',
+      () async {
+        // arrange
+        when(() => imagePickerMock.pickImage(source: ImageSource.gallery))
+            .thenAnswer((_) async => null);
+        // act
+        final result = await imagePickerPhotoService.pickFromGallery();
+        // assert
+        expect(result, isNull);
+      },
+    );
 
-    test('deve disparar uma PhotoPickFailure quando ocorrer algum erro.', () {
-      // arrange
-      when(() => imagePickerMock.pickImage(source: ImageSource.gallery))
-          .thenThrow(Exception());
-      // act
-      final result = imagePickerPhotoService.pickFromGallery();
-      // assert
-      expect(result, throwsA(isA<PhotoPickFailure>()));
-    });
+    test(
+      'deve disparar uma PhotoPickFailure quando ocorrer algum erro.',
+      () {
+        // arrange
+        when(() => imagePickerMock.pickImage(source: ImageSource.gallery))
+            .thenThrow(Exception());
+        // act
+        final result = imagePickerPhotoService.pickFromGallery();
+        // assert
+        expect(result, throwsA(isA<PhotoPickFailure>()));
+      },
+    );
   });
 }

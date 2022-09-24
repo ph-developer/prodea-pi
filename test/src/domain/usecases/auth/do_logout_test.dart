@@ -20,24 +20,29 @@ void main() {
     usecase = DoLogout(authRepoMock, notificationServiceMock);
   });
 
-  test('deve executar sem erros quando o logout for bem sucedido.', () async {
-    // arrange
-    when(() => authRepoMock.logout()).thenAnswer((_) async => true);
-    // act
-    final result = await usecase();
-    // assert
-    expect(result, true);
-    verifyNever(() => notificationServiceMock.notifyError(any()));
-  });
+  test(
+    'deve executar sem erros quando o logout for bem sucedido.',
+    () async {
+      // arrange
+      when(() => authRepoMock.logout()).thenAnswer((_) async => true);
+      // act
+      final result = await usecase();
+      // assert
+      expect(result, true);
+      verifyNever(() => notificationServiceMock.notifyError(any()));
+    },
+  );
 
-  test('deve retornar false e notificar um erro quando ocorrer algum erro.',
-      () async {
-    // arrange
-    when(() => authRepoMock.logout()).thenThrow(LogoutFailure());
-    // act
-    final result = await usecase();
-    // assert
-    expect(result, false);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+  test(
+    'deve retornar false e notificar um erro quando ocorrer algum erro.',
+    () async {
+      // arrange
+      when(() => authRepoMock.logout()).thenThrow(LogoutFailure());
+      // act
+      final result = await usecase();
+      // assert
+      expect(result, false);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 }

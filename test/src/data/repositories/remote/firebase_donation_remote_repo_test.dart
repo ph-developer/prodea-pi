@@ -45,59 +45,72 @@ void main() {
   });
 
   group('create', () {
-    test('deve retornar uma Donation quando obtiver sucesso na criação.',
-        () async {
-      // act
-      final result = await firebaseDonationRemoteRepoWithFake.create(tDonation);
-      // assert
-      expect(result, isA<Donation>());
-      expect(result.id, isA<String>());
-      expect(result.description, tDonation.description);
-      expect(result.createdAt, tDonation.createdAt);
-    });
+    test(
+      'deve retornar uma Donation quando obtiver sucesso na criação.',
+      () async {
+        // act
+        final result =
+            await firebaseDonationRemoteRepoWithFake.create(tDonation);
+        // assert
+        expect(result, isA<Donation>());
+        expect(result.id, isA<String>());
+        expect(result.description, tDonation.description);
+        expect(result.createdAt, tDonation.createdAt);
+      },
+    );
 
-    test('deve disparar uma CreateDonationFailure quando ocorrer algum erro.',
-        () {
-      // arrange
-      when(() => firestoreMock.collection(any())).thenThrow(Exception());
-      // act
-      final result = firebaseDonationRemoteRepoWithMock.create(tDonation);
-      // assert
-      expect(result, throwsA(isA<CreateDonationFailure>()));
-    });
+    test(
+      'deve disparar uma CreateDonationFailure quando ocorrer algum erro.',
+      () {
+        // arrange
+        when(() => firestoreMock.collection(any())).thenThrow(Exception());
+        // act
+        final result = firebaseDonationRemoteRepoWithMock.create(tDonation);
+        // assert
+        expect(result, throwsA(isA<CreateDonationFailure>()));
+      },
+    );
   });
 
   group('update', () {
-    test('deve retornar uma Donation quando obtiver sucesso na alteração.',
-        () async {
-      // act
-      final result = await firebaseDonationRemoteRepoWithFake.update(tDonation);
-      // assert
-      expect(result, isA<Donation>());
-      expect(result.id, tDonation.id);
-      expect(result.description, tDonation.description);
-      expect(result.createdAt, tDonation.createdAt);
-    });
+    test(
+      'deve retornar uma Donation quando obtiver sucesso na alteração.',
+      () async {
+        // act
+        final result =
+            await firebaseDonationRemoteRepoWithFake.update(tDonation);
+        // assert
+        expect(result, isA<Donation>());
+        expect(result.id, tDonation.id);
+        expect(result.description, tDonation.description);
+        expect(result.createdAt, tDonation.createdAt);
+      },
+    );
 
-    test('deve disparar uma UpdateDonationFailure quando ocorrer algum erro.',
-        () {
-      // arrange
-      when(() => firestoreMock.collection(any())).thenThrow(Exception());
-      // act
-      final result = firebaseDonationRemoteRepoWithMock.update(tDonation);
-      // assert
-      expect(result, throwsA(isA<UpdateDonationFailure>()));
-    });
+    test(
+      'deve disparar uma UpdateDonationFailure quando ocorrer algum erro.',
+      () {
+        // arrange
+        when(() => firestoreMock.collection(any())).thenThrow(Exception());
+        // act
+        final result = firebaseDonationRemoteRepoWithMock.update(tDonation);
+        // assert
+        expect(result, throwsA(isA<UpdateDonationFailure>()));
+      },
+    );
   });
 
   group('getDonations', () {
-    test('deve retornar uma lista de doações.', () async {
-      // arrange
-      firestoreFake.collection('donation').add(tDonationMap);
-      // act
-      final stream = firebaseDonationRemoteRepoWithFake.getDonations();
-      // assert
-      expect(stream, emits(isA<List<Donation>>()));
-    });
+    test(
+      'deve retornar uma lista de doações.',
+      () async {
+        // arrange
+        firestoreFake.collection('donation').add(tDonationMap);
+        // act
+        final stream = firebaseDonationRemoteRepoWithFake.getDonations();
+        // assert
+        expect(stream, emits(isA<List<Donation>>()));
+      },
+    );
   });
 }

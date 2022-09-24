@@ -33,43 +33,53 @@ void main() {
   });
 
   group('uploadFile', () {
-    test('deve retornar o caminho do arquivo carregado.', () async {
-      // act
-      final result =
-          await firebaseFileRemoteRepoWithFake.uploadFile('test', tFile);
-      // assert
-      expect(result, isA<String>());
-    });
+    test(
+      'deve retornar o caminho do arquivo carregado.',
+      () async {
+        // act
+        final result =
+            await firebaseFileRemoteRepoWithFake.uploadFile('test', tFile);
+        // assert
+        expect(result, isA<String>());
+      },
+    );
 
-    test('deve disparar uma UploadFileFailure quando ocorrer algum erro.', () {
-      // arrange
-      when(() => storageMock.ref(any())).thenThrow(Exception());
-      // act
-      final result = firebaseFileRemoteRepoWithMock.uploadFile('test', tFile);
-      // assert
-      expect(result, throwsA(isA<UploadFileFailure>()));
-    });
+    test(
+      'deve disparar uma UploadFileFailure quando ocorrer algum erro.',
+      () {
+        // arrange
+        when(() => storageMock.ref(any())).thenThrow(Exception());
+        // act
+        final result = firebaseFileRemoteRepoWithMock.uploadFile('test', tFile);
+        // assert
+        expect(result, throwsA(isA<UploadFileFailure>()));
+      },
+    );
   });
 
   group('getFileDownloadUrl', () {
-    test('deve retornar o caminho do arquivo carregado.', () async {
-      // act
-      final result =
-          await firebaseFileRemoteRepoWithFake.getFileDownloadUrl('test.png');
-      // assert
-      expect(result, isA<String>());
-    });
+    test(
+      'deve retornar o caminho do arquivo carregado.',
+      () async {
+        // act
+        final result =
+            await firebaseFileRemoteRepoWithFake.getFileDownloadUrl('test.png');
+        // assert
+        expect(result, isA<String>());
+      },
+    );
 
     test(
-        'deve disparar uma GetFileDownloadUrlFailure quando ocorrer algum erro.',
-        () {
-      // arrange
-      when(() => storageMock.ref(any())).thenThrow(Exception());
-      // act
-      final result =
-          firebaseFileRemoteRepoWithMock.getFileDownloadUrl('test.png');
-      // assert
-      expect(result, throwsA(isA<GetFileDownloadUrlFailure>()));
-    });
+      'deve disparar uma GetFileDownloadUrlFailure quando ocorrer algum erro.',
+      () {
+        // arrange
+        when(() => storageMock.ref(any())).thenThrow(Exception());
+        // act
+        final result =
+            firebaseFileRemoteRepoWithMock.getFileDownloadUrl('test.png');
+        // assert
+        expect(result, throwsA(isA<GetFileDownloadUrlFailure>()));
+      },
+    );
   });
 }

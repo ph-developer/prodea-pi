@@ -48,15 +48,18 @@ void main() {
     usecase = GetCommonUsers(userRepoMock);
   });
 
-  test('deve retornar uma lista de usuários que não são administradores.', () {
-    // arrange
-    when(userRepoMock.getUsers).thenAnswer((_) => Stream.fromIterable([
-          [tUserOk, tUserWrong]
-        ]));
-    // act
-    final stream = usecase();
-    // assert
-    expect(stream, emits(isA<List<User>>()));
-    expect(stream, emits([tUserOk]));
-  });
+  test(
+    'deve retornar uma lista de usuários que não são administradores.',
+    () {
+      // arrange
+      when(userRepoMock.getUsers).thenAnswer((_) => Stream.fromIterable([
+            [tUserOk, tUserWrong]
+          ]));
+      // act
+      final stream = usecase();
+      // assert
+      expect(stream, emits(isA<List<User>>()));
+      expect(stream, emits([tUserOk]));
+    },
+  );
 }

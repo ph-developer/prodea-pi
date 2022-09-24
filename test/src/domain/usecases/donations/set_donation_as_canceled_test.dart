@@ -37,24 +37,30 @@ void main() {
     usecase = SetDonationAsCanceled(donationRepoMock, notificationServiceMock);
   });
 
-  test('deve retornar a doação cancelada quando obtiver sucesso.', () async {
-    // arrange
-    when(() => donationRepoMock.update(tDonationCanceled))
-        .thenAnswer((_) async => tDonationCanceled);
-    // act
-    final result = await usecase(tDonation, tReason);
-    // assert
-    expect(result, tDonationCanceled);
-  });
+  test(
+    'deve retornar a doação cancelada quando obtiver sucesso.',
+    () async {
+      // arrange
+      when(() => donationRepoMock.update(tDonationCanceled))
+          .thenAnswer((_) async => tDonationCanceled);
+      // act
+      final result = await usecase(tDonation, tReason);
+      // assert
+      expect(result, tDonationCanceled);
+    },
+  );
 
-  test('deve retornar null e notificar quando algum erro ocorrer.', () async {
-    // arrange
-    when(() => donationRepoMock.update(tDonationCanceled))
-        .thenThrow(UpdateDonationFailure());
-    // act
-    final result = await usecase(tDonation, tReason);
-    // assert
-    expect(result, null);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+  test(
+    'deve retornar null e notificar quando algum erro ocorrer.',
+    () async {
+      // arrange
+      when(() => donationRepoMock.update(tDonationCanceled))
+          .thenThrow(UpdateDonationFailure());
+      // act
+      final result = await usecase(tDonation, tReason);
+      // assert
+      expect(result, null);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 }

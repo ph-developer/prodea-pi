@@ -35,39 +35,46 @@ void main() {
   };
 
   group('toMap', () {
-    test('deve retornar um map com os atributos do model.', () {
-      // act
-      final result = tModel.toMap();
-      // assert
-      expect(result, isA<Map<String, dynamic>>());
-      expect(result['description'], tModel.description);
-      expect(result['beneficiaryId'], tModel.beneficiaryId);
-    });
+    test(
+      'deve retornar um map com os atributos do model.',
+      () {
+        // act
+        final result = tModel.toMap();
+        // assert
+        expect(result, isA<Map<String, dynamic>>());
+        expect(result['description'], tModel.description);
+        expect(result['beneficiaryId'], tModel.beneficiaryId);
+      },
+    );
   });
 
   group('fromMap', () {
     test(
-        'deve retornar um model com os atributos do map (timestamp created at).',
-        () {
-      // act
-      final result = DonationDTO.fromMap(tMapWithTimestampCreatedAt);
-      // assert
-      expect(result, isA<Donation>());
-      expect(result.description, tMapWithTimestampCreatedAt['description']);
-      expect(result.beneficiaryId, tMapWithTimestampCreatedAt['beneficiaryId']);
-      expect(result.createdAt, isA<DateTime>());
-    });
+      'deve retornar um model com os atributos do map (timestamp created at).',
+      () {
+        // act
+        final result = DonationDTO.fromMap(tMapWithTimestampCreatedAt);
+        // assert
+        expect(result, isA<Donation>());
+        expect(result.description, tMapWithTimestampCreatedAt['description']);
+        expect(
+            result.beneficiaryId, tMapWithTimestampCreatedAt['beneficiaryId']);
+        expect(result.createdAt, isA<DateTime>());
+      },
+    );
 
     test(
-        'deve retornar um model com os atributos do map (datetime created at).',
-        () {
-      // act
-      final result = DonationDTO.fromMap(tMapWithDateTimeCreatedAt);
-      // assert
-      expect(result, isA<Donation>());
-      expect(result.description, tMapWithDateTimeCreatedAt['description']);
-      expect(result.beneficiaryId, tMapWithDateTimeCreatedAt['beneficiaryId']);
-      expect(result.createdAt, isA<DateTime>());
-    });
+      'deve retornar um model com os atributos do map (datetime created at).',
+      () {
+        // act
+        final result = DonationDTO.fromMap(tMapWithDateTimeCreatedAt);
+        // assert
+        expect(result, isA<Donation>());
+        expect(result.description, tMapWithDateTimeCreatedAt['description']);
+        expect(
+            result.beneficiaryId, tMapWithDateTimeCreatedAt['beneficiaryId']);
+        expect(result.createdAt, isA<DateTime>());
+      },
+    );
   });
 }

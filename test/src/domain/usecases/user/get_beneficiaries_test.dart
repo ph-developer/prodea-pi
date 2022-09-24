@@ -81,16 +81,17 @@ void main() {
   });
 
   test(
-      'deve retornar uma lista de usuários que são beneficiários e estão autorizados.',
-      () {
-    // arrange
-    when(userRepoMock.getUsers).thenAnswer((_) => Stream.fromIterable([
-          [tUserOk, tUserWrong1, tUserWrong2, tUserWrong3]
-        ]));
-    // act
-    final stream = usecase();
-    // assert
-    expect(stream, emits(isA<List<User>>()));
-    expect(stream, emits([tUserOk]));
-  });
+    'deve retornar uma lista de usuários que são beneficiários e estão autorizados.',
+    () {
+      // arrange
+      when(userRepoMock.getUsers).thenAnswer((_) => Stream.fromIterable([
+            [tUserOk, tUserWrong1, tUserWrong2, tUserWrong3]
+          ]));
+      // act
+      final stream = usecase();
+      // assert
+      expect(stream, emits(isA<List<User>>()));
+      expect(stream, emits([tUserOk]));
+    },
+  );
 }

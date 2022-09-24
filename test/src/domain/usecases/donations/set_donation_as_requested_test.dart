@@ -47,39 +47,47 @@ void main() {
     );
   });
 
-  test('deve retornar a doação como solicitada quando obtiver sucesso.',
-      () async {
-    // arrange
-    when(authRepoMock.getCurrentUserId).thenAnswer((_) async => tBeneficiaryId);
-    when(() => donationRepoMock.update(tDonationRequested))
-        .thenAnswer((_) async => tDonationRequested);
-    // act
-    final result = await usecase(tDonation);
-    // assert
-    expect(result, tDonationRequested);
-  });
+  test(
+    'deve retornar a doação como solicitada quando obtiver sucesso.',
+    () async {
+      // arrange
+      when(authRepoMock.getCurrentUserId)
+          .thenAnswer((_) async => tBeneficiaryId);
+      when(() => donationRepoMock.update(tDonationRequested))
+          .thenAnswer((_) async => tDonationRequested);
+      // act
+      final result = await usecase(tDonation);
+      // assert
+      expect(result, tDonationRequested);
+    },
+  );
 
   test(
-      'deve retornar null e notificar quando o usuário não estiver autenticado.',
-      () async {
-    // arrange
-    when(authRepoMock.getCurrentUserId).thenAnswer((_) async => null);
-    // act
-    final result = await usecase(tDonation);
-    // assert
-    expect(result, null);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+    'deve retornar null e notificar quando o usuário não estiver autenticado.',
+    () async {
+      // arrange
+      when(authRepoMock.getCurrentUserId).thenAnswer((_) async => null);
+      // act
+      final result = await usecase(tDonation);
+      // assert
+      expect(result, null);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 
-  test('deve retornar null e notificar quando algum erro ocorrer.', () async {
-    // arrange
-    when(authRepoMock.getCurrentUserId).thenAnswer((_) async => tBeneficiaryId);
-    when(() => donationRepoMock.update(tDonationRequested))
-        .thenThrow(UpdateDonationFailure());
-    // act
-    final result = await usecase(tDonation);
-    // assert
-    expect(result, null);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+  test(
+    'deve retornar null e notificar quando algum erro ocorrer.',
+    () async {
+      // arrange
+      when(authRepoMock.getCurrentUserId)
+          .thenAnswer((_) async => tBeneficiaryId);
+      when(() => donationRepoMock.update(tDonationRequested))
+          .thenThrow(UpdateDonationFailure());
+      // act
+      final result = await usecase(tDonation);
+      // assert
+      expect(result, null);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 }

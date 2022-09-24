@@ -38,25 +38,30 @@ void main() {
         SetDonationAsUnrequested(donationRepoMock, notificationServiceMock);
   });
 
-  test('deve retornar a doação como não solicitada quando obtiver sucesso.',
-      () async {
-    // arrange
-    when(() => donationRepoMock.update(tDonationUnrequested))
-        .thenAnswer((_) async => tDonationUnrequested);
-    // act
-    final result = await usecase(tDonation);
-    // assert
-    expect(result, tDonationUnrequested);
-  });
+  test(
+    'deve retornar a doação como não solicitada quando obtiver sucesso.',
+    () async {
+      // arrange
+      when(() => donationRepoMock.update(tDonationUnrequested))
+          .thenAnswer((_) async => tDonationUnrequested);
+      // act
+      final result = await usecase(tDonation);
+      // assert
+      expect(result, tDonationUnrequested);
+    },
+  );
 
-  test('deve retornar null e notificar quando algum erro ocorrer.', () async {
-    // arrange
-    when(() => donationRepoMock.update(tDonationUnrequested))
-        .thenThrow(UpdateDonationFailure());
-    // act
-    final result = await usecase(tDonation);
-    // assert
-    expect(result, null);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+  test(
+    'deve retornar null e notificar quando algum erro ocorrer.',
+    () async {
+      // arrange
+      when(() => donationRepoMock.update(tDonationUnrequested))
+          .thenThrow(UpdateDonationFailure());
+      // act
+      final result = await usecase(tDonation);
+      // assert
+      expect(result, null);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 }

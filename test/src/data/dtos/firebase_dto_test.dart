@@ -15,16 +15,19 @@ void main() {
   });
 
   group('toMap', () {
-    test('deve retornar um map com os atributos do snapshot.', () {
-      // arrange
-      when(() => documentSnapshotMock.id).thenAnswer((_) => 'test');
-      when(() => documentSnapshotMock.data()).thenAnswer((_) => {'test': 1});
-      // act
-      final result = documentSnapshotMock.toMap();
-      // assert
-      expect(result, isA<Map<String, dynamic>>());
-      expect(result['id'], 'test');
-      expect(result['test'], 1);
-    });
+    test(
+      'deve retornar um map com os atributos do snapshot.',
+      () {
+        // arrange
+        when(() => documentSnapshotMock.id).thenAnswer((_) => 'test');
+        when(() => documentSnapshotMock.data()).thenAnswer((_) => {'test': 1});
+        // act
+        final result = documentSnapshotMock.toMap();
+        // assert
+        expect(result, isA<Map<String, dynamic>>());
+        expect(result['id'], 'test');
+        expect(result['test'], 1);
+      },
+    );
   });
 }

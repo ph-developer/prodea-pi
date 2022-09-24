@@ -38,27 +38,30 @@ void main() {
     usecase = GetUserById(userRepoMock, notificationServiceMock);
   });
 
-  test('deve retornar o usuário quando houver um usuário com o id informado.',
-      () async {
-    // arrange
-    when(() => userRepoMock.getById('id')).thenAnswer((_) async => tUser);
-    // act
-    final result = await usecase('id');
-    // assert
-    expect(result, isA<User>());
-    expect(result, tUser);
-    verifyNever(() => notificationServiceMock.notifyError(any()));
-  });
+  test(
+    'deve retornar o usuário quando houver um usuário com o id informado.',
+    () async {
+      // arrange
+      when(() => userRepoMock.getById('id')).thenAnswer((_) async => tUser);
+      // act
+      final result = await usecase('id');
+      // assert
+      expect(result, isA<User>());
+      expect(result, tUser);
+      verifyNever(() => notificationServiceMock.notifyError(any()));
+    },
+  );
 
   test(
-      'deve retornar null e notificar quando não houver um usuário com o id informado.',
-      () async {
-    // arrange
-    when(() => userRepoMock.getById('id')).thenThrow(GetUserFailure());
-    // act
-    final result = await usecase('id');
-    // assert
-    expect(result, null);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+    'deve retornar null e notificar quando não houver um usuário com o id informado.',
+    () async {
+      // arrange
+      when(() => userRepoMock.getById('id')).thenThrow(GetUserFailure());
+      // act
+      final result = await usecase('id');
+      // assert
+      expect(result, null);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 }

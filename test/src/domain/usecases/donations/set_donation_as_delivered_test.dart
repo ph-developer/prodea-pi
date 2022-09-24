@@ -35,24 +35,30 @@ void main() {
     usecase = SetDonationAsDelivered(donationRepoMock, notificationServiceMock);
   });
 
-  test('deve retornar a doação entregue quando obtiver sucesso.', () async {
-    // arrange
-    when(() => donationRepoMock.update(tDonationDelivered))
-        .thenAnswer((_) async => tDonationDelivered);
-    // act
-    final result = await usecase(tDonation);
-    // assert
-    expect(result, tDonationDelivered);
-  });
+  test(
+    'deve retornar a doação entregue quando obtiver sucesso.',
+    () async {
+      // arrange
+      when(() => donationRepoMock.update(tDonationDelivered))
+          .thenAnswer((_) async => tDonationDelivered);
+      // act
+      final result = await usecase(tDonation);
+      // assert
+      expect(result, tDonationDelivered);
+    },
+  );
 
-  test('deve retornar null e notificar quando algum erro ocorrer.', () async {
-    // arrange
-    when(() => donationRepoMock.update(tDonationDelivered))
-        .thenThrow(UpdateDonationFailure());
-    // act
-    final result = await usecase(tDonation);
-    // assert
-    expect(result, null);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+  test(
+    'deve retornar null e notificar quando algum erro ocorrer.',
+    () async {
+      // arrange
+      when(() => donationRepoMock.update(tDonationDelivered))
+          .thenThrow(UpdateDonationFailure());
+      // act
+      final result = await usecase(tDonation);
+      // assert
+      expect(result, null);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 }

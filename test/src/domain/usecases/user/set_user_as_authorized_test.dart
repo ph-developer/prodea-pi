@@ -54,26 +54,32 @@ void main() {
     usecase = SetUserAsAuthorized(userRepoMock, notificationServiceMock);
   });
 
-  test('deve retornar o usuário autorizado quando obtiver sucesso.', () async {
-    // arrange
-    when(() => userRepoMock.update(tAuthorizedUser))
-        .thenAnswer((_) async => tAuthorizedUser);
-    // act
-    final result = await usecase(tUser);
-    // assert
-    expect(result, isA<User>());
-    expect(result, tAuthorizedUser);
-    verifyNever(() => notificationServiceMock.notifyError(any()));
-  });
+  test(
+    'deve retornar o usuário autorizado quando obtiver sucesso.',
+    () async {
+      // arrange
+      when(() => userRepoMock.update(tAuthorizedUser))
+          .thenAnswer((_) async => tAuthorizedUser);
+      // act
+      final result = await usecase(tUser);
+      // assert
+      expect(result, isA<User>());
+      expect(result, tAuthorizedUser);
+      verifyNever(() => notificationServiceMock.notifyError(any()));
+    },
+  );
 
-  test('deve retornar null e notificar quando algum erro ocorrer.', () async {
-    // arrange
-    when(() => userRepoMock.update(tAuthorizedUser))
-        .thenThrow(UpdateUserFailure());
-    // act
-    final result = await usecase(tUser);
-    // assert
-    expect(result, null);
-    verify(() => notificationServiceMock.notifyError(any())).called(1);
-  });
+  test(
+    'deve retornar null e notificar quando algum erro ocorrer.',
+    () async {
+      // arrange
+      when(() => userRepoMock.update(tAuthorizedUser))
+          .thenThrow(UpdateUserFailure());
+      // act
+      final result = await usecase(tUser);
+      // assert
+      expect(result, null);
+      verify(() => notificationServiceMock.notifyError(any())).called(1);
+    },
+  );
 }
