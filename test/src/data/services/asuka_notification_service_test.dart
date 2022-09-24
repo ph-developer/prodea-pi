@@ -20,10 +20,13 @@ void main() {
   group('notifySuccess', () {
     testWidgets(
       "deve mostrar uma snackbar contendo a mensagem de sucesso.",
-      (WidgetTester tester) async {
+      (tester) async {
         await tester.pumpWidget(createWidgetUnderTest());
+
         asukaNotificationService.notifySuccess('sucesso');
+
         await tester.pump();
+
         expect(find.byType(SnackBar), findsOneWidget);
         expect(find.text('sucesso'), findsOneWidget);
       },
@@ -33,10 +36,13 @@ void main() {
   group('notifyError', () {
     testWidgets(
       "deve mostrar uma snackbar contendo a mensagem de erro.",
-      (WidgetTester tester) async {
+      (tester) async {
         await tester.pumpWidget(createWidgetUnderTest());
+
         asukaNotificationService.notifyError('erro');
+
         await tester.pump();
+
         expect(find.byType(SnackBar), findsOneWidget);
         expect(find.text('erro'), findsOneWidget);
       },

@@ -53,9 +53,7 @@ class _CancelReasonDialogState extends State<CancelReasonDialog> {
           onPressed: value.isEmpty
               ? null
               : () {
-                  if (widget.onOk != null) {
-                    widget.onOk!(value);
-                  }
+                  widget.onOk?.call(value);
                   Navigator.of(context).pop();
                 },
           child: const Text('Cancelar Doação'),
