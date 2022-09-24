@@ -1,3 +1,5 @@
+import 'package:asuka/asuka.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:prodea/src/data/services/asuka_notification_service.dart';
 
@@ -5,12 +7,39 @@ void main() {
   late AsukaNotificationService asukaNotificationService;
 
   setUp(() {
-    TestWidgetsFlutterBinding.ensureInitialized();
-
     asukaNotificationService = AsukaNotificationService();
   });
 
-  group('notifySuccess', () {});
+  Widget createWidgetUnderTest() {
+    return MaterialApp(
+      builder: Asuka.builder,
+      home: const Scaffold(),
+    );
+  }
 
-  group('notifyError', () {});
+  group('notifySuccess', () {
+    testWidgets(
+      "deve mostrar uma snackbar contendo a mensagem de sucesso.",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(createWidgetUnderTest());
+        asukaNotificationService.notifySuccess('sucesso');
+        await tester.pump();
+        expect(find.byType(SnackBar), findsOneWidget);
+        expect(find.text('sucesso'), findsOneWidget);
+      },
+    );
+  });
+
+  group('notifyError', () {
+    testWidgets(
+      "deve mostrar uma snackbar contendo a mensagem de erro.",
+      (WidgetTester tester) async {
+        await tester.pumpWidget(createWidgetUnderTest());
+        asukaNotificationService.notifyError('erro');
+        await tester.pump();
+        expect(find.byType(SnackBar), findsOneWidget);
+        expect(find.text('erro'), findsOneWidget);
+      },
+    );
+  });
 }
