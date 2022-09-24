@@ -57,9 +57,7 @@ abstract class _MainPageControllerBase with Store {
 
   @action
   void init() {
-    for (var subscription in _subscriptions) {
-      subscription.cancel();
-    }
+    _subscriptions.map((subscription) => subscription.cancel());
     _subscriptions.clear();
 
     _subscriptions.addAll([
