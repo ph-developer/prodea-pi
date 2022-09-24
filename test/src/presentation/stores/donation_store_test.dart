@@ -51,99 +51,107 @@ void main() {
     registerFallbackValue(tDonation);
   });
 
-  test(
-    'deve navegar para a página "minhas doações" quando postar uma doação com sucesso.',
-    () async {
-      // arrange
-      store.description = tDonation.description;
-      store.beneficiaryId = tDonation.beneficiaryId;
-      store.expiration = tDonation.expiration;
-      when(() => createDonationMock(tDonation, null))
-          .thenAnswer((_) async => tDonation);
-      // act
-      await store.postDonation();
-      // assert
-      expect(store.isLoading, false);
-      verify(() => createDonationMock(tDonation, null)).called(1);
-      verify(() => modularNavigatorMock.navigate(any())).called(1);
-    },
-  );
+  group('postDonation', () {
+    test(
+      'deve navegar para a página "minhas doações" quando postar uma doação com sucesso.',
+      () async {
+        // arrange
+        store.description = tDonation.description;
+        store.beneficiaryId = tDonation.beneficiaryId;
+        store.expiration = tDonation.expiration;
+        when(() => createDonationMock(tDonation, null))
+            .thenAnswer((_) async => tDonation);
+        // act
+        await store.postDonation();
+        // assert
+        expect(store.isLoading, false);
+        verify(() => createDonationMock(tDonation, null)).called(1);
+        verify(() => modularNavigatorMock.navigate(any())).called(1);
+      },
+    );
 
-  test(
-    'deve manter-se na página quando não conseguir postar a doação.',
-    () async {
-      // arrange
-      store.description = tDonation.description;
-      store.beneficiaryId = tDonation.beneficiaryId;
-      store.expiration = tDonation.expiration;
-      when(() => createDonationMock(tDonation, null))
-          .thenAnswer((_) async => null);
-      // act
-      await store.postDonation();
-      // assert
-      expect(store.isLoading, false);
-      verify(() => createDonationMock(tDonation, null)).called(1);
-      verifyNever(() => modularNavigatorMock.navigate(any()));
-    },
-  );
+    test(
+      'deve manter-se na página quando não conseguir postar a doação.',
+      () async {
+        // arrange
+        store.description = tDonation.description;
+        store.beneficiaryId = tDonation.beneficiaryId;
+        store.expiration = tDonation.expiration;
+        when(() => createDonationMock(tDonation, null))
+            .thenAnswer((_) async => null);
+        // act
+        await store.postDonation();
+        // assert
+        expect(store.isLoading, false);
+        verify(() => createDonationMock(tDonation, null)).called(1);
+        verifyNever(() => modularNavigatorMock.navigate(any()));
+      },
+    );
+  });
 
-  test(
-    'deve alterar a imagem quando for selecionada uma foto da câmera.',
-    () async {
-      // arrange
-      when(pickPhotoFromCameraMock).thenAnswer((_) async => tFile);
-      // act
-      await store.pickImageFromCamera();
-      // assert
-      expect(store.image, tFile);
-    },
-  );
+  group('pickImageFromCamera', () {
+    test(
+      'deve alterar a imagem quando for selecionada uma foto da câmera.',
+      () async {
+        // arrange
+        when(pickPhotoFromCameraMock).thenAnswer((_) async => tFile);
+        // act
+        await store.pickImageFromCamera();
+        // assert
+        expect(store.image, tFile);
+      },
+    );
 
-  test(
-    'deve manter a imagem quando não for selecionada uma foto da câmera.',
-    () async {
-      // arrange
-      store.image = tFile;
-      when(pickPhotoFromCameraMock).thenAnswer((_) async => null);
-      // act
-      await store.pickImageFromCamera();
-      // assert
-      expect(store.image, tFile);
-    },
-  );
+    test(
+      'deve manter a imagem quando não for selecionada uma foto da câmera.',
+      () async {
+        // arrange
+        store.image = tFile;
+        when(pickPhotoFromCameraMock).thenAnswer((_) async => null);
+        // act
+        await store.pickImageFromCamera();
+        // assert
+        expect(store.image, tFile);
+      },
+    );
+  });
 
-  test(
-    'deve alterar a imagem quando for selecionada uma foto da galeria.',
-    () async {
-      // arrange
-      when(pickPhotoFromGalleryMock).thenAnswer((_) async => tFile);
-      // act
-      await store.pickImageFromGallery();
-      // assert
-      expect(store.image, tFile);
-    },
-  );
+  group('pickImageFromGallery', () {
+    test(
+      'deve alterar a imagem quando for selecionada uma foto da galeria.',
+      () async {
+        // arrange
+        when(pickPhotoFromGalleryMock).thenAnswer((_) async => tFile);
+        // act
+        await store.pickImageFromGallery();
+        // assert
+        expect(store.image, tFile);
+      },
+    );
 
-  test(
-    'deve manter a imagem quando não for selecionada uma foto da galeria.',
-    () async {
-      // arrange
-      store.image = tFile;
-      when(pickPhotoFromGalleryMock).thenAnswer((_) async => null);
-      // act
-      await store.pickImageFromGallery();
-      // assert
-      expect(store.image, tFile);
-    },
-  );
+    test(
+      'deve manter a imagem quando não for selecionada uma foto da galeria.',
+      () async {
+        // arrange
+        store.image = tFile;
+        when(pickPhotoFromGalleryMock).thenAnswer((_) async => null);
+        // act
+        await store.pickImageFromGallery();
+        // assert
+        expect(store.image, tFile);
+      },
+    );
+  });
 
-  test(
-    'deve retornar uma string.',
-    () {
-      // act
-      final result = store.toString();
-      // assert
-      expect(result, isA<String>());
-    },
-  );
+  group('toString', () {
+    test(
+      'deve retornar uma string.',
+      () {
+        // act
+        final result = store.toString();
+        // assert
+        expect(result, isA<String>());
+      },
+    );
+  });
 }

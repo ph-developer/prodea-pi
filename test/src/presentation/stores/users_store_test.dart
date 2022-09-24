@@ -61,108 +61,121 @@ void main() {
     );
   });
 
-  test(
-    'deve inicializar a store, populando as listas de usuários.',
-    () async {
-      // arrange
-      when(getCommonUsersMock)
-          .thenAnswer((_) => Stream.fromIterable([tUserList]));
-      when(getBeneficiariesMock)
-          .thenAnswer((_) => Stream.fromIterable([tUserList]));
-      when(getDonorsMock).thenAnswer((_) => Stream.fromIterable([tUserList]));
-      final commonUsersChanged = MockCallable<List<User>>();
-      final beneficiariesChanged = MockCallable<List<User>>();
-      final donorsChanged = MockCallable<List<User>>();
-      whenReaction((_) => store.commonUsers, commonUsersChanged);
-      whenReaction((_) => store.beneficiaries, beneficiariesChanged);
-      whenReaction((_) => store.donors, donorsChanged);
-      // assert
-      expect(store.commonUsers, equals([]));
-      expect(store.beneficiaries, equals([]));
-      expect(store.donors, equals([]));
-      // act
-      store.init();
-      await untilCalled(() => commonUsersChanged(tUserList));
-      await untilCalled(() => beneficiariesChanged(tUserList));
-      await untilCalled(() => donorsChanged(tUserList));
-      // assert
-      expect(store.commonUsers, tUserList);
-      expect(store.beneficiaries, tUserList);
-      expect(store.donors, tUserList);
-    },
-  );
+  group('init', () {
+    test(
+      'deve inicializar a store, populando as listas de usuários.',
+      () async {
+        // arrange
+        when(getCommonUsersMock)
+            .thenAnswer((_) => Stream.fromIterable([tUserList]));
+        when(getBeneficiariesMock)
+            .thenAnswer((_) => Stream.fromIterable([tUserList]));
+        when(getDonorsMock).thenAnswer((_) => Stream.fromIterable([tUserList]));
+        final commonUsersChanged = MockCallable<List<User>>();
+        final beneficiariesChanged = MockCallable<List<User>>();
+        final donorsChanged = MockCallable<List<User>>();
+        whenReaction((_) => store.commonUsers, commonUsersChanged);
+        whenReaction((_) => store.beneficiaries, beneficiariesChanged);
+        whenReaction((_) => store.donors, donorsChanged);
+        // assert
+        expect(store.commonUsers, equals([]));
+        expect(store.beneficiaries, equals([]));
+        expect(store.donors, equals([]));
+        // act
+        store.init();
+        await untilCalled(() => commonUsersChanged(tUserList));
+        await untilCalled(() => beneficiariesChanged(tUserList));
+        await untilCalled(() => donorsChanged(tUserList));
+        // assert
+        expect(store.commonUsers, tUserList);
+        expect(store.beneficiaries, tUserList);
+        expect(store.donors, tUserList);
+      },
+    );
+  });
 
-  test(
-    'deve retornar um doador por id caso este esteja na lista de doadores.',
-    () async {
-      // arrange
-      when(getCommonUsersMock)
-          .thenAnswer((_) => Stream.fromIterable([tUserList]));
-      when(getBeneficiariesMock)
-          .thenAnswer((_) => Stream.fromIterable([tUserList]));
-      when(getDonorsMock).thenAnswer((_) => Stream.fromIterable([tUserList]));
-      final donorsChanged = MockCallable<List<User>>();
-      whenReaction((_) => store.donors, donorsChanged);
-      // act
-      store.init();
-      await untilCalled(() => donorsChanged(tUserList));
-      final result = store.getDonorById('id');
-      // assert
-      expect(result, tUser);
-    },
-  );
+  group('getDonorById', () {
+    test(
+      'deve retornar um doador por id caso este esteja na lista de doadores.',
+      () async {
+        // arrange
+        when(getCommonUsersMock)
+            .thenAnswer((_) => Stream.fromIterable([tUserList]));
+        when(getBeneficiariesMock)
+            .thenAnswer((_) => Stream.fromIterable([tUserList]));
+        when(getDonorsMock).thenAnswer((_) => Stream.fromIterable([tUserList]));
+        final donorsChanged = MockCallable<List<User>>();
+        whenReaction((_) => store.donors, donorsChanged);
+        // act
+        store.init();
+        await untilCalled(() => donorsChanged(tUserList));
+        final result = store.getDonorById('id');
+        // assert
+        expect(result, tUser);
+      },
+    );
+  });
 
-  test(
-    'deve retornar um beneficiário por id caso este esteja na lista de beneficiários.',
-    () async {
-      // arrange
-      when(getCommonUsersMock)
-          .thenAnswer((_) => Stream.fromIterable([tUserList]));
-      when(getBeneficiariesMock)
-          .thenAnswer((_) => Stream.fromIterable([tUserList]));
-      when(getDonorsMock).thenAnswer((_) => Stream.fromIterable([tUserList]));
-      final beneficiariesChanged = MockCallable<List<User>>();
-      whenReaction((_) => store.beneficiaries, beneficiariesChanged);
-      // act
-      store.init();
-      await untilCalled(() => beneficiariesChanged(tUserList));
-      final result = store.getBeneficiaryById('id');
-      // assert
-      expect(result, tUser);
-    },
-  );
+  group('getBeneficiaryById', () {
+    test(
+      'deve retornar um beneficiário por id caso este esteja na lista de beneficiários.',
+      () async {
+        // arrange
+        when(getCommonUsersMock)
+            .thenAnswer((_) => Stream.fromIterable([tUserList]));
+        when(getBeneficiariesMock)
+            .thenAnswer((_) => Stream.fromIterable([tUserList]));
+        when(getDonorsMock).thenAnswer((_) => Stream.fromIterable([tUserList]));
+        final beneficiariesChanged = MockCallable<List<User>>();
+        whenReaction((_) => store.beneficiaries, beneficiariesChanged);
+        // act
+        store.init();
+        await untilCalled(() => beneficiariesChanged(tUserList));
+        final result = store.getBeneficiaryById('id');
+        // assert
+        expect(result, tUser);
+      },
+    );
+  });
 
-  test(
-    'deve chamar a usecase para marcar o usuário como autorizado.',
-    () async {
-      // arrange
-      when(() => setUserAsAuthorizedMock(tUser)).thenAnswer((_) async => tUser);
-      // act
-      await store.setUserAsAuthorized(tUser);
-      // assert
-      verify(() => setUserAsAuthorizedMock(tUser)).called(1);
-    },
-  );
+  group('setUserAsAuthorized', () {
+    test(
+      'deve chamar a usecase para marcar o usuário como autorizado.',
+      () async {
+        // arrange
+        when(() => setUserAsAuthorizedMock(tUser))
+            .thenAnswer((_) async => tUser);
+        // act
+        await store.setUserAsAuthorized(tUser);
+        // assert
+        verify(() => setUserAsAuthorizedMock(tUser)).called(1);
+      },
+    );
+  });
 
-  test(
-    'deve chamar a usecase para marcar o usuário como não autorizado.',
-    () async {
-      // arrange
-      when(() => setUserAsDeniedMock(tUser)).thenAnswer((_) async => tUser);
-      // act
-      await store.setUserAsDenied(tUser);
-      // assert
-      verify(() => setUserAsDeniedMock(tUser)).called(1);
-    },
-  );
+  group('setUserAsDenied', () {
+    test(
+      'deve chamar a usecase para marcar o usuário como não autorizado.',
+      () async {
+        // arrange
+        when(() => setUserAsDeniedMock(tUser)).thenAnswer((_) async => tUser);
+        // act
+        await store.setUserAsDenied(tUser);
+        // assert
+        verify(() => setUserAsDeniedMock(tUser)).called(1);
+      },
+    );
+  });
 
-  test(
-    'deve retornar uma string.',
-    () {
-      // act
-      final result = store.toString();
-      // assert
-      expect(result, isA<String>());
-    },
-  );
+  group('toString', () {
+    test(
+      'deve retornar uma string.',
+      () {
+        // act
+        final result = store.toString();
+        // assert
+        expect(result, isA<String>());
+      },
+    );
+  });
 }
