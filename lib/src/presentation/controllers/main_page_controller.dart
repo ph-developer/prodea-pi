@@ -7,7 +7,6 @@ import 'package:mobx/mobx.dart';
 
 import '../../../core/helpers/navigation.dart';
 import '../../domain/usecases/auth/get_current_user.dart';
-import '../../domain/usecases/user/get_user_by_id.dart';
 
 part 'main_page_controller.g.dart';
 
@@ -15,7 +14,6 @@ class MainPageController = _MainPageControllerBase with _$MainPageController;
 
 abstract class _MainPageControllerBase with Store {
   final GetCurrentUser _getCurrentUser;
-  final GetUserById _getUserById;
   final List<StreamSubscription> _subscriptions = [];
   final _pageInfos = [
     PageInfo(
@@ -44,7 +42,7 @@ abstract class _MainPageControllerBase with Store {
     ),
   ];
 
-  _MainPageControllerBase(this._getCurrentUser, this._getUserById);
+  _MainPageControllerBase(this._getCurrentUser);
 
   @observable
   ObservableList<PageInfo> pageInfos = ObservableList.of([]);

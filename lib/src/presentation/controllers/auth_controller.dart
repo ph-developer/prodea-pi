@@ -9,7 +9,6 @@ import '../../domain/usecases/auth/do_logout.dart';
 import '../../domain/usecases/auth/do_register.dart';
 import '../../domain/usecases/auth/get_current_user.dart';
 import '../../domain/usecases/auth/send_password_reset_email.dart';
-import '../../domain/usecases/user/get_user_by_id.dart';
 
 part 'auth_controller.g.dart';
 
@@ -17,7 +16,6 @@ class AuthController = _AuthControllerBase with _$AuthController;
 
 abstract class _AuthControllerBase with Store {
   final GetCurrentUser _getCurrentUser;
-  final GetUserById _getUserById;
   final DoLogin _doLogin;
   final DoRegister _doRegister;
   final DoLogout _doLogout;
@@ -25,7 +23,6 @@ abstract class _AuthControllerBase with Store {
 
   _AuthControllerBase(
     this._getCurrentUser,
-    this._getUserById,
     this._doLogin,
     this._doRegister,
     this._doLogout,

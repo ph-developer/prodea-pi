@@ -126,10 +126,10 @@ class AppModule extends Module {
 
         //! Controllers
         Bind.singleton<AuthController>(
-            (i) => AuthController(i(), i(), i(), i(), i(), i())),
+            (i) => AuthController(i(), i(), i(), i(), i())),
         Bind.singleton<ConnectionStateController>(
             (i) => ConnectionStateController(i())),
-        Bind.singleton<MainPageController>((i) => MainPageController(i(), i())),
+        Bind.singleton<MainPageController>((i) => MainPageController(i())),
 
         //! Stores
         Bind.singleton<CitiesStore>((i) => CitiesStore(i())),
