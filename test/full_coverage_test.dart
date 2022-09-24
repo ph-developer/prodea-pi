@@ -1,7 +1,6 @@
 // ignore_for_file: unused_import
 import 'package:prodea/core/errors/failures.dart';
 import 'package:prodea/core/extensions/date_time.dart';
-import 'package:prodea/core/extensions/string.dart';
 import 'package:prodea/core/helpers/navigation.dart';
 import 'package:prodea/core/input_formatters.dart';
 import 'package:prodea/firebase_options.dart';
@@ -61,10 +60,6 @@ import 'package:prodea/src/domain/usecases/user/set_user_as_denied.dart';
 import 'package:prodea/src/presentation/controllers/auth_controller.dart';
 import 'package:prodea/src/presentation/controllers/connection_state_controller.dart';
 import 'package:prodea/src/presentation/controllers/main_page_controller.dart';
-import 'package:prodea/src/presentation/dialogs/cancel_reason_dialog.dart';
-import 'package:prodea/src/presentation/dialogs/city_select_dialog.dart';
-import 'package:prodea/src/presentation/dialogs/no_connection_dialog.dart';
-import 'package:prodea/src/presentation/dialogs/user_info_dialog.dart';
 import 'package:prodea/src/presentation/pages/account/profile_page.dart';
 import 'package:prodea/src/presentation/pages/admin/admin_page.dart';
 import 'package:prodea/src/presentation/pages/auth/forgot_password_page.dart';

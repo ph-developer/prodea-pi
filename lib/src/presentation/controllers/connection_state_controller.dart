@@ -21,9 +21,7 @@ abstract class _ConnectionStateControllerBase with Store {
   bool isConnected = true;
 
   void init() {
-    for (var subscription in _subscriptions) {
-      subscription.cancel();
-    }
+    _subscriptions.map((subscription) => subscription.cancel());
     _subscriptions.clear();
 
     _subscriptions.addAll([
