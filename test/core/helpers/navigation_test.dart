@@ -45,6 +45,8 @@ void main() {
     test(
       'deve navegar para a rota anterior.',
       () {
+        // arrange
+        when(() => modularNavigatorMock.path).thenAnswer((_) => '/');
         // act
         NavigationHelper.back();
         // assert

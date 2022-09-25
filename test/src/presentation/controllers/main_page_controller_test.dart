@@ -73,6 +73,12 @@ void main() {
     title: 'Teste',
     abbrTitle: 'Teste',
   );
+  final tPageInfo2 = PageInfo(
+    route: '/test2',
+    icon: Icons.abc,
+    title: 'Teste 2',
+    abbrTitle: 'Teste 2',
+  );
 
   setUp(() {
     modularNavigatorMock = MockModularNavigator();
@@ -185,7 +191,6 @@ void main() {
       () {
         // act
         controller.pageInfos = mobx.ObservableList.of([tPageInfo]);
-        controller.currentPageIndex = 0;
         final result = controller.currentPageInfo;
         // assert
         expect(result, tPageInfo);
@@ -193,28 +198,13 @@ void main() {
     );
 
     test(
-      'deve retornar null quando o índex atual for 0 ou maior, e a array de '
-      'pageInfos estiver vazia.',
+      'deve retornar null quando a array de pageInfos estiver vazia.',
       () {
         // act
         controller.pageInfos = mobx.ObservableList.of([]);
-        controller.currentPageIndex = 0;
         final result = controller.currentPageInfo;
         // assert
         expect(result, null);
-      },
-    );
-
-    test(
-      'deve retornar a primeira pageInfo quando o índex atual for menor que 0, '
-      'e a array de pageInfos não estiver vazia.',
-      () {
-        // act
-        controller.pageInfos = mobx.ObservableList.of([tPageInfo]);
-        controller.currentPageIndex = -1;
-        final result = controller.currentPageInfo;
-        // assert
-        expect(result, controller.pageInfos[0]);
       },
     );
   });
@@ -233,13 +223,12 @@ void main() {
         // act
         controller.init();
         await untilCalled(() => pageInfosChanged(any()));
-        controller.pageInfos = mobx.ObservableList.of([tPageInfo]);
-        controller.currentPageIndex = -1;
-        controller.navigateToPage(0);
+        controller.pageInfos = mobx.ObservableList.of([tPageInfo, tPageInfo2]);
+        controller.navigateToPage(1);
         await untilCalled(() => currentPageIndexChanged(any()));
         final result = controller.currentPageInfo;
         // assert
-        expect(result, tPageInfo);
+        expect(result, tPageInfo2);
       },
     );
   });
