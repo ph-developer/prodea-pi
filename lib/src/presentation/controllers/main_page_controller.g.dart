@@ -9,6 +9,13 @@ part of 'main_page_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$MainPageController on _MainPageControllerBase, Store {
+  Computed<int>? _$currentPageIndexComputed;
+
+  @override
+  int get currentPageIndex => (_$currentPageIndexComputed ??= Computed<int>(
+          () => super.currentPageIndex,
+          name: '_MainPageControllerBase.currentPageIndex'))
+      .value;
   Computed<PageInfo?>? _$currentPageInfoComputed;
 
   @override
@@ -16,6 +23,22 @@ mixin _$MainPageController on _MainPageControllerBase, Store {
           Computed<PageInfo?>(() => super.currentPageInfo,
               name: '_MainPageControllerBase.currentPageInfo'))
       .value;
+
+  late final _$_currentRouteAtom =
+      Atom(name: '_MainPageControllerBase._currentRoute', context: context);
+
+  @override
+  ObservableStream<String> get _currentRoute {
+    _$_currentRouteAtom.reportRead();
+    return super._currentRoute;
+  }
+
+  @override
+  set _currentRoute(ObservableStream<String> value) {
+    _$_currentRouteAtom.reportWrite(value, super._currentRoute, () {
+      super._currentRoute = value;
+    });
+  }
 
   late final _$pageInfosAtom =
       Atom(name: '_MainPageControllerBase.pageInfos', context: context);
@@ -30,22 +53,6 @@ mixin _$MainPageController on _MainPageControllerBase, Store {
   set pageInfos(ObservableList<PageInfo> value) {
     _$pageInfosAtom.reportWrite(value, super.pageInfos, () {
       super.pageInfos = value;
-    });
-  }
-
-  late final _$currentPageIndexAtom =
-      Atom(name: '_MainPageControllerBase.currentPageIndex', context: context);
-
-  @override
-  int get currentPageIndex {
-    _$currentPageIndexAtom.reportRead();
-    return super.currentPageIndex;
-  }
-
-  @override
-  set currentPageIndex(int value) {
-    _$currentPageIndexAtom.reportWrite(value, super.currentPageIndex, () {
-      super.currentPageIndex = value;
     });
   }
 

@@ -47,46 +47,47 @@ abstract class _MainPageControllerBase with Store {
   }
 
   @observable
-  ObservableList<PageInfo> pageInfos = ObservableList.of([]);
+  ObservableStream<String> _currentRoute =
+      NavigationHelper.currentRoute.asObservable();
 
   @observable
-  int currentPageIndex = 0;
+  ObservableList<PageInfo> pageInfos = ObservableList.of([]);
+
+  @computed
+  int get currentPageIndex {
+    final pageIndex =
+        pageInfos.indexWhere((page) => page.route == _currentRoute.value);
+    return pageIndex >= 0 ? pageIndex : 0;
+  }
 
   @computed
   PageInfo? get currentPageInfo {
     if (pageInfos.isEmpty) return null;
-    if (currentPageIndex >= 0) {
-      return pageInfos[currentPageIndex];
-    } else {
-      return pageInfos[0];
-    }
+    return pageInfos[currentPageIndex];
   }
 
   @action
   void init() {
-    _subscriptions.map((subscription) => subscription.cancel());
-    _subscriptions.clear();
+    _currentRoute = NavigationHelper.currentRoute.asObservable();
 
-    _subscriptions.addAll([
-      NavigationHelper.currentRoute.listen((currentRoute) {
-        final pageIndex =
-            pageInfos.indexWhere((page) => page.route == currentRoute);
-        currentPageIndex = pageIndex >= 0 ? pageIndex : 0;
-      }),
-      _getCurrentUser().listen((user) async {
-        pageInfos = ObservableList.of([]);
-        if (user != null) {
-          if (user.isDonor) {
-            pageInfos.add(_pageInfos[0]);
-            pageInfos.add(_pageInfos[1]);
+    _subscriptions
+      ..map((subscription) => subscription.cancel())
+      ..clear()
+      ..add(
+        _getCurrentUser().listen((user) async {
+          pageInfos = ObservableList.of([]);
+          if (user != null) {
+            if (user.isDonor) {
+              pageInfos.add(_pageInfos[0]);
+              pageInfos.add(_pageInfos[1]);
+            }
+            if (user.isBeneficiary) {
+              pageInfos.add(_pageInfos[2]);
+              pageInfos.add(_pageInfos[3]);
+            }
           }
-          if (user.isBeneficiary) {
-            pageInfos.add(_pageInfos[2]);
-            pageInfos.add(_pageInfos[3]);
-          }
-        }
-      }),
-    ]);
+        }),
+      );
   }
 
   @action

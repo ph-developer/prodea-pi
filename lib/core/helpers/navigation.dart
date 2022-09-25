@@ -17,6 +17,7 @@ abstract class NavigationHelper {
 
   static void back() {
     Modular.to.pop();
+    _currentRoute.add(Modular.to.path);
   }
 
   static Stream<String> get currentRoute {
