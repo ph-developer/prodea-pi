@@ -24,6 +24,12 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
   final _cityFilterController = TextEditingController();
 
   @override
+  void initState() {
+    _donationsStore.init();
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _cityFilterController.dispose();
     super.dispose();

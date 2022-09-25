@@ -82,6 +82,14 @@ mixin _$AuthController on _AuthControllerBase, Store {
     });
   }
 
+  late final _$isReadyAsyncAction =
+      AsyncAction('_AuthControllerBase.isReady', context: context);
+
+  @override
+  Future<bool> isReady() {
+    return _$isReadyAsyncAction.run(() => super.isReady());
+  }
+
   late final _$loginAsyncAction =
       AsyncAction('_AuthControllerBase.login', context: context);
 
@@ -121,13 +129,22 @@ mixin _$AuthController on _AuthControllerBase, Store {
       ActionController(name: '_AuthControllerBase', context: context);
 
   @override
-  void init({Function? afterLoginCallback, Function? afterNavigationCallback}) {
+  void init() {
     final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
         name: '_AuthControllerBase.init');
     try {
-      return super.init(
-          afterLoginCallback: afterLoginCallback,
-          afterNavigationCallback: afterNavigationCallback);
+      return super.init();
+    } finally {
+      _$_AuthControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void navigateToInitialRoute() {
+    final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
+        name: '_AuthControllerBase.navigateToInitialRoute');
+    try {
+      return super.navigateToInitialRoute();
     } finally {
       _$_AuthControllerBaseActionController.endAction(_$actionInfo);
     }

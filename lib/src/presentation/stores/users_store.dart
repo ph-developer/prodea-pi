@@ -29,7 +29,9 @@ abstract class _UsersStoreBase with Store {
     this._getDonors,
     this._setUserAsAuthorized,
     this._setUserAsDenied,
-  );
+  ) {
+    init();
+  }
 
   @observable
   ObservableList<User> commonUsers = ObservableList.of([]);

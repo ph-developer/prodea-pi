@@ -5,6 +5,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'presentation/guards/auth_guard.dart';
+import 'presentation/guards/guest_guard.dart';
 import 'presentation/pages/account/profile_page.dart';
 import 'presentation/pages/admin/admin_page.dart';
 import 'presentation/pages/auth/forgot_password_page.dart';
@@ -143,10 +145,24 @@ class AppModule extends Module {
   @override
   List<ModularRoute> get routes => [
         ChildRoute('/', child: (_, __) => const BootPage()),
-        ChildRoute('/login', child: (_, __) => const LoginPage()),
-        ChildRoute('/register', child: (_, __) => const RegisterPage()),
-        ChildRoute('/forgot', child: (_, __) => const ForgotPasswordPage()),
-        ChildRoute('/main', child: (_, __) => const MainPage(), children: [
+        ChildRoute(
+          '/login',
+          child: (_, __) => const LoginPage(),
+          guards: [GuestGuard()],
+        ),
+        ChildRoute(
+          '/register',
+          child: (_, __) => const RegisterPage(),
+          guards: [GuestGuard()],
+        ),
+        ChildRoute(
+          '/forgot',
+          child: (_, __) => const ForgotPasswordPage(),
+          guards: [GuestGuard()],
+        ),
+        ChildRoute('/main', child: (_, __) => const MainPage(), guards: [
+          AuthGuard()
+        ], children: [
           ChildRoute(
             '/donate',
             child: (_, __) => const DonatePage(),
@@ -164,9 +180,25 @@ class AppModule extends Module {
             child: (_, __) => const RequestedDonationsPage(),
           ),
         ]),
-        ChildRoute('/admin', child: (_, __) => const AdminPage()),
-        ChildRoute('/profile', child: (_, __) => const ProfilePage()),
-        ChildRoute('/denied', child: (_, __) => const DeniedPage()),
-        ChildRoute('/waiting', child: (_, __) => const WaitingPage()),
+        ChildRoute(
+          '/admin',
+          child: (_, __) => const AdminPage(),
+          guards: [AuthGuard()],
+        ),
+        ChildRoute(
+          '/profile',
+          child: (_, __) => const ProfilePage(),
+          guards: [AuthGuard()],
+        ),
+        ChildRoute(
+          '/denied',
+          child: (_, __) => const DeniedPage(),
+          guards: [AuthGuard()],
+        ),
+        ChildRoute(
+          '/waiting',
+          child: (_, __) => const WaitingPage(),
+          guards: [AuthGuard()],
+        ),
       ];
 }

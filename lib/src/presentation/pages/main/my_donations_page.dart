@@ -24,6 +24,12 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
   final UsersStore _usersStore = Modular.get();
 
   @override
+  void initState() {
+    _donationsStore.init();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(

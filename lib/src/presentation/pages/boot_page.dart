@@ -33,12 +33,9 @@ class _BootPageState extends State<BootPage> {
     _mainPageController.init();
     _citiesStore.init();
     _connectionStateController.init();
-    _authController.init(
-      afterLoginCallback: () {
-        _donationsStore.init();
-        _usersStore.init();
-      },
-    );
+    _authController.init();
+    _donationsStore.init();
+    _usersStore.init();
   }
 
   @override

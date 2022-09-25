@@ -14,7 +14,9 @@ abstract class _CitiesStoreBase with Store {
   final GetCityNames _getCityNames;
   final List<StreamSubscription> _subscriptions = [];
 
-  _CitiesStoreBase(this._getCityNames);
+  _CitiesStoreBase(this._getCityNames) {
+    init();
+  }
 
   @observable
   ObservableList<String> cities = ObservableList.of([]);

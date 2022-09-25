@@ -27,7 +27,9 @@ abstract class _AuthControllerBase with Store {
     this._doRegister,
     this._doLogout,
     this._sendPasswordResetEmail,
-  );
+  ) {
+    init();
+  }
 
   @observable
   bool isLoading = false;
@@ -55,29 +57,38 @@ abstract class _AuthControllerBase with Store {
   bool get isDenied => currentUser?.status == AuthorizationStatus.denied;
 
   @action
-  void init({Function? afterLoginCallback, Function? afterNavigationCallback}) {
+  Future<bool> isReady() async {
+    await _getCurrentUser().first;
+    return true;
+  }
+
+  @action
+  void init() {
     _getCurrentUser().listen((user) async {
       if (user != null) {
         currentUser = user;
-        afterLoginCallback?.call();
-        if (isAuthorized) {
-          if (isDonor) {
-            NavigationHelper.goTo('/main/donate', replace: true);
-          } else if (isBeneficiary) {
-            NavigationHelper.goTo('/main/available-donations', replace: true);
-          }
-        } else if (isDenied) {
-          NavigationHelper.goTo('/denied', replace: true);
-        } else {
-          NavigationHelper.goTo('/waiting', replace: true);
-        }
+        navigateToInitialRoute();
       } else {
         currentUser = null;
         NavigationHelper.goTo('/login', replace: true);
       }
       isLoading = false;
-      afterNavigationCallback?.call();
     });
+  }
+
+  @action
+  void navigateToInitialRoute() {
+    if (isAuthorized) {
+      if (isDonor) {
+        NavigationHelper.goTo('/main/donate', replace: true);
+      } else if (isBeneficiary) {
+        NavigationHelper.goTo('/main/available-donations', replace: true);
+      }
+    } else if (isDenied) {
+      NavigationHelper.goTo('/denied', replace: true);
+    } else {
+      NavigationHelper.goTo('/waiting', replace: true);
+    }
   }
 
   @action

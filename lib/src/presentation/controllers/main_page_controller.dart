@@ -42,7 +42,9 @@ abstract class _MainPageControllerBase with Store {
     ),
   ];
 
-  _MainPageControllerBase(this._getCurrentUser);
+  _MainPageControllerBase(this._getCurrentUser) {
+    init();
+  }
 
   @observable
   ObservableList<PageInfo> pageInfos = ObservableList.of([]);
@@ -51,9 +53,14 @@ abstract class _MainPageControllerBase with Store {
   int currentPageIndex = 0;
 
   @computed
-  PageInfo? get currentPageInfo => currentPageIndex >= 0 && pageInfos.isNotEmpty
-      ? pageInfos[currentPageIndex]
-      : null;
+  PageInfo? get currentPageInfo {
+    if (pageInfos.isEmpty) return null;
+    if (currentPageIndex >= 0) {
+      return pageInfos[currentPageIndex];
+    } else {
+      return pageInfos[0];
+    }
+  }
 
   @action
   void init() {

@@ -15,7 +15,9 @@ abstract class _ConnectionStateControllerBase with Store {
   final GetConnectionStatus _getConnectionStatus;
   final List<StreamSubscription> _subscriptions = [];
 
-  _ConnectionStateControllerBase(this._getConnectionStatus);
+  _ConnectionStateControllerBase(this._getConnectionStatus) {
+    init();
+  }
 
   @observable
   bool isConnected = true;
