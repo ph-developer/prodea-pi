@@ -52,6 +52,13 @@ void main() {
     getDonorsMock = MockGetDonors();
     setUserAsAuthorizedMock = MockSetUserAsAuthorized();
     setUserAsDeniedMock = MockSetUserAsDenied();
+
+    when(getCommonUsersMock)
+        .thenAnswer((_) => const Stream<List<User>>.empty());
+    when(getBeneficiariesMock)
+        .thenAnswer((_) => const Stream<List<User>>.empty());
+    when(getDonorsMock).thenAnswer((_) => const Stream<List<User>>.empty());
+
     store = UsersStore(
       getCommonUsersMock,
       getBeneficiariesMock,

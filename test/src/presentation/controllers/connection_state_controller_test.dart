@@ -13,6 +13,9 @@ void main() {
 
   setUp(() {
     getConnectionStatusMock = MockGetConnectionStatus();
+
+    when(getConnectionStatusMock).thenAnswer((_) => const Stream<bool>.empty());
+
     controller = ConnectionStateController(getConnectionStatusMock);
   });
 

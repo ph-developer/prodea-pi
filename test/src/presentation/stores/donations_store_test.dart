@@ -68,6 +68,14 @@ void main() {
     setDonationAsUnrequestedMock = MockSetDonationAsUnrequested();
     setDonationAsCanceledMock = MockSetDonationAsCanceled();
     getDonationPhotoUrlMock = MockGetDonationPhotoUrl();
+
+    when(getRequestedDonationsMock)
+        .thenAnswer((_) => const Stream<List<Donation>>.empty());
+    when(getAvailableDonationsMock)
+        .thenAnswer((_) => const Stream<List<Donation>>.empty());
+    when(getMyDonationsMock)
+        .thenAnswer((_) => const Stream<List<Donation>>.empty());
+
     store = DonationsStore(
       getRequestedDonationsMock,
       getAvailableDonationsMock,

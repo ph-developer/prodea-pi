@@ -9,8 +9,6 @@ import 'package:prodea/src/domain/usecases/auth/get_current_user.dart';
 import 'package:prodea/src/domain/usecases/auth/send_password_reset_email.dart';
 import 'package:prodea/src/presentation/controllers/auth_controller.dart';
 
-import '../../../test_helpers/mobx.dart';
-
 class MockModularNavigator extends Mock implements IModularNavigator {}
 
 class MockGetCurrentUser extends Mock implements GetCurrentUser {}
@@ -108,6 +106,9 @@ void main() {
     doRegisterMock = MockDoRegister();
     doLogoutMock = MockDoLogout();
     sendPasswordResetEmailMock = MockSendPasswordResetEmail();
+
+    when(getCurrentUserMock).thenAnswer((_) => const Stream<User?>.empty());
+
     controller = AuthController(
       getCurrentUserMock,
       doLoginMock,
@@ -318,50 +319,21 @@ void main() {
     );
   });
 
-  group('init', () {
+  group('isReady', () {
     test(
-      'deve inicializar o controller e executar o callback pós login e pós '
-      'navegação quando o usuário estiver logado.',
-      () async {
-        // arrange
-        when(getCurrentUserMock)
-            .thenAnswer((_) => Stream.fromIterable([tDeniedUser]));
-        final afterLoginCallback = MockCallable();
-        final afterNavigationCallback = MockCallable();
-        // act
-        controller.init(
-          afterLoginCallback: afterLoginCallback,
-          afterNavigationCallback: afterNavigationCallback,
-        );
-        await untilCalled(afterNavigationCallback);
-        // assert
-        verify(afterLoginCallback).called(1);
-        verify(afterNavigationCallback).called(1);
-        expect(controller.isLoading, false);
-      },
-    );
-
-    test(
-      'deve inicializar o controller e executar apenas o callback pós '
-      'navegação quando o usuário não estiver logado.',
+      'deve retornar true após a primeira emissão do usuário atual.',
       () async {
         // arrange
         when(getCurrentUserMock).thenAnswer((_) => Stream.fromIterable([null]));
-        final afterLoginCallback = MockCallable();
-        final afterNavigationCallback = MockCallable();
         // act
-        controller.init(
-          afterLoginCallback: afterLoginCallback,
-          afterNavigationCallback: afterNavigationCallback,
-        );
-        await untilCalled(afterNavigationCallback);
+        final result = await controller.isReady();
         // assert
-        verifyNever(afterLoginCallback);
-        verify(afterNavigationCallback).called(1);
-        expect(controller.isLoading, false);
+        expect(result, equals(true));
       },
     );
+  });
 
+  group('init', () {
     test(
       'deve inicializar o controller e navegar para a página "doar" quando o '
       'usuário estiver logado e for um doador.',

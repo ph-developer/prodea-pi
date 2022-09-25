@@ -18,6 +18,10 @@ void main() {
 
   setUp(() {
     getCityNamesMock = MockGetCityNames();
+
+    when(getCityNamesMock)
+        .thenAnswer((_) => const Stream<List<String>>.empty());
+
     store = CitiesStore(getCityNamesMock);
   });
 

@@ -77,6 +77,9 @@ void main() {
   setUp(() {
     modularNavigatorMock = MockModularNavigator();
     getCurrentUserMock = MockGetCurrentUser();
+
+    when(getCurrentUserMock).thenAnswer((_) => const Stream<User?>.empty());
+
     controller = MainPageController(getCurrentUserMock);
 
     Modular.navigatorDelegate = modularNavigatorMock;
@@ -203,15 +206,15 @@ void main() {
     );
 
     test(
-      'deve retornar null quando o índex atual for menor que 0, e a array de '
-      'pageInfos não estiver vazia.',
+      'deve retornar a primeira pageInfo quando o índex atual for menor que 0, '
+      'e a array de pageInfos não estiver vazia.',
       () {
         // act
         controller.pageInfos = mobx.ObservableList.of([tPageInfo]);
         controller.currentPageIndex = -1;
         final result = controller.currentPageInfo;
         // assert
-        expect(result, null);
+        expect(result, controller.pageInfos[0]);
       },
     );
   });
