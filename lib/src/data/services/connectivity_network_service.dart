@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../core/errors/failures.dart';
 import '../../domain/services/network_service.dart';
@@ -41,6 +42,8 @@ class ConnectivityNetworkService implements INetworkService {
   }
 
   Future<bool> _lookupInternetAddress(String address) async {
+    if (kIsWeb) return true;
+
     try {
       final result = await InternetAddress.lookup(address);
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
