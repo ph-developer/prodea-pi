@@ -10,6 +10,7 @@ import '../../dialogs/cancel_reason_dialog.dart';
 import '../../dialogs/user_info_dialog.dart';
 import '../../stores/donations_store.dart';
 import '../../stores/users_store.dart';
+import '../../widgets/main_app_bar.dart';
 
 class MyDonationsPage extends StatefulWidget {
   const MyDonationsPage({Key? key}) : super(key: key);
@@ -32,6 +33,10 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: MainAppBar(
+        icon: Icons.thumb_up_alt_rounded,
+        title: 'Minhas Doações',
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _donationsStore.init,
         child: const Icon(Icons.refresh_rounded),

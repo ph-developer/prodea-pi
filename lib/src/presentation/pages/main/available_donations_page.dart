@@ -9,6 +9,7 @@ import '../../controllers/connection_state_controller.dart';
 import '../../dialogs/user_info_dialog.dart';
 import '../../stores/donations_store.dart';
 import '../../stores/users_store.dart';
+import '../../widgets/main_app_bar.dart';
 
 class AvailableDonationsPage extends StatefulWidget {
   const AvailableDonationsPage({Key? key}) : super(key: key);
@@ -38,6 +39,10 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: MainAppBar(
+        icon: Icons.local_mall_rounded,
+        title: 'Doações Disponíveis',
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _donationsStore.init,
         child: const Icon(Icons.refresh_rounded),

@@ -4,8 +4,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../domain/entities/user.dart';
 import '../../controllers/connection_state_controller.dart';
-import '../../dialogs/no_connection_dialog.dart';
 import '../../stores/users_store.dart';
+import '../../widgets/connection_app_bar.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -22,23 +22,9 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     return Observer(
       builder: (_) => Scaffold(
-        appBar: AppBar(
-          backgroundColor:
-              !_connectionStateController.isConnected ? Colors.redAccent : null,
-          title: Row(
-            children: const [
-              Icon(Icons.admin_panel_settings_rounded),
-              SizedBox(width: 12),
-              Text('Administração'),
-            ],
-          ),
-          actions: [
-            if (!_connectionStateController.isConnected)
-              IconButton(
-                onPressed: () => showNoConnectionDialog(context),
-                icon: const Icon(Icons.wifi_off_rounded),
-              ),
-          ],
+        appBar: ConnectionAppBar(
+          icon: Icons.admin_panel_settings_rounded,
+          title: 'Administração',
         ),
         body: Padding(
           padding: const EdgeInsets.all(16),

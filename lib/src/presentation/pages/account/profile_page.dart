@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../domain/entities/user.dart';
 import '../../controllers/auth_controller.dart';
+import '../../widgets/connection_app_bar.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -18,14 +19,9 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: const [
-            Icon(Icons.person_rounded),
-            SizedBox(width: 12),
-            Text('Meu Perfil'),
-          ],
-        ),
+      appBar: ConnectionAppBar(
+        icon: Icons.person_rounded,
+        title: 'Meu Perfil',
       ),
       body: Observer(
         builder: (_) {

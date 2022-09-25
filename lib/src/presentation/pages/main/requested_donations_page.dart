@@ -10,6 +10,7 @@ import '../../controllers/connection_state_controller.dart';
 import '../../dialogs/user_info_dialog.dart';
 import '../../stores/donations_store.dart';
 import '../../stores/users_store.dart';
+import '../../widgets/main_app_bar.dart';
 
 class RequestedDonationsPage extends StatefulWidget {
   const RequestedDonationsPage({Key? key}) : super(key: key);
@@ -39,6 +40,10 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: MainAppBar(
+        icon: Icons.handshake_rounded,
+        title: 'Doações Solicitadas',
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _donationsStore.init,
         child: const Icon(Icons.refresh_rounded),

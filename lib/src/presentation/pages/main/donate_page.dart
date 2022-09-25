@@ -8,6 +8,7 @@ import '../../../../core/input_formatters.dart';
 import '../../controllers/connection_state_controller.dart';
 import '../../stores/donation_store.dart';
 import '../../stores/users_store.dart';
+import '../../widgets/main_app_bar.dart';
 
 class DonatePage extends StatefulWidget {
   const DonatePage({Key? key}) : super(key: key);
@@ -24,6 +25,10 @@ class _DonatePageState extends State<DonatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: MainAppBar(
+        icon: Icons.volunteer_activism_rounded,
+        title: 'Doar',
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
