@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import '../controllers/auth_controller.dart';
 import '../controllers/connection_state_controller.dart';
@@ -38,9 +37,6 @@ class _BootPageState extends State<BootPage> {
       afterLoginCallback: () {
         _donationsStore.init();
         _usersStore.init();
-      },
-      afterNavigationCallback: () {
-        FlutterNativeSplash.remove();
       },
     );
   }
