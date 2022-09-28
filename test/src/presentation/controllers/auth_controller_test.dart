@@ -82,23 +82,6 @@ void main() {
     status: AuthorizationStatus.denied,
   );
 
-  const tWaitingUser = User(
-    id: 'id',
-    email: 'email',
-    cnpj: 'cnpj',
-    name: 'name',
-    address: 'address',
-    city: 'city',
-    phoneNumber: 'phoneNumber',
-    about: 'about',
-    responsibleName: 'responsibleName',
-    responsibleCpf: 'responsibleCpf',
-    isDonor: false,
-    isBeneficiary: false,
-    isAdmin: false,
-    status: AuthorizationStatus.waiting,
-  );
-
   setUp(() {
     modularNavigatorMock = MockModularNavigator();
     getCurrentUserMock = MockGetCurrentUser();
