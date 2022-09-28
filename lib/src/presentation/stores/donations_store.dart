@@ -38,9 +38,7 @@ abstract class _DonationsStoreBase with Store {
     this._setDonationAsUnrequested,
     this._setDonationAsCanceled,
     this._getDonationPhotoUrl,
-  ) {
-    init();
-  }
+  );
 
   @observable
   ObservableList<Donation> requestedDonations = ObservableList.of([]);
@@ -52,7 +50,7 @@ abstract class _DonationsStoreBase with Store {
   ObservableList<Donation> myDonations = ObservableList.of([]);
 
   @action
-  void init() {
+  void fetchDonations() {
     _subscriptions.map((subscription) => subscription.cancel());
     _subscriptions.clear();
 

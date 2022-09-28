@@ -7,12 +7,12 @@ abstract class NavigationHelper {
       StreamController.broadcast();
 
   static void goTo(String path, {bool replace = false}) {
+    _currentRoute.add(path);
     if (replace) {
       Modular.to.navigate(path);
     } else {
       Modular.to.pushNamed(path);
     }
-    _currentRoute.add(path);
   }
 
   static void back() {

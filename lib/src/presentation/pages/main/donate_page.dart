@@ -208,7 +208,20 @@ class _DonatePageState extends State<DonatePage> {
           }
 
           return OutlinedButton(
-            onPressed: canSubmit ? _donationStore.postDonation : null,
+            onPressed: canSubmit
+                ? () => _donationStore.postDonation(
+                      onSuccess: () {
+                        context
+                            .findAncestorWidgetOfExactType<PageView>()
+                            ?.controller
+                            .animateToPage(
+                              1,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.ease,
+                            );
+                      },
+                    )
+                : null,
             child: const Text('Postar Doação'),
           );
         },

@@ -25,12 +25,6 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
   final UsersStore _usersStore = Modular.get();
 
   @override
-  void initState() {
-    _donationsStore.init();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MainAppBar(
@@ -38,7 +32,7 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
         title: 'Minhas Doações',
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _donationsStore.init,
+        onPressed: _donationsStore.fetchDonations,
         child: const Icon(Icons.refresh_rounded),
       ),
       body: Padding(

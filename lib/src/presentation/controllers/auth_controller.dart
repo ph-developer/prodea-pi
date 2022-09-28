@@ -27,9 +27,7 @@ abstract class _AuthControllerBase with Store {
     this._doRegister,
     this._doLogout,
     this._sendPasswordResetEmail,
-  ) {
-    init();
-  }
+  );
 
   @observable
   bool isLoading = false;
@@ -57,51 +55,23 @@ abstract class _AuthControllerBase with Store {
   bool get isDenied => currentUser?.status == AuthorizationStatus.denied;
 
   @action
-  Future<bool> isReady() async {
-    await _getCurrentUser().first;
-    return true;
-  }
-
-  @action
-  void init() {
-    _getCurrentUser().listen((user) async {
-      if (user != null) {
-        currentUser = user;
-        navigateToInitialRoute();
-      } else {
-        currentUser = null;
-        NavigationHelper.goTo('/login', replace: true);
-      }
-      isLoading = false;
-    });
-  }
-
-  @action
-  void navigateToInitialRoute() {
-    if (isAuthorized) {
-      if (isDonor) {
-        NavigationHelper.goTo('/main/donate', replace: true);
-      } else if (isBeneficiary) {
-        NavigationHelper.goTo('/main/available-donations', replace: true);
-      }
-    } else if (isDenied) {
-      NavigationHelper.goTo('/denied', replace: true);
-    } else {
-      NavigationHelper.goTo('/waiting', replace: true);
-    }
+  Future<void> fetchCurrentUser() async {
+    currentUser = await _getCurrentUser();
   }
 
   @action
   Future<void> login(String email, String password) async {
     isLoading = true;
-    await _doLogin(email, password);
+    currentUser = await _doLogin(email, password);
+    if (isLoggedIn) NavigationHelper.goTo('/main', replace: true);
     isLoading = false;
   }
 
   @action
   Future<void> register(String email, String password, User userInfo) async {
     isLoading = true;
-    await _doRegister(email, password, userInfo);
+    currentUser = await _doRegister(email, password, userInfo);
+    if (isLoggedIn) NavigationHelper.goTo('/main', replace: true);
     isLoading = false;
   }
 
@@ -116,7 +86,11 @@ abstract class _AuthControllerBase with Store {
   @action
   Future<void> logout() async {
     isLoading = true;
-    await _doLogout();
+    final result = await _doLogout();
+    if (result) {
+      currentUser = null;
+      NavigationHelper.goTo('/login', replace: true);
+    }
     isLoading = false;
   }
 

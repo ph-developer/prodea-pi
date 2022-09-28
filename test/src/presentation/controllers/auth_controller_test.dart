@@ -107,8 +107,6 @@ void main() {
     doLogoutMock = MockDoLogout();
     sendPasswordResetEmailMock = MockSendPasswordResetEmail();
 
-    when(getCurrentUserMock).thenAnswer((_) => const Stream<User?>.empty());
-
     controller = AuthController(
       getCurrentUserMock,
       doLoginMock,
@@ -319,97 +317,29 @@ void main() {
     );
   });
 
-  group('isReady', () {
+  group('fetchCurrentUser', () {
     test(
-      'deve retornar true após a primeira emissão do usuário atual.',
+      'deve setar o usuário quando ele estiver logado.',
       () async {
         // arrange
-        when(getCurrentUserMock).thenAnswer((_) => Stream.fromIterable([null]));
+        when(getCurrentUserMock).thenAnswer((_) async => tAuthorizedDonorUser);
         // act
-        final result = await controller.isReady();
+        await controller.fetchCurrentUser();
         // assert
-        expect(result, equals(true));
-      },
-    );
-  });
-
-  group('init', () {
-    test(
-      'deve inicializar o controller e navegar para a página "doar" quando o '
-      'usuário estiver logado e for um doador.',
-      () async {
-        // arrange
-        when(getCurrentUserMock)
-            .thenAnswer((_) => Stream.fromIterable([tAuthorizedDonorUser]));
-        // act
-        controller.init();
-        await untilCalled(() => modularNavigatorMock.navigate(any()));
-        // assert
-        verify(() => modularNavigatorMock.navigate('/main/donate')).called(1);
+        expect(controller.currentUser, tAuthorizedDonorUser);
         expect(controller.isLoading, false);
       },
     );
 
     test(
-      'deve inicializar o controller e navegar para a página "doações '
-      'disponíveis" quando o usuário estiver logado e for um beneficiário.',
+      'deve setar o usuário como null quando ele estiver deslogado.',
       () async {
         // arrange
-        when(getCurrentUserMock).thenAnswer(
-            (_) => Stream.fromIterable([tAuthorizedBeneficiaryUser]));
+        when(getCurrentUserMock).thenAnswer((_) async => null);
         // act
-        controller.init();
-        await untilCalled(() => modularNavigatorMock.navigate(any()));
+        await controller.fetchCurrentUser();
         // assert
-        verify(() => modularNavigatorMock.navigate('/main/available-donations'))
-            .called(1);
-        expect(controller.isLoading, false);
-      },
-    );
-
-    test(
-      'deve inicializar o controller e navegar para a página "negado" quando o '
-      'usuário estiver logado e seu cadastro ter sido negado.',
-      () async {
-        // arrange
-        when(getCurrentUserMock)
-            .thenAnswer((_) => Stream.fromIterable([tDeniedUser]));
-        // act
-        controller.init();
-        await untilCalled(() => modularNavigatorMock.navigate(any()));
-        // assert
-        verify(() => modularNavigatorMock.navigate('/denied')).called(1);
-        expect(controller.isLoading, false);
-      },
-    );
-
-    test(
-      'deve inicializar o controller e navegar para a página "aguardando" '
-      'quando o usuário estiver logado e seu cadastro estar em análise.',
-      () async {
-        // arrange
-        when(getCurrentUserMock)
-            .thenAnswer((_) => Stream.fromIterable([tWaitingUser]));
-        // act
-        controller.init();
-        await untilCalled(() => modularNavigatorMock.navigate(any()));
-        // assert
-        verify(() => modularNavigatorMock.navigate('/waiting')).called(1);
-        expect(controller.isLoading, false);
-      },
-    );
-
-    test(
-      'deve inicializar o controller e navegar para a página "login" quando o '
-      'usuário não estiver logado.',
-      () async {
-        // arrange
-        when(getCurrentUserMock).thenAnswer((_) => Stream.fromIterable([null]));
-        // act
-        controller.init();
-        await untilCalled(() => modularNavigatorMock.navigate(any()));
-        // assert
-        verify(() => modularNavigatorMock.navigate('/login')).called(1);
+        expect(controller.currentUser, null);
         expect(controller.isLoading, false);
       },
     );

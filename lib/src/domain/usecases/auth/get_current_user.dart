@@ -11,18 +11,18 @@ class GetCurrentUser {
 
   GetCurrentUser(this._authRepo, this._userRepo, this._notificationService);
 
-  Stream<User?> call() {
-    return _authRepo.currentUserIdChanged().asyncMap((userId) async {
-      if (userId == null) return null;
+  Future<User?> call() async {
+    final userId = await _authRepo.getCurrentUserId();
 
-      try {
-        final user = await _userRepo.getById(userId);
+    if (userId == null) return null;
 
-        return user;
-      } on Failure catch (failure) {
-        _notificationService.notifyError(failure.message);
-        return null;
-      }
-    });
+    try {
+      final user = await _userRepo.getById(userId);
+
+      return user;
+    } on Failure catch (failure) {
+      _notificationService.notifyError(failure.message);
+      return null;
+    }
   }
 }

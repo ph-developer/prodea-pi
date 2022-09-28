@@ -29,11 +29,11 @@ mixin _$CitiesStore on _CitiesStoreBase, Store {
       ActionController(name: '_CitiesStoreBase', context: context);
 
   @override
-  void init() {
+  void fetchCities() {
     final _$actionInfo = _$_CitiesStoreBaseActionController.startAction(
-        name: '_CitiesStoreBase.init');
+        name: '_CitiesStoreBase.fetchCities');
     try {
-      return super.init();
+      return super.fetchCities();
     } finally {
       _$_CitiesStoreBaseActionController.endAction(_$actionInfo);
     }

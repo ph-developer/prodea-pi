@@ -13,13 +13,10 @@ void main() {
 
   setUp(() {
     getConnectionStatusMock = MockGetConnectionStatus();
-
-    when(getConnectionStatusMock).thenAnswer((_) => const Stream<bool>.empty());
-
     controller = ConnectionStateController(getConnectionStatusMock);
   });
 
-  group('init', () {
+  group('fetchConnectionStatus', () {
     test(
       'deve inicializar o controller, e setar o status de conexão como true quando houver conexão.',
       () async {
@@ -29,7 +26,7 @@ void main() {
         final isConnectionChanged = MockCallable<bool>();
         whenReaction((_) => controller.isConnected, isConnectionChanged);
         // act
-        controller.init();
+        controller.fetchConnectionStatus();
         await untilCalled(() => isConnectionChanged(true));
         // assert
         expect(controller.isConnected, true);
@@ -45,7 +42,7 @@ void main() {
         final isConnectionChanged = MockCallable<bool>();
         whenReaction((_) => controller.isConnected, isConnectionChanged);
         // act
-        controller.init();
+        controller.fetchConnectionStatus();
         await untilCalled(() => isConnectionChanged(false));
         // assert
         expect(controller.isConnected, false);

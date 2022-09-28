@@ -29,9 +29,7 @@ abstract class _UsersStoreBase with Store {
     this._getDonors,
     this._setUserAsAuthorized,
     this._setUserAsDenied,
-  ) {
-    init();
-  }
+  );
 
   @observable
   ObservableList<User> commonUsers = ObservableList.of([]);
@@ -43,7 +41,7 @@ abstract class _UsersStoreBase with Store {
   ObservableList<User> donors = ObservableList.of([]);
 
   @action
-  void init() {
+  void fetchUsers() {
     _subscriptions.map((subscription) => subscription.cancel());
     _subscriptions.clear();
 

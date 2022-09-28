@@ -18,14 +18,10 @@ void main() {
 
   setUp(() {
     getCityNamesMock = MockGetCityNames();
-
-    when(getCityNamesMock)
-        .thenAnswer((_) => const Stream<List<String>>.empty());
-
     store = CitiesStore(getCityNamesMock);
   });
 
-  group('init', () {
+  group('fetchCities', () {
     test(
       'deve inicializar a store, populando a lista de cidades.',
       () async {
@@ -37,7 +33,7 @@ void main() {
         // assert
         expect(store.cities, equals([]));
         // act
-        store.init();
+        store.fetchCities();
         await untilCalled(() => citiesChanged(tCityNameList));
         // assert
         expect(store.cities, tCityNameList);

@@ -15,14 +15,13 @@ abstract class _ConnectionStateControllerBase with Store {
   final GetConnectionStatus _getConnectionStatus;
   final List<StreamSubscription> _subscriptions = [];
 
-  _ConnectionStateControllerBase(this._getConnectionStatus) {
-    init();
-  }
+  _ConnectionStateControllerBase(this._getConnectionStatus);
 
   @observable
   bool isConnected = true;
 
-  void init() {
+  @action
+  void fetchConnectionStatus() {
     _subscriptions.map((subscription) => subscription.cancel());
     _subscriptions.clear();
 

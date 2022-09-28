@@ -52,13 +52,6 @@ void main() {
     getDonorsMock = MockGetDonors();
     setUserAsAuthorizedMock = MockSetUserAsAuthorized();
     setUserAsDeniedMock = MockSetUserAsDenied();
-
-    when(getCommonUsersMock)
-        .thenAnswer((_) => const Stream<List<User>>.empty());
-    when(getBeneficiariesMock)
-        .thenAnswer((_) => const Stream<List<User>>.empty());
-    when(getDonorsMock).thenAnswer((_) => const Stream<List<User>>.empty());
-
     store = UsersStore(
       getCommonUsersMock,
       getBeneficiariesMock,
@@ -68,7 +61,7 @@ void main() {
     );
   });
 
-  group('init', () {
+  group('fetchUsers', () {
     test(
       'deve inicializar a store, populando as listas de usuários.',
       () async {
@@ -89,7 +82,7 @@ void main() {
         expect(store.beneficiaries, equals([]));
         expect(store.donors, equals([]));
         // act
-        store.init();
+        store.fetchUsers();
         await untilCalled(() => commonUsersChanged(tUserList));
         await untilCalled(() => beneficiariesChanged(tUserList));
         await untilCalled(() => donorsChanged(tUserList));
@@ -114,7 +107,7 @@ void main() {
         final donorsChanged = MockCallable<List<User>>();
         whenReaction((_) => store.donors, donorsChanged);
         // act
-        store.init();
+        store.fetchUsers();
         await untilCalled(() => donorsChanged(tUserList));
         final result = store.getDonorById('id');
         // assert
@@ -136,7 +129,7 @@ void main() {
         final beneficiariesChanged = MockCallable<List<User>>();
         whenReaction((_) => store.beneficiaries, beneficiariesChanged);
         // act
-        store.init();
+        store.fetchUsers();
         await untilCalled(() => beneficiariesChanged(tUserList));
         final result = store.getBeneficiaryById('id');
         // assert

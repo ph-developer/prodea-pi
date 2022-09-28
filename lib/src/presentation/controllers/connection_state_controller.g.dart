@@ -25,6 +25,22 @@ mixin _$ConnectionStateController on _ConnectionStateControllerBase, Store {
     });
   }
 
+  late final _$_ConnectionStateControllerBaseActionController =
+      ActionController(
+          name: '_ConnectionStateControllerBase', context: context);
+
+  @override
+  void fetchConnectionStatus() {
+    final _$actionInfo =
+        _$_ConnectionStateControllerBaseActionController.startAction(
+            name: '_ConnectionStateControllerBase.fetchConnectionStatus');
+    try {
+      return super.fetchConnectionStatus();
+    } finally {
+      _$_ConnectionStateControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

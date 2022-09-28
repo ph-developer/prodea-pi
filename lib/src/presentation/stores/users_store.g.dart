@@ -78,11 +78,11 @@ mixin _$UsersStore on _UsersStoreBase, Store {
       ActionController(name: '_UsersStoreBase', context: context);
 
   @override
-  void init() {
+  void fetchUsers() {
     final _$actionInfo = _$_UsersStoreBaseActionController.startAction(
-        name: '_UsersStoreBase.init');
+        name: '_UsersStoreBase.fetchUsers');
     try {
-      return super.init();
+      return super.fetchUsers();
     } finally {
       _$_UsersStoreBaseActionController.endAction(_$actionInfo);
     }

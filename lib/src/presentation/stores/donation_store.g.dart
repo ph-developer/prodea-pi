@@ -93,8 +93,9 @@ mixin _$DonationStore on _DonationStoreBase, Store {
       AsyncAction('_DonationStoreBase.postDonation', context: context);
 
   @override
-  Future<void> postDonation() {
-    return _$postDonationAsyncAction.run(() => super.postDonation());
+  Future<void> postDonation({Function? onSuccess}) {
+    return _$postDonationAsyncAction
+        .run(() => super.postDonation(onSuccess: onSuccess));
   }
 
   late final _$pickImageFromCameraAsyncAction =

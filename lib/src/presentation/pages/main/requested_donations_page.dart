@@ -26,12 +26,6 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
   final _cityFilterController = TextEditingController();
 
   @override
-  void initState() {
-    _donationsStore.init();
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _cityFilterController.dispose();
     super.dispose();
@@ -45,7 +39,7 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
         title: 'Doações Solicitadas',
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _donationsStore.init,
+        onPressed: _donationsStore.fetchDonations,
         child: const Icon(Icons.refresh_rounded),
       ),
       body: Padding(

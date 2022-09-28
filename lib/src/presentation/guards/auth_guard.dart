@@ -11,8 +11,6 @@ class AuthGuard extends RouteGuard {
   Future<bool> canActivate(String path, ParallelRoute route) async {
     final AuthController authController = Modular.get();
 
-    await authController.isReady();
-
     return authController.isLoggedIn;
   }
 }

@@ -82,12 +82,12 @@ mixin _$AuthController on _AuthControllerBase, Store {
     });
   }
 
-  late final _$isReadyAsyncAction =
-      AsyncAction('_AuthControllerBase.isReady', context: context);
+  late final _$fetchCurrentUserAsyncAction =
+      AsyncAction('_AuthControllerBase.fetchCurrentUser', context: context);
 
   @override
-  Future<bool> isReady() {
-    return _$isReadyAsyncAction.run(() => super.isReady());
+  Future<void> fetchCurrentUser() {
+    return _$fetchCurrentUserAsyncAction.run(() => super.fetchCurrentUser());
   }
 
   late final _$loginAsyncAction =
@@ -127,28 +127,6 @@ mixin _$AuthController on _AuthControllerBase, Store {
 
   late final _$_AuthControllerBaseActionController =
       ActionController(name: '_AuthControllerBase', context: context);
-
-  @override
-  void init() {
-    final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
-        name: '_AuthControllerBase.init');
-    try {
-      return super.init();
-    } finally {
-      _$_AuthControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void navigateToInitialRoute() {
-    final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
-        name: '_AuthControllerBase.navigateToInitialRoute');
-    try {
-      return super.navigateToInitialRoute();
-    } finally {
-      _$_AuthControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   void navigateToLoginPage() {

@@ -48,45 +48,42 @@ void main() {
   });
 
   test(
-    'deve emitir um User quando o usuário efetuar o login.',
-    () {
-      // arrange
-      when(authRepoMock.currentUserIdChanged)
-          .thenAnswer((_) => Stream.fromIterable(['id']));
-      when(() => userRepoMock.getById('id')).thenAnswer((_) async => tUser);
-      // act
-      final stream = usecase();
-      // assert
-      expect(stream, emits(tUser));
-      verifyNever(() => notificationServiceMock.notifyError(any()));
-    },
-  );
-
-  test(
-    'deve emitir null quando o usuário efetuar o logout.',
-    () {
-      // arrange
-      when(authRepoMock.currentUserIdChanged)
-          .thenAnswer((_) => Stream.fromIterable([null]));
-      // act
-      final stream = usecase();
-      // assert
-      expect(stream, emits(null));
-      verifyNever(() => notificationServiceMock.notifyError(any()));
-    },
-  );
-
-  test(
-    'deve emitir null e notificar quando o usuário efetuar o login e ocorrer algum erro.',
+    'deve retornar um User quando o usuário estiver logado.',
     () async {
       // arrange
-      when(authRepoMock.currentUserIdChanged)
-          .thenAnswer((_) => Stream.fromIterable(['id']));
+      when(authRepoMock.getCurrentUserId).thenAnswer((_) async => 'id');
+      when(() => userRepoMock.getById('id')).thenAnswer((_) async => tUser);
+      // act
+      final result = await usecase();
+      // assert
+      expect(result, tUser);
+      verifyNever(() => notificationServiceMock.notifyError(any()));
+    },
+  );
+
+  test(
+    'deve retornar null quando o usuário estiver deslogado.',
+    () async {
+      // arrange
+      when(authRepoMock.getCurrentUserId).thenAnswer((_) async => null);
+      // act
+      final result = await usecase();
+      // assert
+      expect(result, null);
+      verifyNever(() => notificationServiceMock.notifyError(any()));
+    },
+  );
+
+  test(
+    'deve retornar null e notificar quando ocorrer algum erro.',
+    () async {
+      // arrange
+      when(authRepoMock.getCurrentUserId).thenAnswer((_) async => 'id');
       when(() => userRepoMock.getById(any())).thenThrow(GetUserFailure());
       // act
-      final stream = usecase();
+      final result = await usecase();
       // assert
-      expect(stream, emits(null));
+      expect(result, null);
       await untilCalled(() => notificationServiceMock.notifyError(any()));
       verify(() => notificationServiceMock.notifyError(any())).called(1);
     },

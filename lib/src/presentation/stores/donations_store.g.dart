@@ -110,11 +110,11 @@ mixin _$DonationsStore on _DonationsStoreBase, Store {
       ActionController(name: '_DonationsStoreBase', context: context);
 
   @override
-  void init() {
+  void fetchDonations() {
     final _$actionInfo = _$_DonationsStoreBaseActionController.startAction(
-        name: '_DonationsStoreBase.init');
+        name: '_DonationsStoreBase.fetchDonations');
     try {
-      return super.init();
+      return super.fetchDonations();
     } finally {
       _$_DonationsStoreBaseActionController.endAction(_$actionInfo);
     }

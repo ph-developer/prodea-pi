@@ -10,6 +10,8 @@ import 'package:prodea/src/domain/usecases/photo/pick_photo_from_camera.dart';
 import 'package:prodea/src/domain/usecases/photo/pick_photo_from_gallery.dart';
 import 'package:prodea/src/presentation/stores/donation_store.dart';
 
+import '../../../test_helpers/mobx.dart';
+
 class MockModularNavigator extends Mock implements IModularNavigator {}
 
 class MockCreateDonation extends Mock implements CreateDonation {}
@@ -53,20 +55,21 @@ void main() {
 
   group('postDonation', () {
     test(
-      'deve navegar para a página "minhas doações" quando postar uma doação com sucesso.',
+      'deve postar uma doação com sucesso e chamar a função onSuccess.',
       () async {
         // arrange
+        final onSuccess = MockCallable<void>();
         store.description = tDonation.description;
         store.beneficiaryId = tDonation.beneficiaryId;
         store.expiration = tDonation.expiration;
         when(() => createDonationMock(tDonation, null))
             .thenAnswer((_) async => tDonation);
         // act
-        await store.postDonation();
+        await store.postDonation(onSuccess: onSuccess);
         // assert
         expect(store.isLoading, false);
         verify(() => createDonationMock(tDonation, null)).called(1);
-        verify(() => modularNavigatorMock.navigate(any())).called(1);
+        verify(onSuccess).called(1);
       },
     );
 

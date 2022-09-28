@@ -68,14 +68,6 @@ void main() {
     setDonationAsUnrequestedMock = MockSetDonationAsUnrequested();
     setDonationAsCanceledMock = MockSetDonationAsCanceled();
     getDonationPhotoUrlMock = MockGetDonationPhotoUrl();
-
-    when(getRequestedDonationsMock)
-        .thenAnswer((_) => const Stream<List<Donation>>.empty());
-    when(getAvailableDonationsMock)
-        .thenAnswer((_) => const Stream<List<Donation>>.empty());
-    when(getMyDonationsMock)
-        .thenAnswer((_) => const Stream<List<Donation>>.empty());
-
     store = DonationsStore(
       getRequestedDonationsMock,
       getAvailableDonationsMock,
@@ -88,7 +80,7 @@ void main() {
     );
   });
 
-  group('init', () {
+  group('fetchDonations', () {
     test(
       'deve inicializar a store, populando as listas de doações.',
       () async {
@@ -112,7 +104,7 @@ void main() {
         expect(store.availableDonations, equals([]));
         expect(store.myDonations, equals([]));
         // act
-        store.init();
+        store.fetchDonations();
         await untilCalled(() => requestedDonationsChanged(tDonationList));
         await untilCalled(() => availableDonationsChanged(tDonationList));
         await untilCalled(() => myDonationsChanged(tDonationList));

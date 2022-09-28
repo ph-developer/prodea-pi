@@ -11,12 +11,7 @@ import 'presentation/pages/account/profile_page.dart';
 import 'presentation/pages/admin/admin_page.dart';
 import 'presentation/pages/auth/forgot_password_page.dart';
 import 'presentation/pages/auth/login_page.dart';
-import 'presentation/pages/main/available_donations_page.dart';
-import 'presentation/pages/main/donate_page.dart';
-import 'presentation/pages/main/my_donations_page.dart';
-import 'presentation/pages/main/requested_donations_page.dart';
 import 'presentation/pages/main_page.dart';
-import 'presentation/pages/status/denied_page.dart';
 import 'data/repositories/local/json_city_local_repo.dart';
 import 'data/repositories/remote/firebase_auth_remote_repo.dart';
 import 'data/repositories/remote/firebase_donation_remote_repo.dart';
@@ -59,10 +54,7 @@ import 'domain/usecases/user/set_user_as_authorized.dart';
 import 'domain/usecases/user/set_user_as_denied.dart';
 import 'presentation/controllers/auth_controller.dart';
 import 'presentation/controllers/connection_state_controller.dart';
-import 'presentation/controllers/main_page_controller.dart';
 import 'presentation/pages/auth/register_page.dart';
-import 'presentation/pages/boot_page.dart';
-import 'presentation/pages/status/waiting_page.dart';
 import 'presentation/stores/cities_store.dart';
 import 'presentation/stores/donation_store.dart';
 import 'presentation/stores/donations_store.dart';
@@ -131,7 +123,6 @@ class AppModule extends Module {
             (i) => AuthController(i(), i(), i(), i(), i())),
         Bind.singleton<ConnectionStateController>(
             (i) => ConnectionStateController(i())),
-        Bind.singleton<MainPageController>((i) => MainPageController(i())),
 
         //! Stores
         Bind.singleton<CitiesStore>((i) => CitiesStore(i())),
@@ -144,7 +135,7 @@ class AppModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        ChildRoute('/', child: (_, __) => const BootPage()),
+        RedirectRoute('/', to: '/login'),
         ChildRoute(
           '/login',
           child: (_, __) => const LoginPage(),
@@ -160,26 +151,11 @@ class AppModule extends Module {
           child: (_, __) => const ForgotPasswordPage(),
           guards: [GuestGuard()],
         ),
-        ChildRoute('/main', child: (_, __) => const MainPage(), guards: [
-          AuthGuard()
-        ], children: [
-          ChildRoute(
-            '/donate',
-            child: (_, __) => const DonatePage(),
-          ),
-          ChildRoute(
-            '/my-donations',
-            child: (_, __) => const MyDonationsPage(),
-          ),
-          ChildRoute(
-            '/available-donations',
-            child: (_, __) => const AvailableDonationsPage(),
-          ),
-          ChildRoute(
-            '/requested-donations',
-            child: (_, __) => const RequestedDonationsPage(),
-          ),
-        ]),
+        ChildRoute(
+          '/main',
+          child: (_, __) => const MainPage(),
+          guards: [AuthGuard()],
+        ),
         ChildRoute(
           '/admin',
           child: (_, __) => const AdminPage(),
@@ -188,16 +164,6 @@ class AppModule extends Module {
         ChildRoute(
           '/profile',
           child: (_, __) => const ProfilePage(),
-          guards: [AuthGuard()],
-        ),
-        ChildRoute(
-          '/denied',
-          child: (_, __) => const DeniedPage(),
-          guards: [AuthGuard()],
-        ),
-        ChildRoute(
-          '/waiting',
-          child: (_, __) => const WaitingPage(),
           guards: [AuthGuard()],
         ),
       ];

@@ -14,15 +14,13 @@ abstract class _CitiesStoreBase with Store {
   final GetCityNames _getCityNames;
   final List<StreamSubscription> _subscriptions = [];
 
-  _CitiesStoreBase(this._getCityNames) {
-    init();
-  }
+  _CitiesStoreBase(this._getCityNames);
 
   @observable
   ObservableList<String> cities = ObservableList.of([]);
 
   @action
-  void init() {
+  void fetchCities() {
     _subscriptions.map((subscription) => subscription.cancel());
     _subscriptions.clear();
 
