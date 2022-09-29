@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:prodea/src/themes/main_theme.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('themeData', () {
     test(
       'deve ser do tipo ThemeData.',
