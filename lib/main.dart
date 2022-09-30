@@ -6,7 +6,7 @@ import 'firebase_options.dart';
 import 'src/app_module.dart';
 import 'src/presentation/widgets/app_widget.dart';
 
-Future<void> main() async {
+Future<void> main([List<String> args = const [], Module? appModule]) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
@@ -15,7 +15,7 @@ Future<void> main() async {
 
   runApp(
     ModularApp(
-      module: AppModule(),
+      module: appModule ?? AppModule(),
       child: const AppWidget(),
     ),
   );

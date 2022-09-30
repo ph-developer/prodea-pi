@@ -152,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
         showCitySelectDialog(
           context,
           onSelect: (value) {
-            _userStore.address = value;
+            _userStore.city = value;
             _cityController.text = value;
           },
         );
