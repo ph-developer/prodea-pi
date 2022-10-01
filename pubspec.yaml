@@ -3,7 +3,7 @@ description: Aplicativo do Projeto Integrador UNIVESP.
 
 publish_to: "none"
 
-version: 1.4.0
+version: 1.4.0+1
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
