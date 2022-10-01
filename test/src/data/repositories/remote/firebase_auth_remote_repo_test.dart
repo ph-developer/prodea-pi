@@ -5,13 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:prodea/core/errors/failures.dart';
 import 'package:prodea/src/data/repositories/remote/firebase_auth_remote_repo.dart';
 
-class MockFirebaseAuth extends Mock implements FirebaseAuth {}
-
-class MockFirebaseUser extends Mock implements firebase.User {}
-
-class MockFirebaseUserCredential extends Mock implements UserCredential {}
-
-class MockFirebaseAuthCredential extends Mock implements AuthCredential {}
+import '../../../../mocks/mocks.dart';
 
 void main() {
   late firebase.User userMock;

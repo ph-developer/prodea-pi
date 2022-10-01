@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:prodea/src/presentation/dialogs/no_connection_dialog.dart';
 
-import '../../../test_helpers/finder.dart';
-
 void main() {
   const tScaffoldKey = Key('scaffold');
 
@@ -20,22 +18,24 @@ void main() {
   testWidgets(
     'deve mostrar um diálogo e fechar ao clicar no botão de voltar.',
     (tester) async {
+      // arrange
+      Finder widget;
       await tester.pumpWidget(createWidgetUnderTest());
-
       final BuildContext context = tester.element(find.byKey(tScaffoldKey));
+
+      // mostrar modal
       showNoConnectionDialog(context);
+      await tester.pumpAndSettle();
 
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsOneWidget);
 
-      final backButton = findWidgetByType<TextButton>(TextButton);
+      // voltar
+      widget = find.byType(TextButton).at(0);
+      await tester.tap(widget);
+      await tester.pumpAndSettle();
 
-      expect(backButton.enabled, true);
-
-      await tester.tap(find.byWidget(backButton));
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsNothing);
     },
   );

@@ -11,6 +11,7 @@ import 'package:modular_test/modular_test.dart';
 import 'package:prodea/firebase_options.dart';
 import 'package:prodea/main.dart' as app;
 import 'package:prodea/src/app_module.dart';
+import 'package:prodea/src/presentation/dialogs/cancel_reason_dialog.dart';
 import 'package:prodea/src/presentation/dialogs/city_select_dialog.dart';
 import 'package:prodea/src/presentation/pages/auth/forgot_password_page.dart';
 import 'package:prodea/src/presentation/pages/auth/login_page.dart';
@@ -19,9 +20,7 @@ import 'package:prodea/src/presentation/pages/main/donate_page.dart';
 import 'package:prodea/src/presentation/pages/main/my_donations_page.dart';
 import 'package:prodea/src/presentation/pages/main_page.dart';
 
-import 'test_helpers/finder.dart';
-import 'test_helpers/firebase_mocks.dart';
-import 'test_helpers/image_picker_mocks.dart';
+import 'mocks/mocks.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -58,183 +57,207 @@ void main() {
         ]);
       });
 
-      testWidgets(
-        'deve testar a página de login',
-        (tester) async {
-          await tester.runAsync(() => app.main([], appModule));
-          await tester.pumpAndSettle();
+      testWidgets('deve testar a página de login', (tester) async {
+        // arrange
+        Finder widget;
+        await tester.runAsync(() => app.main([], appModule));
+        await tester.pumpAndSettle();
 
-          expect(find.byType(LoginPage), findsOneWidget);
-          expect(find.byType(TextFormField), findsNWidgets(2));
-          expect(find.byType(OutlinedButton), findsNWidgets(3));
+        // assert
+        expect(find.byType(LoginPage), findsOneWidget);
+        expect(find.byType(TextFormField), findsNWidgets(2));
+        expect(find.byType(OutlinedButton), findsNWidgets(3));
 
-          final emailFormField = findWidgetByType<TextFormField>(TextFormField);
-          await tester.enterText(
-              find.byWidget(emailFormField), 'test@test.dev');
+        // escrever email
+        widget = find.byType(TextFormField).at(0);
+        await tester.enterText(widget, 'test@test.dev');
+        await tester.pumpAndSettle();
 
-          var passwordFormField =
-              findWidgetByType<TextFormField>(TextFormField, 1);
-          await tester.enterText(find.byWidget(passwordFormField), '1');
+        // escrever senha incorreta
+        widget = find.byType(TextFormField).at(1);
+        await tester.enterText(widget, '1');
+        await tester.pumpAndSettle();
 
-          var submitButton = findWidgetByType<OutlinedButton>(OutlinedButton);
-          await tester.tap(find.byWidget(submitButton));
-          await tester.pumpAndSettle();
+        // tentar efetuar login
+        widget = find.byType(OutlinedButton).at(0);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          expect(find.byType(SnackBar), findsOneWidget);
+        // assert
+        expect(find.byType(SnackBar), findsOneWidget);
 
-          passwordFormField = findWidgetByType<TextFormField>(TextFormField, 1);
-          await tester.tap(find.byWidget(passwordFormField));
-          await tester.enterText(find.byWidget(passwordFormField), '123');
+        // escrever senha correta
+        widget = find.byType(TextFormField).at(1);
+        await tester.enterText(widget, '123');
+        await tester.pumpAndSettle();
 
-          submitButton = findWidgetByType<OutlinedButton>(OutlinedButton);
-          await tester.tap(find.byWidget(submitButton));
-          await tester.pumpAndSettle();
+        // efetuar login
+        widget = find.byType(OutlinedButton).at(0);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          expect(find.byType(MainPage), findsOneWidget);
-        },
-      );
+        // assert
+        expect(find.byType(MainPage), findsOneWidget);
+      });
 
-      testWidgets(
-        'deve testar a página de recuperação de senha',
-        (tester) async {
-          await tester.runAsync(() => app.main([], appModule));
-          await tester.pumpAndSettle();
+      testWidgets('deve testar a página recuperar senha', (tester) async {
+        // arrange
+        Finder widget;
+        await tester.runAsync(() => app.main([], appModule));
+        await tester.pumpAndSettle();
 
-          expect(find.byType(LoginPage), findsOneWidget);
+        // assert
+        expect(find.byType(LoginPage), findsOneWidget);
 
-          var forgotButton =
-              findWidgetByType<OutlinedButton>(OutlinedButton, 1);
-          await tester.tap(find.byWidget(forgotButton));
-          await tester.pumpAndSettle();
+        // navegar para a página recuperar senha
+        widget = find.byType(OutlinedButton).at(1);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          expect(find.byType(ForgotPasswordPage), findsOneWidget);
-          expect(find.byType(TextFormField), findsNWidgets(1));
-          expect(find.byType(OutlinedButton), findsNWidgets(2));
+        // assert
+        expect(find.byType(ForgotPasswordPage), findsOneWidget);
+        expect(find.byType(TextFormField), findsNWidgets(1));
+        expect(find.byType(OutlinedButton), findsNWidgets(2));
 
-          final emailFormField = findWidgetByType<TextFormField>(TextFormField);
-          await tester.enterText(
-              find.byWidget(emailFormField), 'test@test.dev');
+        // escrever email
+        widget = find.byType(TextFormField).at(0);
+        await tester.enterText(widget, 'test@test.dev');
+        await tester.pumpAndSettle();
 
-          final submitButton = findWidgetByType<OutlinedButton>(OutlinedButton);
-          await tester.tap(find.byWidget(submitButton));
-          await tester.pumpAndSettle();
+        /// efetuar recuperação de senha
+        widget = find.byType(OutlinedButton).at(0);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          expect(find.byType(SnackBar), findsOneWidget);
-          expect(find.byType(LoginPage), findsOneWidget);
-        },
-      );
+        // assert
+        expect(find.byType(SnackBar), findsOneWidget);
+        expect(find.byType(LoginPage), findsOneWidget);
+      });
 
-      testWidgets(
-        'deve testar a página de cadastro',
-        (tester) async {
-          await tester.runAsync(() => app.main([], appModule));
-          await tester.pumpAndSettle();
+      testWidgets('deve testar a página de cadastro', (tester) async {
+        // arrange
+        Finder widget;
+        await tester.runAsync(() => app.main([], appModule));
+        await tester.pumpAndSettle();
 
-          expect(find.byType(LoginPage), findsOneWidget);
+        // assert
+        expect(find.byType(LoginPage), findsOneWidget);
 
-          var forgotButton =
-              findWidgetByType<OutlinedButton>(OutlinedButton, 2);
-          await tester.tap(find.byWidget(forgotButton));
-          await tester.pumpAndSettle();
+        // navegar para a página de cadastro
+        widget = find.byType(OutlinedButton).at(2);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          expect(find.byType(RegisterPage), findsOneWidget);
-          expect(find.byType(TextFormField), findsNWidgets(10));
-          expect(find.byType(Checkbox), findsNWidgets(2));
-          expect(find.byType(OutlinedButton), findsNWidgets(2));
+        // assert
+        expect(find.byType(RegisterPage), findsOneWidget);
+        expect(find.byType(TextFormField), findsNWidgets(10));
+        expect(find.byType(Checkbox), findsNWidgets(2));
+        expect(find.byType(OutlinedButton), findsNWidgets(2));
 
-          final emailFormField = findWidgetByType<TextFormField>(TextFormField);
-          await tester.enterText(
-              find.byWidget(emailFormField), 'test@test.dev');
+        // escrever email
+        widget = find.byType(TextFormField).at(0);
+        await tester.enterText(widget, 'test@test.dev');
+        await tester.pumpAndSettle();
 
-          final passwordFormField =
-              findWidgetByType<TextFormField>(TextFormField, 1);
-          await tester.enterText(find.byWidget(passwordFormField), 'test');
+        // escrever senha
+        widget = find.byType(TextFormField).at(1);
+        await tester.enterText(widget, 'senha');
+        await tester.pumpAndSettle();
 
-          final cnpjFormField =
-              findWidgetByType<TextFormField>(TextFormField, 2);
-          await tester.enterText(
-              find.byWidget(cnpjFormField), '00.000.000/0000-00');
+        // escrever cnpj
+        widget = find.byType(TextFormField).at(2);
+        await tester.enterText(widget, '00.000.000/0000-00');
+        await tester.pumpAndSettle();
 
-          final nameFormField =
-              findWidgetByType<TextFormField>(TextFormField, 3);
-          await tester.enterText(find.byWidget(nameFormField), 'test');
+        // escrever nome
+        widget = find.byType(TextFormField).at(3);
+        await tester.enterText(widget, 'nome');
+        await tester.pumpAndSettle();
 
-          final addressFormField =
-              findWidgetByType<TextFormField>(TextFormField, 4);
-          await tester.enterText(find.byWidget(addressFormField), 'test');
+        // escrever endereço
+        widget = find.byType(TextFormField).at(4);
+        await tester.enterText(widget, 'endereço');
+        await tester.pumpAndSettle();
 
-          final cityFormField =
-              findWidgetByType<TextFormField>(TextFormField, 5);
-          await tester.tap(find.byWidget(cityFormField));
-          await tester.pumpAndSettle();
+        // abrir modal para selecionar cidade
+        widget = find.byType(TextFormField).at(5);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          expect(find.byType(CitySelectDialog), findsOneWidget);
+        // assert
+        expect(find.byType(CitySelectDialog), findsOneWidget);
 
-          final filterIcon = findWidgetByIcon<Icon>(Icons.filter_alt_rounded);
-          final filterFormField = find
-              .ancestor(
-                of: find.byWidget(filterIcon),
-                matching: find.byType(TextFormField),
-              )
-              .evaluate()
-              .first
-              .widget as TextFormField;
-          await tester.enterText(find.byWidget(filterFormField), 'penap');
-          await tester.pumpAndSettle();
+        // filtrar cidades
+        widget = find.byIcon(Icons.filter_alt_rounded);
+        widget = find
+            .ancestor(of: widget, matching: find.byType(TextFormField))
+            .at(0);
+        await tester.enterText(widget, 'penap');
+        await tester.pumpAndSettle();
 
-          expect(find.text('Penápolis/SP'), findsOneWidget);
+        // assert
+        expect(find.text('Penápolis/SP'), findsOneWidget);
 
-          final penapolisText = findWidgetByText<Text>('Penápolis/SP');
-          final penapolisListTile = find
-              .ancestor(
-                of: find.byWidget(penapolisText),
-                matching: find.byType(ListTile),
-              )
-              .evaluate()
-              .first
-              .widget as ListTile;
-          await tester.tap(find.byWidget(penapolisListTile));
-          await tester.pumpAndSettle();
+        // selecionar cidade
+        widget = find.text('Penápolis/SP');
+        widget =
+            find.ancestor(of: widget, matching: find.byType(ListTile)).at(0);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          expect(find.byType(CitySelectDialog), findsNothing);
+        // assert
+        expect(find.byType(CitySelectDialog), findsNothing);
 
-          final phoneFormField =
-              findWidgetByType<TextFormField>(TextFormField, 6);
-          await tester.enterText(
-              find.byWidget(phoneFormField), '(00) 00000-0000');
+        // escrever telefone
+        widget = find.byType(TextFormField).at(6);
+        await tester.enterText(widget, '(00) 00000-0000');
+        await tester.pumpAndSettle();
 
-          final aboutFormField =
-              findWidgetByType<TextFormField>(TextFormField, 7);
-          await tester.enterText(find.byWidget(aboutFormField), 'test');
+        // escrever sobre
+        widget = find.byType(TextFormField).at(7);
+        await tester.enterText(widget, 'sobre');
+        await tester.pumpAndSettle();
 
-          final responsibleNameFormField =
-              findWidgetByType<TextFormField>(TextFormField, 8);
-          await tester.enterText(
-              find.byWidget(responsibleNameFormField), 'test');
+        // escrever nome do responsável
+        widget = find.byType(TextFormField).at(8);
+        await tester.enterText(widget, 'nome do responsável');
+        await tester.pumpAndSettle();
 
-          final responsibleCpfFormField =
-              findWidgetByType<TextFormField>(TextFormField, 9);
-          await tester.enterText(
-              find.byWidget(responsibleCpfFormField), '000.000.000-00');
+        // escrever cpf do responsável
+        widget = find.byType(TextFormField).at(9);
+        await tester.enterText(widget, '000.000.000-00');
+        await tester.pumpAndSettle();
 
-          await tester.tapAt(const Offset(0, 0));
-          await tester.pumpAndSettle();
+        // descer scroll até visualizar o botão voltar
+        widget = find.byType(SingleChildScrollView).at(0);
+        widget = find
+            .descendant(of: widget, matching: find.byType(Scrollable))
+            .at(0);
+        await tester.scrollUntilVisible(
+          find.byType(OutlinedButton).at(1),
+          500.0,
+          scrollable: widget,
+        );
+        await tester.pumpAndSettle();
 
-          final donorCheckbox = findWidgetByType<Checkbox>(Checkbox);
-          await tester.tap(find.byWidget(donorCheckbox));
-          await tester.pumpAndSettle();
+        // marcar checkbox de doador
+        widget = find.byType(Checkbox).at(0);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          final beneficiaryCheckbox = findWidgetByType<Checkbox>(Checkbox, 1);
-          await tester.tap(find.byWidget(beneficiaryCheckbox));
-          await tester.pumpAndSettle();
+        // marcar checkbox de beneficiário
+        widget = find.byType(Checkbox).at(1);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          final submitButton = findWidgetByType<OutlinedButton>(OutlinedButton);
-          await tester.tap(find.byWidget(submitButton));
-          await tester.pumpAndSettle();
+        // efetuar cadastro
+        widget = find.byType(OutlinedButton).at(0);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          expect(find.byType(MainPage), findsOneWidget);
-        },
-      );
+        // assert
+        expect(find.byType(MainPage), findsOneWidget);
+      });
     });
 
     group('Testes de Plataforma', () {
@@ -250,76 +273,143 @@ void main() {
         ]);
       });
 
-      testWidgets(
-        'deve testar a página doar',
-        (tester) async {
-          await tester.runAsync(() => app.main([], appModule));
-          await tester.pumpAndSettle();
+      testWidgets('deve testar a página doar', (tester) async {
+        // arrange
+        Finder widget;
+        await tester.runAsync(() => app.main([], appModule));
+        await tester.pumpAndSettle();
 
-          expect(find.byType(MainPage), findsOneWidget);
-          expect(find.byType(DonatePage), findsOneWidget);
-          expect(find.byType(TextFormField), findsNWidgets(2));
-          expect(find.byType(OutlinedButton), findsNWidgets(3));
+        // assert
+        expect(find.byType(MainPage), findsOneWidget);
+        expect(find.byType(DonatePage), findsOneWidget);
+        expect(find.byType(TextFormField), findsNWidgets(2));
+        expect(find.byType(OutlinedButton), findsNWidgets(3));
 
-          final descriptionFormField =
-              findWidgetByType<TextFormField>(TextFormField);
-          await tester.enterText(
-              find.byWidget(descriptionFormField), 'description');
+        // escrever descrição
+        widget = find.byType(TextFormField).at(0);
+        await tester.enterText(widget, 'descrição');
+        await tester.pumpAndSettle();
 
-          await tester.tapAt(const Offset(0, 0));
-          await tester.pumpAndSettle();
+        // tirar foto
+        widget = find.byType(OutlinedButton).at(0);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          var takePhotoButton =
-              findWidgetByType<OutlinedButton>(OutlinedButton);
-          await tester.tap(find.byWidget(takePhotoButton));
-          await tester.pumpAndSettle();
+        // assert
+        expect(find.byIcon(Icons.close_rounded), findsOneWidget);
 
-          expect(find.byIcon(Icons.close_rounded), findsOneWidget);
+        // remover foto
+        widget = find.byIcon(Icons.close_rounded);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          var clearPhotoButton = findWidgetByIcon<Icon>(Icons.close_rounded);
-          await tester.tap(find.byWidget(clearPhotoButton));
-          await tester.pumpAndSettle();
+        // assert
+        expect(find.byIcon(Icons.close_rounded), findsNothing);
 
-          expect(find.byIcon(Icons.close_rounded), findsNothing);
+        // escolher foto da galeria
+        widget = find.byType(OutlinedButton).at(1);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          takePhotoButton = findWidgetByType<OutlinedButton>(OutlinedButton, 1);
-          await tester.tap(find.byWidget(takePhotoButton));
-          await tester.pumpAndSettle();
+        // assert
+        expect(find.byIcon(Icons.close_rounded), findsOneWidget);
 
-          expect(find.byIcon(Icons.close_rounded), findsOneWidget);
+        // remover foto
+        widget = find.byIcon(Icons.close_rounded);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          clearPhotoButton = findWidgetByIcon<Icon>(Icons.close_rounded);
-          await tester.tap(find.byWidget(clearPhotoButton));
-          await tester.pumpAndSettle();
+        // abrir dropdown para selecionar beneficiário
+        widget = find.byType(DropdownButtonFormField<String?>);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          var dropdown = findWidgetByType<DropdownButtonFormField<String?>>(
-              DropdownButtonFormField<String?>);
-          await tester.tap(find.byWidget(dropdown));
-          await tester.pumpAndSettle();
+        // selecionar beneficiário
+        widget = find.text('anon').at(1);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          await tester.tap(find.text('anon').at(1));
-          await tester.pumpAndSettle();
+        // escrever vencimento
+        widget = find.byType(TextFormField).at(1);
+        await tester.enterText(widget, '01/12/2022');
+        await tester.pumpAndSettle();
 
-          var expirationFormField =
-              findWidgetByType<TextFormField>(TextFormField, 1);
-          await tester.enterText(
-              find.byWidget(expirationFormField), '01/12/5000');
+        // postar doação
+        widget = find.byType(OutlinedButton).at(2);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
 
-          await tester.tapAt(const Offset(0, 0));
-          await tester.pumpAndSettle();
+        // assert
+        expect(find.byType(MainPage), findsOneWidget);
+        expect(find.byType(MyDonationsPage), findsOneWidget);
+        expect(find.byType(SnackBar), findsOneWidget);
+        expect(find.byType(Card), findsNWidgets(3));
+        expect(find.text('descrição'), findsOneWidget);
+        expect(find.textContaining('anon'), findsNWidgets(2));
+      });
 
-          var submitButton =
-              findWidgetByType<OutlinedButton>(OutlinedButton, 2);
-          await tester.tap(find.byWidget(submitButton));
-          await tester.pumpAndSettle();
+      testWidgets('deve testar a página minhas doações', (tester) async {
+        // arrange
+        Finder widget;
+        await tester.runAsync(() => app.main([], appModule));
+        await tester.pumpAndSettle();
 
-          expect(find.byType(MainPage), findsOneWidget);
-          expect(find.byType(MyDonationsPage), findsOneWidget);
-          expect(find.byType(SnackBar), findsOneWidget);
-          expect(find.text('description'), findsOneWidget);
-          expect(find.textContaining('anon'), findsOneWidget);
-        },
-      );
+        // assert
+        expect(find.byType(MainPage), findsOneWidget);
+        expect(find.byType(DonatePage), findsOneWidget);
+
+        // navega para a página minhas doações
+        widget = find.byIcon(Icons.thumb_up_alt_rounded);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
+
+        // assert
+        expect(find.byType(MyDonationsPage), findsOneWidget);
+        expect(find.byType(Card), findsNWidgets(2));
+        expect(find.text('Marcar como Entregue'), findsOneWidget);
+        expect(find.text('Cancelar Doação'), findsNWidgets(2));
+
+        // marcar doação como entregue
+        widget = find.text('Marcar como Entregue');
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
+
+        // assert
+        expect(find.byType(Card), findsNWidgets(2));
+        expect(find.text('Marcar como Entregue'), findsNothing);
+        expect(find.text('Cancelar Doação'), findsOneWidget);
+
+        // cancelar doação
+        widget = find.text('Cancelar Doação');
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
+
+        // assert
+        expect(find.byType(Card), findsNWidgets(2));
+        expect(find.byType(CancelReasonDialog), findsOneWidget);
+        expect(find.byType(TextFormField), findsOneWidget);
+        expect(find.text('Voltar'), findsOneWidget);
+        expect(find.text('Cancelar Doação'), findsNWidgets(3));
+
+        // escrever motivo da doação
+        widget = find.byType(TextFormField);
+        await tester.enterText(widget, 'Teste');
+        await tester.pumpAndSettle();
+
+        // cancelar doação
+        widget = find.text('Cancelar Doação').at(2);
+        await tester.tap(widget);
+        await tester.pumpAndSettle();
+
+        // assert
+        expect(find.byType(MyDonationsPage), findsOneWidget);
+        expect(find.byType(Card), findsNWidgets(2));
+        expect(find.byType(CancelReasonDialog), findsNothing);
+        expect(find.byType(TextFormField), findsNothing);
+        expect(find.textContaining('Motivo: Teste'), findsOneWidget);
+        expect(find.text('Voltar'), findsNothing);
+        expect(find.text('Cancelar Doação'), findsNothing);
+      });
     });
   });
 }

@@ -7,11 +7,7 @@ import 'package:prodea/src/domain/repositories/user_repo.dart';
 import 'package:prodea/src/domain/services/notification_service.dart';
 import 'package:prodea/src/domain/usecases/auth/do_login.dart';
 
-class MockNotificationService extends Mock implements INotificationService {}
-
-class MockAuthRepo extends Mock implements IAuthRepo {}
-
-class MockUserRepo extends Mock implements IUserRepo {}
+import '../../../../mocks/mocks.dart';
 
 void main() {
   late INotificationService notificationServiceMock;

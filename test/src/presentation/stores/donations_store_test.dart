@@ -11,26 +11,7 @@ import 'package:prodea/src/domain/usecases/donations/set_donation_as_requested.d
 import 'package:prodea/src/domain/usecases/donations/set_donation_as_unrequested.dart';
 import 'package:prodea/src/presentation/stores/donations_store.dart';
 
-import '../../../test_helpers/mobx.dart';
-
-class MockGetRequestedDonations extends Mock implements GetRequestedDonations {}
-
-class MockGetAvailableDonations extends Mock implements GetAvailableDonations {}
-
-class MockGetMyDonations extends Mock implements GetMyDonations {}
-
-class MockSetDonationAsDelivered extends Mock
-    implements SetDonationAsDelivered {}
-
-class MockSetDonationAsRequested extends Mock
-    implements SetDonationAsRequested {}
-
-class MockSetDonationAsUnrequested extends Mock
-    implements SetDonationAsUnrequested {}
-
-class MockSetDonationAsCanceled extends Mock implements SetDonationAsCanceled {}
-
-class MockGetDonationPhotoUrl extends Mock implements GetDonationPhotoUrl {}
+import '../../../mocks/mocks.dart';
 
 void main() {
   late GetRequestedDonations getRequestedDonationsMock;

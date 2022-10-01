@@ -4,7 +4,7 @@ import 'package:prodea/src/domain/entities/city.dart';
 import 'package:prodea/src/domain/repositories/city_repo.dart';
 import 'package:prodea/src/domain/usecases/cities/get_cities.dart';
 
-class MockCityRepo extends Mock implements ICityRepo {}
+import '../../../../mocks/mocks.dart';
 
 void main() {
   late ICityRepo cityRepoMock;

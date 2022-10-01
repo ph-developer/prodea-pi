@@ -8,17 +8,7 @@ import 'package:prodea/src/domain/usecases/user/set_user_as_authorized.dart';
 import 'package:prodea/src/domain/usecases/user/set_user_as_denied.dart';
 import 'package:prodea/src/presentation/stores/users_store.dart';
 
-import '../../../test_helpers/mobx.dart';
-
-class MockGetCommonUsers extends Mock implements GetCommonUsers {}
-
-class MockGetBeneficiaries extends Mock implements GetBeneficiaries {}
-
-class MockGetDonors extends Mock implements GetDonors {}
-
-class MockSetUserAsAuthorized extends Mock implements SetUserAsAuthorized {}
-
-class MockSetUserAsDenied extends Mock implements SetUserAsDenied {}
+import '../../../mocks/mocks.dart';
 
 void main() {
   late GetCommonUsers getCommonUsersMock;

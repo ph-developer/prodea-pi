@@ -3,9 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:prodea/src/domain/usecases/cities/get_city_names.dart';
 import 'package:prodea/src/presentation/stores/cities_store.dart';
 
-import '../../../test_helpers/mobx.dart';
-
-class MockGetCityNames extends Mock implements GetCityNames {}
+import '../../../mocks/mocks.dart';
 
 void main() {
   late GetCityNames getCityNamesMock;

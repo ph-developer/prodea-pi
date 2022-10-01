@@ -4,8 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:prodea/src/domain/entities/user.dart';
 import 'package:prodea/src/presentation/dialogs/user_info_dialog.dart';
 
-import '../../../test_helpers/finder.dart';
-
 void main() {
   const tScaffoldKey = Key('scaffold');
   const tUser = User(
@@ -37,13 +35,16 @@ void main() {
   testWidgets(
     'deve mostrar um diálogo e fechar ao clicar no botão de voltar.',
     (tester) async {
+      // arrange
+      Finder widget;
       await tester.pumpWidget(createWidgetUnderTest());
-
       final BuildContext context = tester.element(find.byKey(tScaffoldKey));
+
+      // mostrar modal
       showUserDialog(context, user: tUser);
+      await tester.pumpAndSettle();
 
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsOneWidget);
       expect(find.text('CNPJ: ${tUser.cnpj}'), findsOneWidget);
       expect(find.text('Endereço: ${tUser.address}'), findsOneWidget);
@@ -54,13 +55,12 @@ void main() {
           findsOneWidget);
       expect(find.text('Sobre: ${tUser.about}'), findsOneWidget);
 
-      final backButton = findWidgetByType<TextButton>(TextButton);
+      // voltar
+      widget = find.byType(TextButton).at(0);
+      await tester.tap(widget);
+      await tester.pumpAndSettle();
 
-      expect(backButton.enabled, true);
-
-      await tester.tap(find.byWidget(backButton));
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsNothing);
     },
   );

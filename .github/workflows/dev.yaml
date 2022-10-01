@@ -24,7 +24,7 @@ jobs:
       - name: Run Flutter Pub Get
         run: flutter pub get
 
-      - name: Run Unit and Widget tests
+      - name: Run Unit and Widget Tests
         run: flutter test test
 
   flutter-integration-tests:

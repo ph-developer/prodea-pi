@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:prodea/core/errors/failures.dart';
 import 'package:prodea/src/data/services/image_picker_photo_service.dart';
 
-class MockImagePicker extends Mock implements ImagePicker {}
+import '../../../mocks/mocks.dart';
 
 void main() {
   late XFile tXFile;

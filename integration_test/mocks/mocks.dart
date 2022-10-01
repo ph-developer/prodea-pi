@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:prodea/src/data/dtos/donation_dto.dart';
@@ -93,7 +94,7 @@ Future<FirebaseFirestore> setupFirebaseFirestoreMock() async {
         ).toMap(),
       );
 
-  await firestoreFake.collection('userInfo').doc('test').set(
+  await firestoreFake.collection('userInfo').doc('anon').set(
         const User(
           id: 'anon',
           email: 'anon@test.dev',
@@ -116,7 +117,17 @@ Future<FirebaseFirestore> setupFirebaseFirestoreMock() async {
         Donation(
           description: 'Arroz',
           expiration: '01/01/5000',
-          photoUrl: 'test.png',
+          isDelivered: false,
+          donorId: 'test',
+          beneficiaryId: 'anon',
+          createdAt: DateTime.now(),
+        ).toMap(),
+      );
+
+  await firestoreFake.collection('donation').add(
+        Donation(
+          description: 'Carré',
+          expiration: '01/01/5000',
           isDelivered: false,
           donorId: 'test',
           createdAt: DateTime.now(),
@@ -127,7 +138,6 @@ Future<FirebaseFirestore> setupFirebaseFirestoreMock() async {
         Donation(
           description: 'Batata',
           expiration: '01/01/5000',
-          photoUrl: 'test.png',
           isDelivered: false,
           donorId: 'anon',
           createdAt: DateTime.now(),
@@ -138,7 +148,6 @@ Future<FirebaseFirestore> setupFirebaseFirestoreMock() async {
         Donation(
           description: 'Feijão',
           expiration: '01/01/5000',
-          photoUrl: 'test.png',
           isDelivered: false,
           donorId: 'anon',
           beneficiaryId: 'test',
@@ -159,4 +168,21 @@ Future<FirebaseStorage> setupFirebaseStorageMock() async {
   await storageMock.ref().child('test.png').putFile(file);
 
   return storageMock;
+}
+
+Future<ImagePicker> setupImagePickerMock() async {
+  const channel = MethodChannel('plugins.flutter.io/image_picker_android');
+
+  Future<String> handler(MethodCall methodCall) async {
+    final data = await rootBundle.load('assets/icon.png');
+    final bytes = data.buffer.asUint8List();
+    final tempDir = await getTemporaryDirectory();
+    final file = await File('${tempDir.path}/tmp.tmp').writeAsBytes(bytes);
+    return file.path;
+  }
+
+  TestDefaultBinaryMessengerBinding.instance?.defaultBinaryMessenger
+      .setMockMethodCallHandler(channel, handler);
+
+  return ImagePicker();
 }

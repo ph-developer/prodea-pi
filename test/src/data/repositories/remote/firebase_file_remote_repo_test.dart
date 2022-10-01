@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_storage_mocks/firebase_storage_mocks.dart' as fake;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -9,9 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:prodea/core/errors/failures.dart';
 import 'package:prodea/src/data/repositories/remote/firebase_file_remote_repo.dart';
 
-typedef FakeFirebaseStorage = fake.MockFirebaseStorage;
-
-class MockFirebaseStorage extends Mock implements FirebaseStorage {}
+import '../../../../mocks/mocks.dart';
 
 void main() {
   late File tFile;

@@ -9,18 +9,7 @@ import 'package:prodea/src/domain/usecases/auth/get_current_user.dart';
 import 'package:prodea/src/domain/usecases/auth/send_password_reset_email.dart';
 import 'package:prodea/src/presentation/controllers/auth_controller.dart';
 
-class MockModularNavigator extends Mock implements IModularNavigator {}
-
-class MockGetCurrentUser extends Mock implements GetCurrentUser {}
-
-class MockDoLogin extends Mock implements DoLogin {}
-
-class MockDoRegister extends Mock implements DoRegister {}
-
-class MockDoLogout extends Mock implements DoLogout {}
-
-class MockSendPasswordResetEmail extends Mock
-    implements SendPasswordResetEmail {}
+import '../../../mocks/mocks.dart';
 
 void main() {
   late IModularNavigator modularNavigatorMock;

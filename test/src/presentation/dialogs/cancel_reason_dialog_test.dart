@@ -4,8 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:prodea/src/presentation/dialogs/cancel_reason_dialog.dart';
 
-import '../../../test_helpers/finder.dart';
-import '../../../test_helpers/mobx.dart';
+import '../../../mocks/mocks.dart';
 
 void main() {
   const tScaffoldKey = Key('scaffold');
@@ -22,42 +21,32 @@ void main() {
   testWidgets(
     'deve mostrar um diálogo, interagir com ele e retornar uma string na função onOk.',
     (tester) async {
+      // arrange
+      Finder widget;
       await tester.pumpWidget(createWidgetUnderTest());
-
       final onOk = MockCallable<void>();
       final BuildContext context = tester.element(find.byKey(tScaffoldKey));
+
+      // mostrar modal
       showCancelReasonDialog(context, onOk: onOk);
+      await tester.pumpAndSettle();
 
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsOneWidget);
       expect(find.byType(TextFormField), findsOneWidget);
       expect(find.byType(TextButton), findsNWidgets(2));
 
-      final state = tester.state(find.byType(CancelReasonDialog)) as dynamic;
-      final textFormField = findWidgetByType<TextFormField>(TextFormField);
-      var submitButton = findWidgetByType<TextButton>(TextButton, 1);
+      // escrever motivo
+      widget = find.byType(TextFormField).at(0);
+      await tester.enterText(widget, 'teste');
+      await tester.pumpAndSettle();
 
-      expect(textFormField.initialValue, isEmpty);
-      expect(submitButton.enabled, false);
+      // confirmar
+      widget = find.byType(TextButton).at(1);
+      await tester.tap(widget);
+      await tester.pumpAndSettle();
 
-      await tester.tap(find.byWidget(submitButton));
-      await tester.pump();
-
-      expect(find.byType(AlertDialog), findsOneWidget);
-      verifyNever(() => onOk(any()));
-
-      await tester.enterText(find.byWidget(textFormField), 'teste');
-      await tester.pump();
-
-      submitButton = findWidgetByType<TextButton>(TextButton, 1);
-
-      expect(state.value, 'teste');
-      expect(submitButton.enabled, true);
-
-      await tester.tap(find.byWidget(submitButton));
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsNothing);
       verify(() => onOk('teste')).called(1);
     },
@@ -66,23 +55,25 @@ void main() {
   testWidgets(
     'deve mostrar um diálogo e fechar ao clicar no botão de voltar.',
     (tester) async {
+      // arrange
+      Finder widget;
       await tester.pumpWidget(createWidgetUnderTest());
-
       final onOk = MockCallable<void>();
       final BuildContext context = tester.element(find.byKey(tScaffoldKey));
+
+      // mostrar modal
       showCancelReasonDialog(context, onOk: onOk);
+      await tester.pumpAndSettle();
 
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsOneWidget);
 
-      final backButton = findWidgetByType<TextButton>(TextButton);
+      // cancelar
+      widget = find.byType(TextButton).at(0);
+      await tester.tap(widget);
+      await tester.pumpAndSettle();
 
-      expect(backButton.enabled, true);
-
-      await tester.tap(find.byWidget(backButton));
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsNothing);
       verifyNever(() => onOk(any()));
     },

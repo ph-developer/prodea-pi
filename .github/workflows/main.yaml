@@ -1,0 +1,36 @@
+name: Upload APK to Google Drive
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload-apk-to-google-drive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+
+      - name: Run Flutter Pub Get
+        run: flutter pub get
+
+      - name: Build APK File
+        run: flutter build apk
+
+      - name: Upload APK To Google Drive
+        uses: adityak74/google-drive-upload-git-action@main
+        with:
+          credentials: "${{ secrets.GDRIVE_CREDENTIALS }}"
+          filename: build/app/outputs/apk/release/app-release.apk
+          folderId: ${{ secrets.GDRIVE_FOLDER_ID }}
+          overwrite: "true"

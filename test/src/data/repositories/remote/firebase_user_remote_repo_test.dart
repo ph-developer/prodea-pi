@@ -6,7 +6,7 @@ import 'package:prodea/core/errors/failures.dart';
 import 'package:prodea/src/data/repositories/remote/firebase_user_remote_repo.dart';
 import 'package:prodea/src/domain/entities/user.dart';
 
-class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
+import '../../../../mocks/mocks.dart';
 
 void main() {
   late FirebaseFirestore firestoreFake;

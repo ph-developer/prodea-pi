@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:prodea/core/errors/failures.dart';
 import 'package:prodea/src/data/services/connectivity_network_service.dart';
 
-class MockConnectivity extends Mock implements Connectivity {}
+import '../../../mocks/mocks.dart';
 
 void main() {
   late Connectivity connectivityMock;

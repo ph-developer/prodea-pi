@@ -1,5 +1,3 @@
-// ignore_for_file: subtype_of_sealed_class
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,7 +6,7 @@ import 'package:prodea/core/errors/failures.dart';
 import 'package:prodea/src/data/repositories/remote/firebase_donation_remote_repo.dart';
 import 'package:prodea/src/domain/entities/donation.dart';
 
-class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
+import '../../../../mocks/mocks.dart';
 
 void main() {
   late FirebaseFirestore firestoreFake;

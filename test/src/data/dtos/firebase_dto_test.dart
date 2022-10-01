@@ -1,11 +1,9 @@
-// ignore_for_file: subtype_of_sealed_class
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:prodea/src/data/dtos/firebase_dto.dart';
 
-class MockDocumentSnapshot extends Mock implements DocumentSnapshot {}
+import '../../../mocks/mocks.dart';
 
 void main() {
   late DocumentSnapshot documentSnapshotMock;
