@@ -5,9 +5,7 @@ import 'package:prodea/src/domain/repositories/auth_repo.dart';
 import 'package:prodea/src/domain/services/notification_service.dart';
 import 'package:prodea/src/domain/usecases/auth/send_password_reset_email.dart';
 
-class MockNotificationService extends Mock implements INotificationService {}
-
-class MockAuthRepo extends Mock implements IAuthRepo {}
+import '../../../../mocks/mocks.dart';
 
 void main() {
   late INotificationService notificationServiceMock;

@@ -10,15 +10,7 @@ import 'package:prodea/src/domain/usecases/photo/pick_photo_from_camera.dart';
 import 'package:prodea/src/domain/usecases/photo/pick_photo_from_gallery.dart';
 import 'package:prodea/src/presentation/stores/donation_store.dart';
 
-import '../../../test_helpers/mobx.dart';
-
-class MockModularNavigator extends Mock implements IModularNavigator {}
-
-class MockCreateDonation extends Mock implements CreateDonation {}
-
-class MockPickPhotoFromCamera extends Mock implements PickPhotoFromCamera {}
-
-class MockPickPhotoFromGallery extends Mock implements PickPhotoFromGallery {}
+import '../../../mocks/mocks.dart';
 
 void main() {
   late File tFile;

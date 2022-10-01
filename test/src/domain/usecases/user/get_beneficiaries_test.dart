@@ -4,7 +4,7 @@ import 'package:prodea/src/domain/entities/user.dart';
 import 'package:prodea/src/domain/repositories/user_repo.dart';
 import 'package:prodea/src/domain/usecases/user/get_beneficiaries.dart';
 
-class MockUserRepo extends Mock implements IUserRepo {}
+import '../../../../mocks/mocks.dart';
 
 void main() {
   late IUserRepo userRepoMock;

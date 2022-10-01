@@ -5,9 +5,7 @@ import 'package:prodea/src/domain/repositories/auth_repo.dart';
 import 'package:prodea/src/domain/repositories/donation_repo.dart';
 import 'package:prodea/src/domain/usecases/donations/get_requested_donations.dart';
 
-class MockAuthRepo extends Mock implements IAuthRepo {}
-
-class MockDonationRepo extends Mock implements IDonationRepo {}
+import '../../../../mocks/mocks.dart';
 
 void main() {
   late IAuthRepo authRepoMock;

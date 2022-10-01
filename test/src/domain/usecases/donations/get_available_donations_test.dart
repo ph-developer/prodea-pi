@@ -4,7 +4,7 @@ import 'package:prodea/src/domain/entities/donation.dart';
 import 'package:prodea/src/domain/repositories/donation_repo.dart';
 import 'package:prodea/src/domain/usecases/donations/get_available_donations.dart';
 
-class MockDonationRepo extends Mock implements IDonationRepo {}
+import '../../../../mocks/mocks.dart';
 
 void main() {
   late IDonationRepo donationRepoMock;

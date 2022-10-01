@@ -6,9 +6,7 @@ import 'package:prodea/src/domain/repositories/file_repo.dart';
 import 'package:prodea/src/domain/services/notification_service.dart';
 import 'package:prodea/src/domain/usecases/donations/get_donation_photo_url.dart';
 
-class MockNotificationService extends Mock implements INotificationService {}
-
-class MockFileRepo extends Mock implements IFileRepo {}
+import '../../../../mocks/mocks.dart';
 
 void main() {
   late INotificationService notificationServiceMock;

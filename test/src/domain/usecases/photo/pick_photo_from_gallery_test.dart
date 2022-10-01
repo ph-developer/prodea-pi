@@ -8,9 +8,7 @@ import 'package:prodea/src/domain/services/notification_service.dart';
 import 'package:prodea/src/domain/services/photo_service.dart';
 import 'package:prodea/src/domain/usecases/photo/pick_photo_from_gallery.dart';
 
-class MockNotificationService extends Mock implements INotificationService {}
-
-class MockPhotoService extends Mock implements IPhotoService {}
+import '../../../../mocks/mocks.dart';
 
 void main() {
   late File tFile;

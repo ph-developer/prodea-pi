@@ -3,9 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:prodea/src/domain/usecases/network/get_connection_status.dart';
 import 'package:prodea/src/presentation/controllers/connection_state_controller.dart';
 
-import '../../../test_helpers/mobx.dart';
-
-class MockGetConnectionStatus extends Mock implements GetConnectionStatus {}
+import '../../../mocks/mocks.dart';
 
 void main() {
   late GetConnectionStatus getConnectionStatusMock;

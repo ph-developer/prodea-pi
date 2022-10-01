@@ -11,13 +11,7 @@ import 'package:prodea/src/domain/repositories/file_repo.dart';
 import 'package:prodea/src/domain/services/notification_service.dart';
 import 'package:prodea/src/domain/usecases/donations/create_donation.dart';
 
-class MockNotificationService extends Mock implements INotificationService {}
-
-class MockDonationRepo extends Mock implements IDonationRepo {}
-
-class MockFileRepo extends Mock implements IFileRepo {}
-
-class MockAuthRepo extends Mock implements IAuthRepo {}
+import '../../../../mocks/mocks.dart';
 
 void main() {
   late File tFile;

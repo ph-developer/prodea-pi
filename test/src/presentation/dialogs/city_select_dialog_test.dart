@@ -8,10 +8,7 @@ import 'package:modular_test/modular_test.dart';
 import 'package:prodea/src/presentation/dialogs/city_select_dialog.dart';
 import 'package:prodea/src/presentation/stores/cities_store.dart';
 
-import '../../../test_helpers/finder.dart';
-import '../../../test_helpers/mobx.dart';
-
-class MockCitiesStore extends Mock implements CitiesStore {}
+import '../../../mocks/mocks.dart';
 
 class TestModule extends Module {
   @override
@@ -50,14 +47,17 @@ void main() {
   testWidgets(
     'deve mostrar um diálogo, interagir com ele e retornar uma string na função onOk.',
     (tester) async {
+      // arrange
+      Finder widget;
       await tester.pumpWidget(createWidgetUnderTest());
-
       final onSelect = MockCallable<void>();
       final BuildContext context = tester.element(find.byKey(tScaffoldKey));
+
+      // mostrar modal
       showCitySelectDialog(context, onSelect: onSelect);
+      await tester.pumpAndSettle();
 
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsOneWidget);
       expect(find.byType(TextFormField), findsOneWidget);
       expect(find.byType(TextButton), findsNWidgets(2));
@@ -65,37 +65,33 @@ void main() {
       expect(find.text('Araçatuba/SP'), findsOneWidget);
       expect(find.text('Penápolis/SP'), findsOneWidget);
 
-      final textFormField = findWidgetByType<TextFormField>(TextFormField);
+      // filtrar cidades
+      widget = find.byType(TextFormField).at(0);
+      await tester.enterText(widget, 'enapo');
+      await tester.pumpAndSettle();
 
-      await tester.enterText(find.byWidget(textFormField), 'enapo');
-      await tester.pump();
-
+      // assert
       expect(find.byType(IconButton), findsOneWidget);
       expect(find.text('Araçatuba/SP'), findsNothing);
       expect(find.text('Penápolis/SP'), findsOneWidget);
 
-      final clearFilterButton = findWidgetByType<IconButton>(IconButton);
+      // limpar o filtro de cidades
+      widget = find.byType(IconButton).at(0);
+      await tester.tap(widget);
+      await tester.pumpAndSettle();
 
-      await tester.tap(find.byWidget(clearFilterButton));
-      await tester.pump();
-
+      // assert
       expect(find.byType(IconButton), findsNothing);
       expect(find.text('Araçatuba/SP'), findsOneWidget);
       expect(find.text('Penápolis/SP'), findsOneWidget);
 
-      final penapolisText = findWidgetByText<Text>('Penápolis/SP');
-      final penapolisListTile = find
-          .ancestor(
-            of: find.byWidget(penapolisText),
-            matching: find.byType(ListTile),
-          )
-          .evaluate()
-          .first
-          .widget as ListTile;
+      // selecionar cidade
+      widget = find.text('Penápolis/SP');
+      widget = find.ancestor(of: widget, matching: find.byType(ListTile)).at(0);
+      await tester.tap(widget);
+      await tester.pumpAndSettle();
 
-      await tester.tap(find.byWidget(penapolisListTile));
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsNothing);
       verify(() => onSelect('Penápolis/SP')).called(1);
     },
@@ -104,23 +100,25 @@ void main() {
   testWidgets(
     'deve mostrar um diálogo e fechar ao clicar no botão de voltar.',
     (tester) async {
+      // arrange
+      Finder widget;
       await tester.pumpWidget(createWidgetUnderTest());
-
       final onSelect = MockCallable<void>();
       final BuildContext context = tester.element(find.byKey(tScaffoldKey));
+
+      // mostrar modal
       showCitySelectDialog(context, onSelect: onSelect);
+      await tester.pumpAndSettle();
 
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsOneWidget);
 
-      final backButton = findWidgetByType<TextButton>(TextButton);
+      // voltar
+      widget = find.byType(TextButton).at(0);
+      await tester.tap(widget);
+      await tester.pumpAndSettle();
 
-      expect(backButton.enabled, true);
-
-      await tester.tap(find.byWidget(backButton));
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsNothing);
       verifyNever(() => onSelect(any()));
     },
@@ -129,23 +127,25 @@ void main() {
   testWidgets(
     'deve mostrar um diálogo e retornar uma string vazia ao clicar no botão de limpar.',
     (tester) async {
+      // arrange
+      Finder widget;
       await tester.pumpWidget(createWidgetUnderTest());
-
       final onSelect = MockCallable<void>();
       final BuildContext context = tester.element(find.byKey(tScaffoldKey));
+
+      // mostrar modal
       showCitySelectDialog(context, onSelect: onSelect);
+      await tester.pumpAndSettle();
 
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsOneWidget);
 
-      final clearButton = findWidgetByType<TextButton>(TextButton, 1);
+      // limpar
+      widget = find.byType(TextButton).at(1);
+      await tester.tap(widget);
+      await tester.pumpAndSettle();
 
-      expect(clearButton.enabled, true);
-
-      await tester.tap(find.byWidget(clearButton));
-      await tester.pump();
-
+      // assert
       expect(find.byType(AlertDialog), findsNothing);
       verify(() => onSelect('')).called(1);
     },
