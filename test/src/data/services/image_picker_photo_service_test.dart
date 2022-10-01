@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:prodea/core/errors/failures.dart';
 import 'package:prodea/src/data/services/image_picker_photo_service.dart';
 
@@ -20,8 +21,11 @@ void main() {
     imagePickerMock = MockImagePicker();
     imagePickerPhotoService = ImagePickerPhotoService(imagePickerMock);
 
-    final fileBytes = await rootBundle.load('assets/icon.png');
-    tXFile = XFile.fromData(fileBytes.buffer.asUint8List());
+    final data = await rootBundle.load('assets/icon.png');
+    final bytes = data.buffer.asUint8List();
+    final tempDir = await getTemporaryDirectory();
+    final file = await File('${tempDir.path}/tmp.tmp').writeAsBytes(bytes);
+    tXFile = XFile.fromData(file.readAsBytesSync());
   });
 
   group('pickFromCamera', () {

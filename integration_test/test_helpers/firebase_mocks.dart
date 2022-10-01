@@ -9,6 +9,7 @@ import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:prodea/src/data/dtos/donation_dto.dart';
 import 'package:prodea/src/data/dtos/user_dto.dart';
 import 'package:prodea/src/domain/entities/donation.dart';
@@ -22,7 +23,7 @@ class MockFirebaseUserCredential extends Mock implements UserCredential {}
 
 class MockFirebaseAuthCredential extends Mock implements AuthCredential {}
 
-FirebaseAuth setupFirebaseAuthMock() {
+FirebaseAuth setupFirebaseAuthMock(bool startLoggedIn) {
   final userMock = MockFirebaseUser();
   final userCredentialMock = MockFirebaseUserCredential();
   final nullCredentialMock = MockFirebaseUserCredential();
@@ -42,7 +43,7 @@ FirebaseAuth setupFirebaseAuthMock() {
     return user == null ? nullCredentialMock : userCredentialMock;
   }
 
-  setCurrentUser(null);
+  setCurrentUser(startLoggedIn ? userMock : null);
 
   when(() => authMock.sendPasswordResetEmail(email: any(named: 'email')))
       .thenAnswer((_) async => true);
@@ -78,7 +79,26 @@ Future<FirebaseFirestore> setupFirebaseFirestoreMock() async {
           id: 'test',
           email: 'test@test.dev',
           cnpj: '00.000.000/0000-00',
-          name: 'test',
+          name: 'tester',
+          address: 'test',
+          city: 'test/TE',
+          phoneNumber: '(00) 0000-0000',
+          about: 'test',
+          responsibleName: 'test',
+          responsibleCpf: '000.000.000-00',
+          isDonor: true,
+          isBeneficiary: true,
+          isAdmin: true,
+          status: AuthorizationStatus.authorized,
+        ).toMap(),
+      );
+
+  await firestoreFake.collection('userInfo').doc('test').set(
+        const User(
+          id: 'anon',
+          email: 'anon@test.dev',
+          cnpj: '00.000.000/0000-00',
+          name: 'anon',
           address: 'test',
           city: 'test/TE',
           phoneNumber: '(00) 0000-0000',
@@ -107,9 +127,9 @@ Future<FirebaseFirestore> setupFirebaseFirestoreMock() async {
         Donation(
           description: 'Batata',
           expiration: '01/01/5000',
-          isDelivered: true,
-          donorId: 'test',
-          cancellation: 'test',
+          photoUrl: 'test.png',
+          isDelivered: false,
+          donorId: 'anon',
           createdAt: DateTime.now(),
         ).toMap(),
       );
@@ -120,32 +140,8 @@ Future<FirebaseFirestore> setupFirebaseFirestoreMock() async {
           expiration: '01/01/5000',
           photoUrl: 'test.png',
           isDelivered: false,
-          donorId: 'test',
+          donorId: 'anon',
           beneficiaryId: 'test',
-          createdAt: DateTime.now(),
-        ).toMap(),
-      );
-
-  await firestoreFake.collection('donation').add(
-        Donation(
-          description: 'Macsrrão',
-          expiration: '01/01/5000',
-          isDelivered: true,
-          donorId: 'test',
-          beneficiaryId: 'test',
-          createdAt: DateTime.now(),
-        ).toMap(),
-      );
-
-  await firestoreFake.collection('donation').add(
-        Donation(
-          description: 'Batata',
-          expiration: '01/01/5000',
-          photoUrl: 'test.png',
-          isDelivered: true,
-          donorId: 'test',
-          beneficiaryId: 'test',
-          cancellation: 'test',
           createdAt: DateTime.now(),
         ).toMap(),
       );
@@ -156,9 +152,11 @@ Future<FirebaseFirestore> setupFirebaseFirestoreMock() async {
 Future<FirebaseStorage> setupFirebaseStorageMock() async {
   final storageMock = MockFirebaseStorage();
 
-  final fileBytes = await rootBundle.load('assets/icon.png');
-  final tFile = File.fromRawPath(fileBytes.buffer.asUint8List());
-  await storageMock.ref().child('test.png').putFile(tFile);
+  final data = await rootBundle.load('assets/icon.png');
+  final bytes = data.buffer.asUint8List();
+  final tempDir = await getTemporaryDirectory();
+  final file = await File('${tempDir.path}/tmp.tmp').writeAsBytes(bytes);
+  await storageMock.ref().child('test.png').putFile(file);
 
   return storageMock;
 }

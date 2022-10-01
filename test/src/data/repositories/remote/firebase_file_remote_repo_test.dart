@@ -5,6 +5,7 @@ import 'package:firebase_storage_mocks/firebase_storage_mocks.dart' as fake;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:prodea/core/errors/failures.dart';
 import 'package:prodea/src/data/repositories/remote/firebase_file_remote_repo.dart';
 
@@ -27,8 +28,10 @@ void main() {
     storageMock = MockFirebaseStorage();
     firebaseFileRemoteRepoWithMock = FirebaseFileRemoteRepo(storageMock);
 
-    final fileBytes = await rootBundle.load('assets/icon.png');
-    tFile = File.fromRawPath(fileBytes.buffer.asUint8List());
+    final data = await rootBundle.load('assets/icon.png');
+    final bytes = data.buffer.asUint8List();
+    final tempDir = await getTemporaryDirectory();
+    tFile = await File('${tempDir.path}/tmp.tmp').writeAsBytes(bytes);
     await storageFake.ref().child('test.png').putFile(tFile);
   });
 
