@@ -32,4 +32,4 @@ jobs:
         with:
           credentials: "${{ secrets.GDRIVE_CREDENTIALS }}"
           target: build/app/outputs/flutter-apk/app-release.apk
-          folderId: ${{ secrets.GDRIVE_FOLDER_ID }}
+          parent_folder_id: ${{ secrets.GDRIVE_FOLDER_ID }}
