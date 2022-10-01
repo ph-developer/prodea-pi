@@ -28,9 +28,8 @@ jobs:
         run: flutter build apk
 
       - name: Upload APK To Google Drive
-        uses: adityak74/google-drive-upload-git-action@main
+        uses: willo32/google-drive-upload-action@v1
         with:
           credentials: "${{ secrets.GDRIVE_CREDENTIALS }}"
-          filename: build/app/outputs/flutter-apk/app-release.apk
+          target: build/app/outputs/flutter-apk/app-release.apk
           folderId: ${{ secrets.GDRIVE_FOLDER_ID }}
-          overwrite: "true"
