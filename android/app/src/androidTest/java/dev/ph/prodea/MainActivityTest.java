@@ -1,4 +1,4 @@
-package com.example.prodea;
+package dev.ph.prodea;
 
 import androidx.test.rule.ActivityTestRule;
 import dev.flutter.plugins.integration_test.FlutterTestRunner;

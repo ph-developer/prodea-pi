@@ -1,4 +1,4 @@
-package com.example.prodea
+package dev.ph.prodea
 
 import io.flutter.embedding.android.FlutterActivity
 

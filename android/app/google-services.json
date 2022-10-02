@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:258044886668:android:15f1fb58272f9e1a3205a9",
+        "mobilesdk_app_id": "1:258044886668:android:61b90bd35048d7073205a9",
         "android_client_info": {
-          "package_name": "com.example.prodea"
+          "package_name": "dev.ph.prodea"
         }
       },
       "oauth_client": [
@@ -34,7 +34,7 @@
               "client_id": "258044886668-gaubdaf7aamo1ugc3j7a2c5canncnphc.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.prodea"
+                "bundle_id": "dev.ph.prodea"
               }
             }
           ]

@@ -55,7 +55,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCqPNN5-UC_Puht5XuYzzYnyxdVOr0jA18',
-    appId: '1:258044886668:android:15f1fb58272f9e1a3205a9',
+    appId: '1:258044886668:android:61b90bd35048d7073205a9',
     messagingSenderId: '258044886668',
     projectId: 'prodea-pi',
     storageBucket: 'prodea-pi.appspot.com',
@@ -63,21 +63,21 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDkcNCyjY7MEG9Jek-d9TV1K9OgFtDAVM8',
-    appId: '1:258044886668:ios:20069634b33cb8113205a9',
+    appId: '1:258044886668:ios:8c2b34b30e2fa2e13205a9',
     messagingSenderId: '258044886668',
     projectId: 'prodea-pi',
     storageBucket: 'prodea-pi.appspot.com',
-    iosClientId: '258044886668-gaubdaf7aamo1ugc3j7a2c5canncnphc.apps.googleusercontent.com',
-    iosBundleId: 'com.example.prodea',
+    iosClientId: '258044886668-otffhk73d2bh7t72rkg7vj18o2c3okrj.apps.googleusercontent.com',
+    iosBundleId: 'dev.ph.prodea',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyDkcNCyjY7MEG9Jek-d9TV1K9OgFtDAVM8',
-    appId: '1:258044886668:ios:20069634b33cb8113205a9',
+    appId: '1:258044886668:ios:8c2b34b30e2fa2e13205a9',
     messagingSenderId: '258044886668',
     projectId: 'prodea-pi',
     storageBucket: 'prodea-pi.appspot.com',
-    iosClientId: '258044886668-gaubdaf7aamo1ugc3j7a2c5canncnphc.apps.googleusercontent.com',
-    iosBundleId: 'com.example.prodea',
+    iosClientId: '258044886668-otffhk73d2bh7t72rkg7vj18o2c3okrj.apps.googleusercontent.com',
+    iosBundleId: 'dev.ph.prodea',
   );
 }
