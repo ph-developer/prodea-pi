@@ -3,7 +3,7 @@ description: Aplicativo do Projeto Integrador UNIVESP.
 
 publish_to: "none"
 
-version: 1.4.0+1
+version: 2.0.0
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
@@ -30,8 +30,10 @@ dependencies:
   # Platform Tools
   connectivity_plus: ^2.3.6+1
   image_picker: ^0.8.5+3
+  image_picker_for_web: ^2.1.10
   flutter_native_splash: ^2.2.9
   path_provider: ^2.0.11
+  url_launcher: ^6.1.6
 
   # State Management
   mobx: ^2.0.7+5
@@ -76,6 +78,7 @@ flutter:
 flutter_native_splash:
   android: true
   ios: true
+  web: false
   image: "assets/icon.png"
   color: "#fffbff"
   color_dark: "#201b17"

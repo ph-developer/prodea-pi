@@ -10,7 +10,8 @@ import '../../controllers/connection_state_controller.dart';
 import '../../dialogs/user_info_dialog.dart';
 import '../../stores/donations_store.dart';
 import '../../stores/users_store.dart';
-import '../../widgets/main_app_bar.dart';
+import '../../widgets/app_bar/main_app_bar.dart';
+import '../../widgets/layout/layout_breakpoint.dart';
 
 class RequestedDonationsPage extends StatefulWidget {
   const RequestedDonationsPage({Key? key}) : super(key: key);
@@ -35,49 +36,176 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MainAppBar(
-        icon: Icons.handshake_rounded,
+        icon: const Icon(Icons.handshake_rounded),
         title: 'Doações Solicitadas',
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _donationsStore.fetchDonations,
         child: const Icon(Icons.refresh_rounded),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Observer(
-          builder: (context) {
-            final donations = _cityFilterController.text.isNotEmpty
-                ? _donationsStore.requestedDonations
-                    .where((donation) => _usersStore
-                        .getDonorById(donation.donorId!)
-                        .city
-                        .includes(_cityFilterController.text))
-                    .toList()
-                : _donationsStore.requestedDonations;
+      body: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          padding: const EdgeInsets.all(16),
+          child: Observer(
+            builder: (context) {
+              final donations = _cityFilterController.text.isNotEmpty
+                  ? _donationsStore.requestedDonations
+                      .where((donation) => _usersStore
+                          .getDonorById(donation.donorId!)
+                          .city
+                          .includes(_cityFilterController.text))
+                      .toList()
+                  : _donationsStore.requestedDonations;
 
-            if (_donationsStore.requestedDonations.isEmpty) {
-              return const Text('No momento não há doaçoes solicitadas...');
-            }
+              if (_donationsStore.requestedDonations.isEmpty) {
+                return const Text('No momento não há doaçoes solicitadas...');
+              }
 
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: _buildFilterField(),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: donations.length,
-                    itemBuilder: (context, index) {
-                      final donation = donations[index];
-                      return _buildDonationCard(donation);
-                    },
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: _buildFilterField(),
                   ),
-                ),
-              ],
-            );
-          },
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: donations.length,
+                      itemBuilder: (context, index) {
+                        final donation = donations[index];
+                        return LayoutBreakpoint(
+                          xs: _buildMobileDonationCard(donation),
+                          md: _buildWebDonationCard(donation),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildWebDonationCard(Donation donation) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Row(
+        children: [
+          if (donation.photoUrl != null)
+            FutureBuilder(
+              future: _donationsStore.getDonationPhotoURL(donation),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.data == null) {
+                  return const SizedBox(
+                    width: 325,
+                    height: 250,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                } else {
+                  return Container(
+                    width: 325,
+                    height: 250,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.fitHeight,
+                        image: NetworkImage(snapshot.data!),
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+          Expanded(
+            child: ListTile(
+              title: Text(donation.description),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (donation.createdAt != null)
+                    Text("Data da Doação: ${donation.createdAt!.toDateStr()}"),
+                  if (!donation.isDelivered)
+                    Text("Validade: ${donation.expiration}"),
+                  if (donation.donorId != null)
+                    Observer(
+                      builder: (context) {
+                        final donor =
+                            _usersStore.getDonorById(donation.donorId!);
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text("Doador: ${donor.name} "),
+                                InkWell(
+                                  child: const Icon(
+                                    Icons.info_outline_rounded,
+                                    size: 16,
+                                  ),
+                                  onTap: () => showUserDialog(
+                                    context,
+                                    user: donor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text("Cidade: ${donor.city} "),
+                          ],
+                        );
+                      },
+                    ),
+                  Text("Situação: ${donation.status}"),
+                  const SizedBox(height: 8),
+                  if (donation.cancellation == null &&
+                      !donation.isDelivered &&
+                      !donation.isExpired)
+                    SizedBox(
+                      width: double.infinity,
+                      child: Observer(
+                        builder: (_) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: OutlinedButton(
+                            onPressed: _connectionStateController.isConnected
+                                ? () {
+                                    _donationsStore
+                                        .setDonationAsDelivered(donation);
+                                  }
+                                : null,
+                            child: const Text('Marcar como Recebida'),
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (donation.cancellation == null &&
+                      !donation.isDelivered &&
+                      !donation.isExpired)
+                    SizedBox(
+                      width: double.infinity,
+                      child: Observer(
+                        builder: (_) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: OutlinedButton(
+                            onPressed: _connectionStateController.isConnected
+                                ? () {
+                                    _donationsStore
+                                        .setDonationAsUnrequested(donation);
+                                  }
+                                : null,
+                            child: const Text('Cancelar Solicitação'),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -103,7 +231,7 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
     );
   }
 
-  Widget _buildDonationCard(Donation donation) {
+  Widget _buildMobileDonationCard(Donation donation) {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -170,20 +298,24 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
                     },
                   ),
                 Text("Situação: ${donation.status}"),
+                const SizedBox(height: 8),
                 if (donation.cancellation == null &&
                     !donation.isDelivered &&
                     !donation.isExpired)
                   SizedBox(
                     width: double.infinity,
                     child: Observer(
-                      builder: (_) => OutlinedButton(
-                        onPressed: _connectionStateController.isConnected
-                            ? () {
-                                _donationsStore
-                                    .setDonationAsDelivered(donation);
-                              }
-                            : null,
-                        child: const Text('Marcar como Recebida'),
+                      builder: (_) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: OutlinedButton(
+                          onPressed: _connectionStateController.isConnected
+                              ? () {
+                                  _donationsStore
+                                      .setDonationAsDelivered(donation);
+                                }
+                              : null,
+                          child: const Text('Marcar como Recebida'),
+                        ),
                       ),
                     ),
                   ),
@@ -193,14 +325,17 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
                   SizedBox(
                     width: double.infinity,
                     child: Observer(
-                      builder: (_) => OutlinedButton(
-                        onPressed: _connectionStateController.isConnected
-                            ? () {
-                                _donationsStore
-                                    .setDonationAsUnrequested(donation);
-                              }
-                            : null,
-                        child: const Text('Cancelar Solicitação'),
+                      builder: (_) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: OutlinedButton(
+                          onPressed: _connectionStateController.isConnected
+                              ? () {
+                                  _donationsStore
+                                      .setDonationAsUnrequested(donation);
+                                }
+                              : null,
+                          child: const Text('Cancelar Solicitação'),
+                        ),
                       ),
                     ),
                   ),

@@ -1,0 +1,34 @@
+name: Deploy Website on Firebase Hosting
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-website-on-firebase-hosting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+
+      - name: Run Flutter Pub Get
+        run: flutter pub get
+
+      - name: Build APK File
+        run: flutter build apk
+
+      - name: Build Web App
+        run: flutter build web --release
+
+      - name: Copy Tree Shaked Material Icons to Web App
+        run: cp -r ./build/app/intermediates/flutter/release/flutter_assets/fonts/MaterialIcons-Regular.otf ./build/web/assets/fonts/MaterialIcons-Regular.otf

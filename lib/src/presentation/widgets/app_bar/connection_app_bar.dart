@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../../core/helpers/navigation.dart';
-import '../controllers/connection_state_controller.dart';
-import '../dialogs/no_connection_dialog.dart';
+import '../../../../core/helpers/navigation.dart';
+import '../../controllers/connection_state_controller.dart';
+import '../../dialogs/no_connection_dialog.dart';
 
 class ConnectionAppBar extends StatelessWidget implements PreferredSizeWidget {
   final ConnectionStateController _connectionStateController = Modular.get();
-  final IconData? icon;
+  final Icon? icon;
   final String? title;
   final List<Widget>? actions;
 
@@ -48,7 +48,7 @@ class ConnectionAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return Row(
       children: [
-        if (icon != null) Icon(icon),
+        if (icon != null) icon!,
         const SizedBox(width: 12),
         if (title != null) Text(title!),
       ],

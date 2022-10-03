@@ -23,19 +23,22 @@ class _LoginPageState extends State<LoginPage> {
       body: Padding(
         padding: const EdgeInsets.all(36),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildLogo(),
-              _buildEmailField(),
-              const SizedBox(height: 12),
-              _buildPasswordField(),
-              const SizedBox(height: 24),
-              _buildSubmitButton(),
-              const SizedBox(height: 24),
-              _buildNavigationButtons(),
-            ],
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildLogo(),
+                _buildEmailField(),
+                const SizedBox(height: 12),
+                _buildPasswordField(),
+                const SizedBox(height: 24),
+                _buildSubmitButton(),
+                const SizedBox(height: 24),
+                _buildNavigationButtons(),
+              ],
+            ),
           ),
         ),
       ),

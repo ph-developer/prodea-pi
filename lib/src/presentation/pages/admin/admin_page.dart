@@ -5,7 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import '../../../domain/entities/user.dart';
 import '../../controllers/connection_state_controller.dart';
 import '../../stores/users_store.dart';
-import '../../widgets/connection_app_bar.dart';
+import '../../widgets/app_bar/connection_app_bar.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -23,29 +23,32 @@ class _AdminPageState extends State<AdminPage> {
     return Observer(
       builder: (_) => Scaffold(
         appBar: ConnectionAppBar(
-          icon: Icons.admin_panel_settings_rounded,
+          icon: const Icon(Icons.admin_panel_settings_rounded),
           title: 'Administração',
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Observer(
-            builder: (context) {
-              final userInfos = _usersStore.commonUsers;
+        body: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 1200),
+            padding: const EdgeInsets.all(16),
+            child: Observer(
+              builder: (context) {
+                final userInfos = _usersStore.commonUsers;
 
-              if (userInfos.isEmpty) {
-                return const Text(
-                  'Infelizmente não há usuários cadastrados...',
+                if (userInfos.isEmpty) {
+                  return const Text(
+                    'Infelizmente não há usuários cadastrados...',
+                  );
+                }
+
+                return ListView.builder(
+                  itemCount: userInfos.length,
+                  itemBuilder: (context, index) {
+                    final userInfo = userInfos[index];
+                    return _buildUserCard(userInfo);
+                  },
                 );
-              }
-
-              return ListView.builder(
-                itemCount: userInfos.length,
-                itemBuilder: (context, index) {
-                  final userInfo = userInfos[index];
-                  return _buildUserCard(userInfo);
-                },
-              );
-            },
+              },
+            ),
           ),
         ),
       ),
@@ -90,26 +93,32 @@ class _AdminPageState extends State<AdminPage> {
                 user.status == AuthorizationStatus.denied)
               SizedBox(
                 width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: _connectionStateController.isConnected
-                      ? () {
-                          _usersStore.setUserAsAuthorized(user);
-                        }
-                      : null,
-                  child: const Text('Autorizar'),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: OutlinedButton(
+                    onPressed: _connectionStateController.isConnected
+                        ? () {
+                            _usersStore.setUserAsAuthorized(user);
+                          }
+                        : null,
+                    child: const Text('Autorizar'),
+                  ),
                 ),
               ),
             if (user.status == AuthorizationStatus.waiting ||
                 user.status == AuthorizationStatus.authorized)
               SizedBox(
                 width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: _connectionStateController.isConnected
-                      ? () {
-                          _usersStore.setUserAsDenied(user);
-                        }
-                      : null,
-                  child: const Text('Negar Autorização'),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: OutlinedButton(
+                    onPressed: _connectionStateController.isConnected
+                        ? () {
+                            _usersStore.setUserAsDenied(user);
+                          }
+                        : null,
+                    child: const Text('Negar Autorização'),
+                  ),
                 ),
               ),
           ],

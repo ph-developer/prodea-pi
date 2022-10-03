@@ -55,6 +55,7 @@ import 'domain/usecases/user/set_user_as_denied.dart';
 import 'presentation/controllers/auth_controller.dart';
 import 'presentation/controllers/connection_state_controller.dart';
 import 'presentation/pages/auth/register_page.dart';
+import 'presentation/pages/web/home_page.dart';
 import 'presentation/stores/cities_store.dart';
 import 'presentation/stores/donation_store.dart';
 import 'presentation/stores/donations_store.dart';
@@ -135,7 +136,10 @@ class AppModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        RedirectRoute('/', to: '/login'),
+        ChildRoute(
+          '/',
+          child: (_, __) => const HomePage(),
+        ),
         ChildRoute(
           '/login',
           child: (_, __) => const LoginPage(),

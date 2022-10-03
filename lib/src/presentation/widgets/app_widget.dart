@@ -1,4 +1,5 @@
 import 'package:asuka/asuka.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -36,7 +37,9 @@ class _AppWidgetState extends State<AppWidget> {
     _citiesStore.fetchCities();
     _usersStore.fetchUsers();
 
-    if (_authController.isLoggedIn) {
+    if (kIsWeb && Uri.base.toString().endsWith('/#/')) {
+      Modular.setInitialRoute('/');
+    } else if (_authController.isLoggedIn) {
       Modular.setInitialRoute('/main');
     } else {
       Modular.setInitialRoute('/login');

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -8,7 +9,7 @@ import '../../../../core/input_formatters.dart';
 import '../../controllers/connection_state_controller.dart';
 import '../../stores/donation_store.dart';
 import '../../stores/users_store.dart';
-import '../../widgets/main_app_bar.dart';
+import '../../widgets/app_bar/main_app_bar.dart';
 
 class DonatePage extends StatefulWidget {
   const DonatePage({Key? key}) : super(key: key);
@@ -26,24 +27,33 @@ class _DonatePageState extends State<DonatePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MainAppBar(
-        icon: Icons.volunteer_activism_rounded,
+        icon: const Icon(Icons.volunteer_activism_rounded),
         title: 'Doar',
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
+        child: Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildDescriptionField(),
-              const SizedBox(height: 24),
-              _buildPhotoField(),
-              const SizedBox(height: 24),
-              _buildBeneficiaryField(),
-              const SizedBox(height: 24),
-              _buildExpirationField(),
-              const SizedBox(height: 24),
-              _buildSubmitButton(),
+              SingleChildScrollView(
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 1200),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildDescriptionField(),
+                      const SizedBox(height: 24),
+                      _buildPhotoField(),
+                      const SizedBox(height: 24),
+                      _buildBeneficiaryField(),
+                      const SizedBox(height: 24),
+                      _buildExpirationField(),
+                      const SizedBox(height: 24),
+                      _buildSubmitButton(),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -65,23 +75,35 @@ class _DonatePageState extends State<DonatePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: _donationStore.pickImageFromCamera,
-                child: const Text('Tirar Foto'),
+        if (kIsWeb)
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: _donationStore.pickImageFromGallery,
+                  child: const Text('Escolher Arquivo de Foto'),
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: OutlinedButton(
-                onPressed: _donationStore.pickImageFromGallery,
-                child: const Text('Escolher Foto da Galeria'),
+            ],
+          ),
+        if (!kIsWeb)
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: _donationStore.pickImageFromCamera,
+                  child: const Text('Tirar Foto'),
+                ),
               ),
-            ),
-          ],
-        ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: _donationStore.pickImageFromGallery,
+                  child: const Text('Escolher Foto da Galeria'),
+                ),
+              ),
+            ],
+          ),
         const SizedBox(height: 8),
         Observer(
           builder: (_) {
@@ -96,10 +118,15 @@ class _DonatePageState extends State<DonatePage> {
                   return Container(
                     height: 200,
                     decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.fitWidth,
-                        image: FileImage(_donationStore.image!),
-                      ),
+                      image: kIsWeb
+                          ? DecorationImage(
+                              fit: BoxFit.fitWidth,
+                              image: NetworkImage(_donationStore.image!.path),
+                            )
+                          : DecorationImage(
+                              fit: BoxFit.fitWidth,
+                              image: FileImage(_donationStore.image!),
+                            ),
                     ),
                     child: SizedBox(
                       width: double.infinity,
