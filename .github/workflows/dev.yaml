@@ -11,18 +11,18 @@ jobs:
       - name: Get Repository
         uses: actions/checkout@v3
 
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: "12.x"
+      # - name: Setup Java
+      #   uses: actions/setup-java@v1
+      #   with:
+      #     java-version: "12.x"
 
-      - name: Setup Flutter SDK
-        uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
+      # - name: Setup Flutter SDK
+      #   uses: subosito/flutter-action@v2
+      #   with:
+      #     channel: "stable"
 
-      - name: Run Flutter Pub Get
-        run: flutter pub get
+      # - name: Run Flutter Pub Get
+      #   run: flutter pub get
 
       # - name: Run Unit and Widget Tests
       #   run: flutter test test
@@ -64,11 +64,12 @@ jobs:
     steps:
       - name: Get Repository
         uses: actions/checkout@v3
-
-      - name: Merge dev -> main
-        uses: devmasx/merge-branch@master
         with:
-          type: now
-          from_branch: dev
-          target_branch: main
-          github_token: ${{ github.token }}
+          ref: main
+
+      - name: Git Merge div -> main
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git merge dev
+          git push
