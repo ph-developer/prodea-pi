@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/input_formatters.dart';
 import '../../controllers/auth_controller.dart';
+import '../../controllers/navigation_controller.dart';
 import '../../dialogs/city_select_dialog.dart';
 import '../../stores/user_store.dart';
 import '../../widgets/button/loading_outlined_button.dart';
@@ -19,6 +20,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final NavigationController _navigationController = Modular.get();
   final AuthController _authController = Modular.get();
   final UserStore _userStore = Modular.get();
   final _cityController = TextEditingController(text: '');
@@ -367,10 +369,8 @@ class _RegisterPageState extends State<RegisterPage> {
           return OutlinedButton(
             onPressed: canSubmit
                 ? () => _authController.register(
-                      _userStore.email,
-                      _password,
-                      _userStore.user,
-                    )
+                    _userStore.email, _password, _userStore.user,
+                    onSuccess: _navigationController.navigateToMainPage)
                 : null,
             child: const Text('Solicitar Cadastro'),
           );
@@ -387,7 +387,8 @@ class _RegisterPageState extends State<RegisterPage> {
           final isLoading = _authController.isLoading;
 
           return OutlinedButton(
-            onPressed: !isLoading ? _authController.navigateToLoginPage : null,
+            onPressed:
+                !isLoading ? _navigationController.navigateToLoginPage : null,
             child: const Text('Voltar'),
           );
         },

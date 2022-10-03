@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../../../core/helpers/navigation.dart';
 import '../../controllers/connection_state_controller.dart';
+import '../../controllers/navigation_controller.dart';
 import '../../dialogs/no_connection_dialog.dart';
 
 class ConnectionAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final NavigationController _navigationController = Modular.get();
   final ConnectionStateController _connectionStateController = Modular.get();
   final Icon? icon;
   final String? title;
@@ -27,8 +28,8 @@ class ConnectionAppBar extends StatelessWidget implements PreferredSizeWidget {
 
         return AppBar(
           leading: (ModalRoute.of(context)?.impliesAppBarDismissal ?? false)
-              ? const BackButton(
-                  onPressed: NavigationHelper.back,
+              ? BackButton(
+                  onPressed: _navigationController.navigateBack,
                 )
               : null,
           backgroundColor: _getBackgroundColor(isConnected),

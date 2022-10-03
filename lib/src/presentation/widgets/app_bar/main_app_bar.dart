@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../../../core/helpers/navigation.dart';
 import '../../controllers/auth_controller.dart';
+import '../../controllers/navigation_controller.dart';
 import '../layout/breakpoint.dart';
 import 'connection_app_bar.dart';
 
@@ -12,6 +12,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final List<Widget>? actions;
   final AuthController _authController = Modular.get();
+  final NavigationController _navigationController = Modular.get();
 
   @override
   final Size preferredSize;
@@ -50,7 +51,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       if (isAdmin) {
         widgets.addAll([
           TextButton.icon(
-            onPressed: () => NavigationHelper.goTo('/admin'),
+            onPressed: _navigationController.navigateToAdminPage,
             icon: const Icon(Icons.admin_panel_settings_rounded),
             label: const Text('Administração'),
           ),
@@ -60,7 +61,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       if (name != null) {
         widgets.addAll([
           TextButton.icon(
-            onPressed: () => NavigationHelper.goTo('/profile'),
+            onPressed: _navigationController.navigateToProfilePage,
             icon: const Icon(Icons.person_rounded),
             label: Text(name),
           ),
@@ -69,7 +70,9 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
 
       widgets.addAll([
         TextButton.icon(
-          onPressed: () => _authController.logout(),
+          onPressed: () => _authController.logout(
+            onSuccess: _navigationController.navigateToLoginPage,
+          ),
           icon: const Icon(Icons.logout_rounded),
           label: const Text('Sair'),
         ),
@@ -89,7 +92,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
     if (isLoggedIn) {
       widgets.addAll([
         IconButton(
-          onPressed: () => NavigationHelper.goTo('/profile'),
+          onPressed: _navigationController.navigateToProfilePage,
           icon: const Icon(Icons.person_rounded),
         ),
       ]);
@@ -97,7 +100,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       if (isAdmin) {
         widgets.addAll([
           IconButton(
-            onPressed: () => NavigationHelper.goTo('/admin'),
+            onPressed: _navigationController.navigateToAdminPage,
             icon: const Icon(Icons.admin_panel_settings_rounded),
           ),
         ]);

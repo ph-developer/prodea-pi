@@ -2,11 +2,14 @@ import 'dart:async';
 
 import 'package:flutter_modular/flutter_modular.dart';
 
-abstract class NavigationHelper {
+import '../../domain/services/navigation_service.dart';
+
+class ModularNavigationService implements INavigationService {
   static final StreamController<String> _currentRoute =
       StreamController.broadcast();
 
-  static void goTo(String path, {bool replace = false}) {
+  @override
+  void goTo(String path, {bool replace = false}) {
     _currentRoute.add(path);
     if (replace) {
       Modular.to.navigate(path);
@@ -15,12 +18,14 @@ abstract class NavigationHelper {
     }
   }
 
-  static void back() {
+  @override
+  void goBack() {
     Modular.to.pop();
     _currentRoute.add(Modular.to.path);
   }
 
-  static Stream<String> get currentRoute {
+  @override
+  Stream<String> currentRoute() {
     return _currentRoute.stream;
   }
 }

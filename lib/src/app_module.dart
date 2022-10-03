@@ -5,6 +5,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'data/services/modular_navigation_service.dart';
+import 'domain/services/navigation_service.dart';
+import 'domain/usecases/navigation/get_current_route.dart';
+import 'domain/usecases/navigation/go_back.dart';
+import 'domain/usecases/navigation/go_to.dart';
 import 'presentation/guards/auth_guard.dart';
 import 'presentation/guards/guest_guard.dart';
 import 'presentation/pages/account/profile_page.dart';
@@ -82,6 +87,7 @@ class AppModule extends Module {
         Bind.factory<IUserRepo>((i) => FirebaseUserRemoteRepo(i())),
 
         //! Services
+        Bind.factory<INavigationService>((i) => ModularNavigationService()),
         Bind.factory<INetworkService>((i) => ConnectivityNetworkService(i())),
         Bind.factory<IPhotoService>((i) => ImagePickerPhotoService(i())),
         Bind.factory<INotificationService>((i) => AsukaNotificationService()),
@@ -108,6 +114,9 @@ class AppModule extends Module {
             (i) => SetDonationAsRequested(i(), i(), i())),
         Bind.factory<SetDonationAsUnrequested>(
             (i) => SetDonationAsUnrequested(i(), i())),
+        Bind.factory<GetCurrentRoute>((i) => GetCurrentRoute(i())),
+        Bind.factory<GoBack>((i) => GoBack(i())),
+        Bind.factory<GoTo>((i) => GoTo(i())),
         Bind.factory<GetConnectionStatus>((i) => GetConnectionStatus(i(), i())),
         Bind.factory<PickPhotoFromCamera>((i) => PickPhotoFromCamera(i(), i())),
         Bind.factory<PickPhotoFromGallery>(

@@ -1,4 +1,3 @@
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:prodea/src/domain/entities/user.dart';
@@ -12,7 +11,6 @@ import 'package:prodea/src/presentation/controllers/auth_controller.dart';
 import '../../../mocks/mocks.dart';
 
 void main() {
-  late IModularNavigator modularNavigatorMock;
   late GetCurrentUser getCurrentUserMock;
   late DoLogin doLoginMock;
   late DoRegister doRegisterMock;
@@ -72,7 +70,6 @@ void main() {
   );
 
   setUp(() {
-    modularNavigatorMock = MockModularNavigator();
     getCurrentUserMock = MockGetCurrentUser();
     doLoginMock = MockDoLogin();
     doRegisterMock = MockDoRegister();
@@ -86,8 +83,6 @@ void main() {
       doLogoutMock,
       sendPasswordResetEmailMock,
     );
-
-    Modular.navigatorDelegate = modularNavigatorMock;
   });
 
   group('isLoggedIn', () {
@@ -352,34 +347,15 @@ void main() {
 
   group('sendPasswordResetEmail', () {
     test(
-      'deve chamar a usecase para efetuar o envio do link de redefinição de '
-      'senha e navegar para a página de login se obtiver sucesso.',
+      'deve chamar a usecase para efetuar o envio do link de redefinição de senha.',
       () async {
         // arrange
         when(() => sendPasswordResetEmailMock(any()))
             .thenAnswer((_) async => true);
         // act
         await controller.sendPasswordResetEmail('email');
-        await untilCalled(() => modularNavigatorMock.navigate(any()));
         // assert
         verify(() => sendPasswordResetEmailMock('email')).called(1);
-        verify(() => modularNavigatorMock.navigate('/login')).called(1);
-        expect(controller.isLoading, false);
-      },
-    );
-
-    test(
-      'deve chamar a usecase para efetuar o envio do link de redefinição de '
-      'senha e manter-se na página se não obtiver sucesso.',
-      () async {
-        // arrange
-        when(() => sendPasswordResetEmailMock(any()))
-            .thenAnswer((_) async => false);
-        // act
-        await controller.sendPasswordResetEmail('email');
-        // assert
-        verify(() => sendPasswordResetEmailMock('email')).called(1);
-        verifyNever(() => modularNavigatorMock.navigate(any()));
         expect(controller.isLoading, false);
       },
     );
@@ -396,45 +372,6 @@ void main() {
         // assert
         verify(doLogoutMock).called(1);
         expect(controller.isLoading, false);
-      },
-    );
-  });
-
-  group('navigateToLoginPage', () {
-    test(
-      'deve navegar para a página de login.',
-      () async {
-        // act
-        controller.navigateToLoginPage();
-        await untilCalled(() => modularNavigatorMock.navigate(any()));
-        // assert
-        verify(() => modularNavigatorMock.navigate('/login')).called(1);
-      },
-    );
-  });
-
-  group('navigateToForgotPasswordPage', () {
-    test(
-      'deve navegar para a página de solicitação de link de redefinição de senha.',
-      () async {
-        // act
-        controller.navigateToForgotPasswordPage();
-        await untilCalled(() => modularNavigatorMock.navigate(any()));
-        // assert
-        verify(() => modularNavigatorMock.navigate('/forgot')).called(1);
-      },
-    );
-  });
-
-  group('navigateToRegisterPage', () {
-    test(
-      'deve navegar para a página de cadastro.',
-      () async {
-        // act
-        controller.navigateToRegisterPage();
-        await untilCalled(() => modularNavigatorMock.navigate(any()));
-        // assert
-        verify(() => modularNavigatorMock.navigate('/register')).called(1);
       },
     );
   });

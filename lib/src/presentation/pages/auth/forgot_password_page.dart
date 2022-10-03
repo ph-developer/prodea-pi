@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../controllers/auth_controller.dart';
+import '../../controllers/navigation_controller.dart';
 import '../../widgets/button/loading_outlined_button.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -14,6 +15,7 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  final NavigationController _navigationController = Modular.get();
   final AuthController _authController = Modular.get();
   var email = '';
 
@@ -79,7 +81,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           }
 
           return OutlinedButton(
-            onPressed: () => _authController.sendPasswordResetEmail(email),
+            onPressed: () => _authController.sendPasswordResetEmail(
+              email,
+              onSuccess: _navigationController.navigateToLoginPage,
+            ),
             child: const Text('Solicitar Redefinição de Senha'),
           );
         },
@@ -95,7 +100,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           final isLoading = _authController.isLoading;
 
           return OutlinedButton(
-            onPressed: !isLoading ? _authController.navigateToLoginPage : null,
+            onPressed:
+                !isLoading ? _navigationController.navigateToLoginPage : null,
             child: const Text('Voltar'),
           );
         },

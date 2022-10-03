@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../controllers/auth_controller.dart';
+import '../../controllers/navigation_controller.dart';
 import '../../widgets/button/loading_outlined_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,6 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final NavigationController _navigationController = Modular.get();
   final AuthController _authController = Modular.get();
   var _email = '';
   var _password = '';
@@ -98,7 +100,11 @@ class _LoginPageState extends State<LoginPage> {
           }
 
           return OutlinedButton(
-            onPressed: () => _authController.login(_email, _password),
+            onPressed: () => _authController.login(
+              _email,
+              _password,
+              onSuccess: _navigationController.navigateToMainPage,
+            ),
             child: const Text('Entrar'),
           );
         },
@@ -116,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
             Expanded(
               child: OutlinedButton(
                 onPressed: !isLoading
-                    ? _authController.navigateToForgotPasswordPage
+                    ? _navigationController.navigateToForgotPasswordPage
                     : null,
                 child: const Text('Recuperar Senha'),
               ),
@@ -124,8 +130,9 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(width: 12),
             Expanded(
               child: OutlinedButton(
-                onPressed:
-                    !isLoading ? _authController.navigateToRegisterPage : null,
+                onPressed: !isLoading
+                    ? _navigationController.navigateToRegisterPage
+                    : null,
                 child: const Text('Solicitar Cadastro'),
               ),
             ),
