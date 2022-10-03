@@ -65,10 +65,11 @@ jobs:
       - name: Get Repository
         uses: actions/checkout@v3
 
-      - name: Git Merge div -> main
+      - name: Git Merge dev -> main
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
+          git pull main
           git checkout main
           git pull
           git merge dev
