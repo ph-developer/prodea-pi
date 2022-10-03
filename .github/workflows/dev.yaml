@@ -24,8 +24,8 @@ jobs:
       - name: Run Flutter Pub Get
         run: flutter pub get
 
-      - name: Run Unit and Widget Tests
-        run: flutter test test
+      # - name: Run Unit and Widget Tests
+      #   run: flutter test test
 
   flutter-integration-tests:
     runs-on: ubuntu-latest
