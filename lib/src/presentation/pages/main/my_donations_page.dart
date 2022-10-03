@@ -93,75 +93,7 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                 }
               },
             ),
-          ListTile(
-            title: Text(donation.description),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (donation.createdAt != null)
-                  Text("Data da Doação: ${donation.createdAt!.toDateStr()}"),
-                if (!donation.isDelivered)
-                  Text("Validade: ${donation.expiration}"),
-                if (donation.beneficiaryId != null)
-                  Observer(
-                    builder: (context) {
-                      final beneficiary = _usersStore
-                          .getBeneficiaryById(donation.beneficiaryId!);
-
-                      return Row(
-                        children: [
-                          Text("Destino: ${beneficiary.name} "),
-                          InkWell(
-                            child: const Icon(
-                              Icons.info_outline_rounded,
-                              size: 16,
-                            ),
-                            onTap: () => showUserDialog(
-                              context,
-                              user: beneficiary,
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                Text("Situação: ${donation.status}"),
-                const SizedBox(height: 8),
-                if (donation.cancellation == null &&
-                    !donation.isDelivered &&
-                    !donation.isExpired &&
-                    donation.beneficiaryId != null)
-                  SizedBox(
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: ConnectionOutlinedButton(
-                        onPressed: () =>
-                            _donationsStore.setDonationAsDelivered(donation),
-                        child: const Text('Marcar como Entregue'),
-                      ),
-                    ),
-                  ),
-                if (donation.cancellation == null &&
-                    !donation.isDelivered &&
-                    !donation.isExpired)
-                  SizedBox(
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: ConnectionOutlinedButton(
-                        onPressed: () => showCancelReasonDialog(
-                          context,
-                          onOk: (reason) => _donationsStore
-                              .setDonationAsCanceled(donation, reason),
-                        ),
-                        child: const Text('Cancelar Doação'),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
+          _buildCardListTile(donation),
         ],
       ),
     );
@@ -199,76 +131,76 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
               },
             ),
           Expanded(
-            child: ListTile(
-              title: Text(donation.description),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (donation.createdAt != null)
-                    Text("Data da Doação: ${donation.createdAt!.toDateStr()}"),
-                  if (!donation.isDelivered)
-                    Text("Validade: ${donation.expiration}"),
-                  if (donation.beneficiaryId != null)
-                    Observer(
-                      builder: (context) {
-                        final beneficiary = _usersStore
-                            .getBeneficiaryById(donation.beneficiaryId!);
+            child: _buildCardListTile(donation),
+          ),
+        ],
+      ),
+    );
+  }
 
-                        return Row(
-                          children: [
-                            Text("Destino: ${beneficiary.name} "),
-                            InkWell(
-                              child: const Icon(
-                                Icons.info_outline_rounded,
-                                size: 16,
-                              ),
-                              onTap: () => showUserDialog(
-                                context,
-                                user: beneficiary,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  Text("Situação: ${donation.status}"),
-                  const SizedBox(height: 8),
-                  if (donation.cancellation == null &&
-                      !donation.isDelivered &&
-                      !donation.isExpired &&
-                      donation.beneficiaryId != null)
-                    SizedBox(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ConnectionOutlinedButton(
-                          onPressed: () =>
-                              _donationsStore.setDonationAsDelivered(donation),
-                          child: const Text('Marcar como Entregue'),
-                        ),
+  Widget _buildCardListTile(Donation donation) {
+    return ListTile(
+      title: Text(donation.description),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (donation.createdAt != null)
+            Text("Data da Doação: ${donation.createdAt!.toDateStr()}"),
+          if (!donation.isDelivered) Text("Validade: ${donation.expiration}"),
+          if (donation.beneficiaryId != null)
+            Observer(
+              builder: (context) {
+                final beneficiary =
+                    _usersStore.getBeneficiaryById(donation.beneficiaryId!);
+
+                return Row(
+                  children: [
+                    Text("Destino: ${beneficiary.name} "),
+                    InkWell(
+                      child: const Icon(
+                        Icons.info_outline_rounded,
+                        size: 16,
                       ),
+                      onTap: () => showUserDialog(context, user: beneficiary),
                     ),
-                  if (donation.cancellation == null &&
-                      !donation.isDelivered &&
-                      !donation.isExpired)
-                    SizedBox(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ConnectionOutlinedButton(
-                          onPressed: () => showCancelReasonDialog(
-                            context,
-                            onOk: (reason) => _donationsStore
-                                .setDonationAsCanceled(donation, reason),
-                          ),
-                          child: const Text('Cancelar Doação'),
-                        ),
-                      ),
-                    ),
-                ],
+                  ],
+                );
+              },
+            ),
+          Text("Situação: ${donation.status}"),
+          const SizedBox(height: 8),
+          if (donation.cancellation == null &&
+              !donation.isDelivered &&
+              !donation.isExpired &&
+              donation.beneficiaryId != null)
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ConnectionOutlinedButton(
+                  onPressed: () =>
+                      _donationsStore.setDonationAsDelivered(donation),
+                  child: const Text('Marcar como Entregue'),
+                ),
               ),
             ),
-          ),
+          if (donation.cancellation == null &&
+              !donation.isDelivered &&
+              !donation.isExpired)
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ConnectionOutlinedButton(
+                  onPressed: () => showCancelReasonDialog(
+                    context,
+                    onOk: (reason) =>
+                        _donationsStore.setDonationAsCanceled(donation, reason),
+                  ),
+                  child: const Text('Cancelar Doação'),
+                ),
+              ),
+            ),
         ],
       ),
     );

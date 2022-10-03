@@ -88,115 +88,6 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
     );
   }
 
-  Widget _buildWebDonationCard(Donation donation) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: Row(
-        children: [
-          if (donation.photoUrl != null)
-            FutureBuilder(
-              future: _donationsStore.getDonationPhotoURL(donation),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData || snapshot.data == null) {
-                  return const SizedBox(
-                    width: 325,
-                    height: 250,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                } else {
-                  return Container(
-                    width: 325,
-                    height: 250,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.fitHeight,
-                        image: NetworkImage(snapshot.data!),
-                      ),
-                    ),
-                  );
-                }
-              },
-            ),
-          Expanded(
-            child: ListTile(
-              title: Text(donation.description),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (donation.createdAt != null)
-                    Text("Data da Doação: ${donation.createdAt!.toDateStr()}"),
-                  if (!donation.isDelivered)
-                    Text("Validade: ${donation.expiration}"),
-                  if (donation.donorId != null)
-                    Observer(
-                      builder: (context) {
-                        final donor =
-                            _usersStore.getDonorById(donation.donorId!);
-
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text("Doador: ${donor.name} "),
-                                InkWell(
-                                  child: const Icon(
-                                    Icons.info_outline_rounded,
-                                    size: 16,
-                                  ),
-                                  onTap: () => showUserDialog(
-                                    context,
-                                    user: donor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Text("Cidade: ${donor.city} "),
-                          ],
-                        );
-                      },
-                    ),
-                  Text("Situação: ${donation.status}"),
-                  const SizedBox(height: 8),
-                  if (donation.cancellation == null &&
-                      !donation.isDelivered &&
-                      !donation.isExpired)
-                    SizedBox(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ConnectionOutlinedButton(
-                          onPressed: () =>
-                              _donationsStore.setDonationAsDelivered(donation),
-                          child: const Text('Marcar como Recebida'),
-                        ),
-                      ),
-                    ),
-                  if (donation.cancellation == null &&
-                      !donation.isDelivered &&
-                      !donation.isExpired)
-                    SizedBox(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ConnectionOutlinedButton(
-                          onPressed: () => _donationsStore
-                              .setDonationAsUnrequested(donation),
-                          child: const Text('Cancelar Solicitação'),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildFilterField() {
     return TextFormField(
       controller: _cityFilterController,
@@ -247,76 +138,115 @@ class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
                 }
               },
             ),
-          ListTile(
-            title: Text(donation.description),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (donation.createdAt != null)
-                  Text("Data da Doação: ${donation.createdAt!.toDateStr()}"),
-                if (!donation.isDelivered)
-                  Text("Validade: ${donation.expiration}"),
-                if (donation.donorId != null)
-                  Observer(
-                    builder: (context) {
-                      final donor = _usersStore.getDonorById(donation.donorId!);
+          _buildCardListTile(donation),
+        ],
+      ),
+    );
+  }
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text("Doador: ${donor.name} "),
-                              InkWell(
-                                child: const Icon(
-                                  Icons.info_outline_rounded,
-                                  size: 16,
-                                ),
-                                onTap: () => showUserDialog(
-                                  context,
-                                  user: donor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text("Cidade: ${donor.city} "),
-                        ],
-                      );
-                    },
-                  ),
-                Text("Situação: ${donation.status}"),
-                const SizedBox(height: 8),
-                if (donation.cancellation == null &&
-                    !donation.isDelivered &&
-                    !donation.isExpired)
-                  SizedBox(
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: ConnectionOutlinedButton(
-                        onPressed: () =>
-                            _donationsStore.setDonationAsDelivered(donation),
-                        child: const Text('Marcar como Recebida'),
+  Widget _buildWebDonationCard(Donation donation) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Row(
+        children: [
+          if (donation.photoUrl != null)
+            FutureBuilder(
+              future: _donationsStore.getDonationPhotoURL(donation),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.data == null) {
+                  return const SizedBox(
+                    width: 325,
+                    height: 250,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                } else {
+                  return Container(
+                    width: 325,
+                    height: 250,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.fitHeight,
+                        image: NetworkImage(snapshot.data!),
                       ),
                     ),
-                  ),
-                if (donation.cancellation == null &&
-                    !donation.isDelivered &&
-                    !donation.isExpired)
-                  SizedBox(
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: ConnectionOutlinedButton(
-                        onPressed: () =>
-                            _donationsStore.setDonationAsUnrequested(donation),
-                        child: const Text('Cancelar Solicitação'),
-                      ),
-                    ),
-                  ),
-              ],
+                  );
+                }
+              },
             ),
+          Expanded(
+            child: _buildCardListTile(donation),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCardListTile(Donation donation) {
+    return ListTile(
+      title: Text(donation.description),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (donation.createdAt != null)
+            Text("Data da Doação: ${donation.createdAt!.toDateStr()}"),
+          if (!donation.isDelivered) Text("Validade: ${donation.expiration}"),
+          if (donation.donorId != null)
+            Observer(
+              builder: (context) {
+                final donor = _usersStore.getDonorById(donation.donorId!);
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text("Doador: ${donor.name} "),
+                        InkWell(
+                          child: const Icon(
+                            Icons.info_outline_rounded,
+                            size: 16,
+                          ),
+                          onTap: () => showUserDialog(context, user: donor),
+                        ),
+                      ],
+                    ),
+                    Text("Cidade: ${donor.city} "),
+                  ],
+                );
+              },
+            ),
+          Text("Situação: ${donation.status}"),
+          const SizedBox(height: 8),
+          if (donation.cancellation == null &&
+              !donation.isDelivered &&
+              !donation.isExpired)
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ConnectionOutlinedButton(
+                  onPressed: () =>
+                      _donationsStore.setDonationAsDelivered(donation),
+                  child: const Text('Marcar como Recebida'),
+                ),
+              ),
+            ),
+          if (donation.cancellation == null &&
+              !donation.isDelivered &&
+              !donation.isExpired)
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ConnectionOutlinedButton(
+                  onPressed: () =>
+                      _donationsStore.setDonationAsUnrequested(donation),
+                  child: const Text('Cancelar Solicitação'),
+                ),
+              ),
+            ),
         ],
       ),
     );

@@ -139,58 +139,7 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
                 }
               },
             ),
-          ListTile(
-            title: Text(donation.description),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (donation.createdAt != null)
-                  Text("Data da Doação: ${donation.createdAt!.toDateStr()}"),
-                if (!donation.isDelivered)
-                  Text("Validade: ${donation.expiration}"),
-                if (donation.donorId != null)
-                  Observer(
-                    builder: (context) {
-                      final donor = _usersStore.getDonorById(donation.donorId!);
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text("Doador: ${donor.name} "),
-                              InkWell(
-                                child: const Icon(
-                                  Icons.info_outline_rounded,
-                                  size: 16,
-                                ),
-                                onTap: () => showUserDialog(
-                                  context,
-                                  user: donor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text("Cidade: ${donor.city} "),
-                        ],
-                      );
-                    },
-                  ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ConnectionOutlinedButton(
-                      onPressed: () =>
-                          _donationsStore.setDonationAsRequested(donation),
-                      child: const Text('Solicitar Doação'),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          _buildCardListTile(donation),
         ],
       ),
     );
@@ -228,57 +177,56 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
               },
             ),
           Expanded(
-            child: ListTile(
-              title: Text(donation.description),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (donation.createdAt != null)
-                    Text("Data da Doação: ${donation.createdAt!.toDateStr()}"),
-                  if (!donation.isDelivered)
-                    Text("Validade: ${donation.expiration}"),
-                  if (donation.donorId != null)
-                    Observer(
-                      builder: (context) {
-                        final donor =
-                            _usersStore.getDonorById(donation.donorId!);
+            child: _buildCardListTile(donation),
+          ),
+        ],
+      ),
+    );
+  }
 
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text("Doador: ${donor.name} "),
-                                InkWell(
-                                  child: const Icon(
-                                    Icons.info_outline_rounded,
-                                    size: 16,
-                                  ),
-                                  onTap: () => showUserDialog(
-                                    context,
-                                    user: donor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Text("Cidade: ${donor.city} "),
-                          ],
-                        );
-                      },
+  Widget _buildCardListTile(Donation donation) {
+    return ListTile(
+      title: Text(donation.description),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (donation.createdAt != null)
+            Text("Data da Doação: ${donation.createdAt!.toDateStr()}"),
+          if (!donation.isDelivered) Text("Validade: ${donation.expiration}"),
+          if (donation.donorId != null)
+            Observer(
+              builder: (context) {
+                final donor = _usersStore.getDonorById(donation.donorId!);
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text("Doador: ${donor.name} "),
+                        InkWell(
+                          child: const Icon(
+                            Icons.info_outline_rounded,
+                            size: 16,
+                          ),
+                          onTap: () => showUserDialog(context, user: donor),
+                        ),
+                      ],
                     ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: ConnectionOutlinedButton(
-                        onPressed: () =>
-                            _donationsStore.setDonationAsRequested(donation),
-                        child: const Text('Solicitar Doação'),
-                      ),
-                    ),
-                  ),
-                ],
+                    Text("Cidade: ${donor.city} "),
+                  ],
+                );
+              },
+            ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ConnectionOutlinedButton(
+                onPressed: () =>
+                    _donationsStore.setDonationAsRequested(donation),
+                child: const Text('Solicitar Doação'),
               ),
             ),
           ),
