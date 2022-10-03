@@ -5,6 +5,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'data/services/modular_navigation_service.dart';
+import 'domain/services/navigation_service.dart';
+import 'domain/usecases/navigation/get_current_route.dart';
+import 'domain/usecases/navigation/go_back.dart';
+import 'domain/usecases/navigation/go_to.dart';
+import 'presentation/controllers/navigation_controller.dart';
 import 'presentation/guards/auth_guard.dart';
 import 'presentation/guards/guest_guard.dart';
 import 'presentation/pages/account/profile_page.dart';
@@ -55,6 +61,7 @@ import 'domain/usecases/user/set_user_as_denied.dart';
 import 'presentation/controllers/auth_controller.dart';
 import 'presentation/controllers/connection_state_controller.dart';
 import 'presentation/pages/auth/register_page.dart';
+import 'presentation/pages/web/home_page.dart';
 import 'presentation/stores/cities_store.dart';
 import 'presentation/stores/donation_store.dart';
 import 'presentation/stores/donations_store.dart';
@@ -65,9 +72,9 @@ class AppModule extends Module {
   @override
   List<Bind> get binds => [
         //! Firebase
-        Bind.instance<FirebaseAuth>(FirebaseAuth.instance),
-        Bind.instance<FirebaseStorage>(FirebaseStorage.instance),
-        Bind.instance<FirebaseFirestore>(FirebaseFirestore.instance),
+        Bind.factory<FirebaseAuth>((i) => FirebaseAuth.instance),
+        Bind.factory<FirebaseStorage>((i) => FirebaseStorage.instance),
+        Bind.factory<FirebaseFirestore>((i) => FirebaseFirestore.instance),
 
         //! Third-Party
         Bind.factory<Connectivity>((i) => Connectivity()),
@@ -81,6 +88,7 @@ class AppModule extends Module {
         Bind.factory<IUserRepo>((i) => FirebaseUserRemoteRepo(i())),
 
         //! Services
+        Bind.factory<INavigationService>((i) => ModularNavigationService()),
         Bind.factory<INetworkService>((i) => ConnectivityNetworkService(i())),
         Bind.factory<IPhotoService>((i) => ImagePickerPhotoService(i())),
         Bind.factory<INotificationService>((i) => AsukaNotificationService()),
@@ -107,6 +115,9 @@ class AppModule extends Module {
             (i) => SetDonationAsRequested(i(), i(), i())),
         Bind.factory<SetDonationAsUnrequested>(
             (i) => SetDonationAsUnrequested(i(), i())),
+        Bind.factory<GetCurrentRoute>((i) => GetCurrentRoute(i())),
+        Bind.factory<GoBack>((i) => GoBack(i())),
+        Bind.factory<GoTo>((i) => GoTo(i())),
         Bind.factory<GetConnectionStatus>((i) => GetConnectionStatus(i(), i())),
         Bind.factory<PickPhotoFromCamera>((i) => PickPhotoFromCamera(i(), i())),
         Bind.factory<PickPhotoFromGallery>(
@@ -123,6 +134,8 @@ class AppModule extends Module {
             (i) => AuthController(i(), i(), i(), i(), i())),
         Bind.singleton<ConnectionStateController>(
             (i) => ConnectionStateController(i())),
+        Bind.singleton<NavigationController>(
+            (i) => NavigationController(i(), i(), i())),
 
         //! Stores
         Bind.singleton<CitiesStore>((i) => CitiesStore(i())),
@@ -135,7 +148,10 @@ class AppModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        RedirectRoute('/', to: '/login'),
+        ChildRoute(
+          '/',
+          child: (_, __) => const HomePage(),
+        ),
         ChildRoute(
           '/login',
           child: (_, __) => const LoginPage(),

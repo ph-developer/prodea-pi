@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../controllers/auth_controller.dart';
+import '../../controllers/navigation_controller.dart';
 
 class DeniedPage extends StatefulWidget {
   const DeniedPage({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class DeniedPage extends StatefulWidget {
 }
 
 class _DeniedPageState extends State<DeniedPage> {
+  final NavigationController _navigationController = Modular.get();
   final AuthController _authController = Modular.get();
 
   @override
@@ -30,7 +32,9 @@ class _DeniedPageState extends State<DeniedPage> {
                 const Text('Em breve entraremos em contato...'),
                 const SizedBox(height: 12),
                 OutlinedButton(
-                  onPressed: _authController.logout,
+                  onPressed: () => _authController.logout(
+                    onSuccess: _navigationController.navigateToLoginPage,
+                  ),
                   child: const Text('Sair'),
                 ),
               ],

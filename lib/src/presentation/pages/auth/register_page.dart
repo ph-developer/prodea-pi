@@ -6,8 +6,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/input_formatters.dart';
 import '../../controllers/auth_controller.dart';
+import '../../controllers/navigation_controller.dart';
 import '../../dialogs/city_select_dialog.dart';
 import '../../stores/user_store.dart';
+import '../../widgets/button/loading_outlined_button.dart';
+import '../../widgets/layout/layout_breakpoint.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -17,6 +20,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final NavigationController _navigationController = Modular.get();
   final AuthController _authController = Modular.get();
   final UserStore _userStore = Modular.get();
   final _cityController = TextEditingController(text: '');
@@ -33,40 +37,112 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(36),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildLogo(),
-              _buildEmailField(),
-              const SizedBox(height: 12),
-              _buildPasswordField(),
-              const SizedBox(height: 12),
-              _buildCnpjField(),
-              const SizedBox(height: 12),
-              _buildNameField(),
-              const SizedBox(height: 12),
-              _buildAddressField(),
-              const SizedBox(height: 12),
-              _buildCityField(),
-              const SizedBox(height: 12),
-              _buildPhoneNumberField(),
-              const SizedBox(height: 12),
-              _buildAboutField(),
-              const SizedBox(height: 12),
-              _buildResponsibleNameField(),
-              const SizedBox(height: 12),
-              _buildResponsibleCpfField(),
-              const SizedBox(height: 12),
-              _buildIsDonorField(),
-              const SizedBox(height: 12),
-              _buildIsBeneficiaryField(),
-              const SizedBox(height: 24),
-              _buildSubmitButton(),
-              const SizedBox(height: 24),
-              _buildNavigationButtons(),
-            ],
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 1200),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildLogo(),
+                  LayoutBreakpoint(
+                    xs: Column(
+                      children: [
+                        _buildEmailField(),
+                        const SizedBox(height: 12),
+                        _buildPasswordField(),
+                      ],
+                    ),
+                    md: Row(
+                      children: [
+                        Flexible(child: _buildEmailField()),
+                        const SizedBox(width: 12),
+                        Flexible(child: _buildPasswordField()),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  LayoutBreakpoint(
+                    xs: Column(
+                      children: [
+                        _buildCnpjField(),
+                        const SizedBox(height: 12),
+                        _buildNameField(),
+                      ],
+                    ),
+                    md: Row(
+                      children: [
+                        Flexible(child: _buildCnpjField()),
+                        const SizedBox(width: 12),
+                        Flexible(child: _buildNameField()),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  LayoutBreakpoint(
+                    xs: Column(
+                      children: [
+                        _buildAddressField(),
+                        const SizedBox(height: 12),
+                        _buildCityField(),
+                        const SizedBox(height: 12),
+                        _buildPhoneNumberField(),
+                      ],
+                    ),
+                    md: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Flexible(child: _buildAddressField()),
+                            const SizedBox(width: 12),
+                            Flexible(child: _buildCityField()),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        _buildPhoneNumberField(),
+                      ],
+                    ),
+                    lg: Row(
+                      children: [
+                        Flexible(flex: 2, child: _buildAddressField()),
+                        const SizedBox(width: 12),
+                        Flexible(flex: 1, child: _buildCityField()),
+                        const SizedBox(width: 12),
+                        Flexible(flex: 1, child: _buildPhoneNumberField()),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildAboutField(),
+                  const SizedBox(height: 12),
+                  LayoutBreakpoint(
+                    xs: Column(
+                      children: [
+                        _buildResponsibleNameField(),
+                        const SizedBox(height: 12),
+                        _buildResponsibleCpfField(),
+                      ],
+                    ),
+                    md: Row(
+                      children: [
+                        Flexible(child: _buildResponsibleNameField()),
+                        const SizedBox(width: 12),
+                        Flexible(child: _buildResponsibleCpfField()),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildIsDonorField(),
+                  const SizedBox(height: 12),
+                  _buildIsBeneficiaryField(),
+                  const SizedBox(height: 24),
+                  _buildSubmitButton(),
+                  const SizedBox(height: 24),
+                  _buildNavigationButtons(),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -208,65 +284,62 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _buildIsDonorField() {
-    return Center(
-      child: RichText(
-        text: TextSpan(
-          children: [
-            WidgetSpan(
-              child: SizedBox(
-                height: 20,
-                width: 28,
-                child: Observer(
-                  builder: (_) {
-                    return Checkbox(
-                      value: _userStore.isDonor,
-                      onChanged: (value) => _userStore.isDonor = value == true,
-                    );
-                  },
-                ),
+    return RichText(
+      text: TextSpan(
+        children: [
+          WidgetSpan(
+            child: SizedBox(
+              height: 20,
+              width: 28,
+              child: Observer(
+                builder: (_) {
+                  return Checkbox(
+                    value: _userStore.isDonor,
+                    onChanged: (value) => _userStore.isDonor = value == true,
+                  );
+                },
               ),
             ),
-            const TextSpan(
-              style: TextStyle(
-                fontSize: 12,
-              ),
-              text: 'Desejo cadastrar minha empresa/entidade como doadora.',
+          ),
+          TextSpan(
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(context).textTheme.bodyText1?.color,
             ),
-          ],
-        ),
+            text: 'Desejo cadastrar minha empresa/entidade como doadora.',
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildIsBeneficiaryField() {
-    return Center(
-      child: RichText(
-        text: TextSpan(
-          children: [
-            WidgetSpan(
-              child: SizedBox(
-                height: 20,
-                width: 28,
-                child: Observer(
-                  builder: (_) {
-                    return Checkbox(
-                      value: _userStore.isBeneficiary,
-                      onChanged: (value) =>
-                          _userStore.isBeneficiary = value == true,
-                    );
-                  },
-                ),
+    return RichText(
+      text: TextSpan(
+        children: [
+          WidgetSpan(
+            child: SizedBox(
+              height: 20,
+              width: 28,
+              child: Observer(
+                builder: (_) {
+                  return Checkbox(
+                    value: _userStore.isBeneficiary,
+                    onChanged: (value) =>
+                        _userStore.isBeneficiary = value == true,
+                  );
+                },
               ),
             ),
-            const TextSpan(
-              style: TextStyle(
-                fontSize: 12,
-              ),
-              text: 'Desejo cadastrar minha empresa/entidade como '
-                  'beneficiária.',
+          ),
+          TextSpan(
+            style: TextStyle(
+              fontSize: 16,
+              color: Theme.of(context).textTheme.bodyText1?.color,
             ),
-          ],
-        ),
+            text: 'Desejo cadastrar minha empresa/entidade como beneficiária.',
+          ),
+        ],
       ),
     );
   }
@@ -290,25 +363,14 @@ class _RegisterPageState extends State<RegisterPage> {
               (_userStore.isBeneficiary || _userStore.isDonor);
 
           if (isLoading) {
-            return const OutlinedButton(
-              onPressed: null,
-              child: SizedBox(
-                height: 18,
-                width: 18,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
-              ),
-            );
+            return const LoadingOutlinedButton();
           }
 
           return OutlinedButton(
             onPressed: canSubmit
                 ? () => _authController.register(
-                      _userStore.email,
-                      _password,
-                      _userStore.user,
-                    )
+                    _userStore.email, _password, _userStore.user,
+                    onSuccess: _navigationController.navigateToMainPage)
                 : null,
             child: const Text('Solicitar Cadastro'),
           );
@@ -325,7 +387,8 @@ class _RegisterPageState extends State<RegisterPage> {
           final isLoading = _authController.isLoading;
 
           return OutlinedButton(
-            onPressed: !isLoading ? _authController.navigateToLoginPage : null,
+            onPressed:
+                !isLoading ? _navigationController.navigateToLoginPage : null,
             child: const Text('Voltar'),
           );
         },

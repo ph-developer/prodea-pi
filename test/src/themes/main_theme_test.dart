@@ -14,4 +14,24 @@ void main() {
       },
     );
   });
+
+  group('webThemeData', () {
+    test(
+      'deve ser do tipo ThemeData.',
+      () {
+        // assert
+        expect(webThemeData, isA<ThemeData>());
+      },
+    );
+  });
+
+  group('mobileThemeData', () {
+    test(
+      'deve ser do tipo ThemeData.',
+      () {
+        // assert
+        expect(mobileThemeData, isA<ThemeData>());
+      },
+    );
+  });
 }

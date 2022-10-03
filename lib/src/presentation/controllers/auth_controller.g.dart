@@ -94,17 +94,19 @@ mixin _$AuthController on _AuthControllerBase, Store {
       AsyncAction('_AuthControllerBase.login', context: context);
 
   @override
-  Future<void> login(String email, String password) {
-    return _$loginAsyncAction.run(() => super.login(email, password));
+  Future<void> login(String email, String password, {Function? onSuccess}) {
+    return _$loginAsyncAction
+        .run(() => super.login(email, password, onSuccess: onSuccess));
   }
 
   late final _$registerAsyncAction =
       AsyncAction('_AuthControllerBase.register', context: context);
 
   @override
-  Future<void> register(String email, String password, User userInfo) {
-    return _$registerAsyncAction
-        .run(() => super.register(email, password, userInfo));
+  Future<void> register(String email, String password, User userInfo,
+      {Function? onSuccess}) {
+    return _$registerAsyncAction.run(
+        () => super.register(email, password, userInfo, onSuccess: onSuccess));
   }
 
   late final _$sendPasswordResetEmailAsyncAction = AsyncAction(
@@ -112,53 +114,17 @@ mixin _$AuthController on _AuthControllerBase, Store {
       context: context);
 
   @override
-  Future<void> sendPasswordResetEmail(String email) {
+  Future<void> sendPasswordResetEmail(String email, {Function? onSuccess}) {
     return _$sendPasswordResetEmailAsyncAction
-        .run(() => super.sendPasswordResetEmail(email));
+        .run(() => super.sendPasswordResetEmail(email, onSuccess: onSuccess));
   }
 
   late final _$logoutAsyncAction =
       AsyncAction('_AuthControllerBase.logout', context: context);
 
   @override
-  Future<void> logout() {
-    return _$logoutAsyncAction.run(() => super.logout());
-  }
-
-  late final _$_AuthControllerBaseActionController =
-      ActionController(name: '_AuthControllerBase', context: context);
-
-  @override
-  void navigateToLoginPage() {
-    final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
-        name: '_AuthControllerBase.navigateToLoginPage');
-    try {
-      return super.navigateToLoginPage();
-    } finally {
-      _$_AuthControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void navigateToForgotPasswordPage() {
-    final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
-        name: '_AuthControllerBase.navigateToForgotPasswordPage');
-    try {
-      return super.navigateToForgotPasswordPage();
-    } finally {
-      _$_AuthControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void navigateToRegisterPage() {
-    final _$actionInfo = _$_AuthControllerBaseActionController.startAction(
-        name: '_AuthControllerBase.navigateToRegisterPage');
-    try {
-      return super.navigateToRegisterPage();
-    } finally {
-      _$_AuthControllerBaseActionController.endAction(_$actionInfo);
-    }
+  Future<void> logout({Function? onSuccess}) {
+    return _$logoutAsyncAction.run(() => super.logout(onSuccess: onSuccess));
   }
 
   @override

@@ -4,6 +4,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../controllers/auth_controller.dart';
+import '../../controllers/navigation_controller.dart';
+import '../../widgets/button/loading_outlined_button.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  final NavigationController _navigationController = Modular.get();
   final AuthController _authController = Modular.get();
   var email = '';
 
@@ -22,17 +25,20 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       body: Padding(
         padding: const EdgeInsets.all(36),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildLogo(),
-              _buildEmailField(),
-              const SizedBox(height: 24),
-              _buildSubmitButton(),
-              const SizedBox(height: 24),
-              _buildNavigationButtons(),
-            ],
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildLogo(),
+                _buildEmailField(),
+                const SizedBox(height: 24),
+                _buildSubmitButton(),
+                const SizedBox(height: 24),
+                _buildNavigationButtons(),
+              ],
+            ),
           ),
         ),
       ),
@@ -71,20 +77,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           final isLoading = _authController.isLoading;
 
           if (isLoading) {
-            return const OutlinedButton(
-              onPressed: null,
-              child: SizedBox(
-                height: 18,
-                width: 18,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
-              ),
-            );
+            return const LoadingOutlinedButton();
           }
 
           return OutlinedButton(
-            onPressed: () => _authController.sendPasswordResetEmail(email),
+            onPressed: () => _authController.sendPasswordResetEmail(
+              email,
+              onSuccess: _navigationController.navigateToLoginPage,
+            ),
             child: const Text('Solicitar Redefinição de Senha'),
           );
         },
@@ -100,7 +100,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           final isLoading = _authController.isLoading;
 
           return OutlinedButton(
-            onPressed: !isLoading ? _authController.navigateToLoginPage : null,
+            onPressed:
+                !isLoading ? _navigationController.navigateToLoginPage : null,
             child: const Text('Voltar'),
           );
         },

@@ -4,7 +4,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../domain/entities/user.dart';
 import '../../controllers/auth_controller.dart';
-import '../../widgets/connection_app_bar.dart';
+import '../../controllers/navigation_controller.dart';
+import '../../widgets/app_bar/connection_app_bar.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -14,13 +15,14 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final NavigationController _navigationController = Modular.get();
   final AuthController _authController = Modular.get();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ConnectionAppBar(
-        icon: Icons.person_rounded,
+        icon: const Icon(Icons.person_rounded),
         title: 'Meu Perfil',
       ),
       body: Observer(
@@ -80,7 +82,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   const SizedBox(height: 12),
                   OutlinedButton(
-                    onPressed: _authController.logout,
+                    onPressed: () => _authController.logout(
+                      onSuccess: _navigationController.navigateToLoginPage,
+                    ),
                     child: const Text('Sair'),
                   ),
                 ],

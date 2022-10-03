@@ -1,16 +1,18 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:prodea/core/helpers/navigation.dart';
+import 'package:prodea/src/data/services/modular_navigation_service.dart';
 
-class MockModularNavigator extends Mock implements IModularNavigator {}
+import '../../../mocks/mocks.dart';
 
 void main() {
   late IModularNavigator modularNavigatorMock;
+  late ModularNavigationService service;
 
   setUp(() {
     modularNavigatorMock = MockModularNavigator();
     Modular.navigatorDelegate = modularNavigatorMock;
+    service = ModularNavigationService();
   });
 
   group('goTo', () {
@@ -21,7 +23,7 @@ void main() {
         when(() => modularNavigatorMock.pushNamed('/home'))
             .thenAnswer((_) async => null);
         // act
-        NavigationHelper.goTo('/home', replace: false);
+        service.goTo('/home', replace: false);
         await untilCalled(() => modularNavigatorMock.pushNamed('/home'));
         // assert
         verify(() => modularNavigatorMock.pushNamed('/home')).called(1);
@@ -33,7 +35,7 @@ void main() {
       'deve navegar para outra rota e remover histórico.',
       () {
         // act
-        NavigationHelper.goTo('/home', replace: true);
+        service.goTo('/home', replace: true);
         // assert
         verify(() => modularNavigatorMock.navigate('/home')).called(1);
         verifyNever(() => modularNavigatorMock.pushNamed('/home'));
@@ -41,14 +43,14 @@ void main() {
     );
   });
 
-  group('back', () {
+  group('goBack', () {
     test(
       'deve navegar para a rota anterior.',
       () {
         // arrange
         when(() => modularNavigatorMock.path).thenAnswer((_) => '/');
         // act
-        NavigationHelper.back();
+        service.goBack();
         // assert
         verify(() => modularNavigatorMock.pop());
       },
@@ -60,11 +62,11 @@ void main() {
       'deve emitir a rota quando ocorrer uma navegação.',
       () {
         // act
-        final stream = NavigationHelper.currentRoute;
+        final stream = service.currentRoute();
         // assert
         expect(stream, emits('/home'));
         // act
-        NavigationHelper.goTo('/home', replace: true);
+        service.goTo('/home', replace: true);
       },
     );
   });

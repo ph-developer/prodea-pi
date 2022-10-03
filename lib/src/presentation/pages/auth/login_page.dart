@@ -4,6 +4,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../controllers/auth_controller.dart';
+import '../../controllers/navigation_controller.dart';
+import '../../widgets/button/loading_outlined_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final NavigationController _navigationController = Modular.get();
   final AuthController _authController = Modular.get();
   var _email = '';
   var _password = '';
@@ -23,19 +26,22 @@ class _LoginPageState extends State<LoginPage> {
       body: Padding(
         padding: const EdgeInsets.all(36),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildLogo(),
-              _buildEmailField(),
-              const SizedBox(height: 12),
-              _buildPasswordField(),
-              const SizedBox(height: 24),
-              _buildSubmitButton(),
-              const SizedBox(height: 24),
-              _buildNavigationButtons(),
-            ],
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildLogo(),
+                _buildEmailField(),
+                const SizedBox(height: 12),
+                _buildPasswordField(),
+                const SizedBox(height: 24),
+                _buildSubmitButton(),
+                const SizedBox(height: 24),
+                _buildNavigationButtons(),
+              ],
+            ),
           ),
         ),
       ),
@@ -90,20 +96,15 @@ class _LoginPageState extends State<LoginPage> {
           final isLoading = _authController.isLoading;
 
           if (isLoading) {
-            return const OutlinedButton(
-              onPressed: null,
-              child: SizedBox(
-                height: 18,
-                width: 18,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
-              ),
-            );
+            return const LoadingOutlinedButton();
           }
 
           return OutlinedButton(
-            onPressed: () => _authController.login(_email, _password),
+            onPressed: () => _authController.login(
+              _email,
+              _password,
+              onSuccess: _navigationController.navigateToMainPage,
+            ),
             child: const Text('Entrar'),
           );
         },
@@ -121,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
             Expanded(
               child: OutlinedButton(
                 onPressed: !isLoading
-                    ? _authController.navigateToForgotPasswordPage
+                    ? _navigationController.navigateToForgotPasswordPage
                     : null,
                 child: const Text('Recuperar Senha'),
               ),
@@ -129,8 +130,9 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(width: 12),
             Expanded(
               child: OutlinedButton(
-                onPressed:
-                    !isLoading ? _authController.navigateToRegisterPage : null,
+                onPressed: !isLoading
+                    ? _navigationController.navigateToRegisterPage
+                    : null,
                 child: const Text('Solicitar Cadastro'),
               ),
             ),

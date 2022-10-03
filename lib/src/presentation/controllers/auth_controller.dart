@@ -3,7 +3,6 @@
 import 'package:mobx/mobx.dart';
 
 import '../../domain/entities/user.dart';
-import '../../../core/helpers/navigation.dart';
 import '../../domain/usecases/auth/do_login.dart';
 import '../../domain/usecases/auth/do_logout.dart';
 import '../../domain/usecases/auth/do_register.dart';
@@ -60,52 +59,49 @@ abstract class _AuthControllerBase with Store {
   }
 
   @action
-  Future<void> login(String email, String password) async {
+  Future<void> login(
+    String email,
+    String password, {
+    Function? onSuccess,
+  }) async {
     isLoading = true;
     currentUser = await _doLogin(email, password);
-    if (isLoggedIn) NavigationHelper.goTo('/main', replace: true);
+    if (isLoggedIn) onSuccess?.call();
     isLoading = false;
   }
 
   @action
-  Future<void> register(String email, String password, User userInfo) async {
+  Future<void> register(
+    String email,
+    String password,
+    User userInfo, {
+    Function? onSuccess,
+  }) async {
     isLoading = true;
     currentUser = await _doRegister(email, password, userInfo);
-    if (isLoggedIn) NavigationHelper.goTo('/main', replace: true);
+    if (isLoggedIn) onSuccess?.call();
     isLoading = false;
   }
 
   @action
-  Future<void> sendPasswordResetEmail(String email) async {
+  Future<void> sendPasswordResetEmail(
+    String email, {
+    Function? onSuccess,
+  }) async {
     isLoading = true;
     final result = await _sendPasswordResetEmail(email);
-    if (result) NavigationHelper.goTo('/login', replace: true);
+    if (result) onSuccess?.call();
     isLoading = false;
   }
 
   @action
-  Future<void> logout() async {
+  Future<void> logout({Function? onSuccess}) async {
     isLoading = true;
     final result = await _doLogout();
     if (result) {
       currentUser = null;
-      NavigationHelper.goTo('/login', replace: true);
+      onSuccess?.call();
     }
     isLoading = false;
-  }
-
-  @action
-  void navigateToLoginPage() {
-    NavigationHelper.goTo('/login', replace: true);
-  }
-
-  @action
-  void navigateToForgotPasswordPage() {
-    NavigationHelper.goTo('/forgot', replace: true);
-  }
-
-  @action
-  void navigateToRegisterPage() {
-    NavigationHelper.goTo('/register', replace: true);
   }
 }
