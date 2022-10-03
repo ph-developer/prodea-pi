@@ -326,6 +326,35 @@ void main() {
         expect(controller.isLoading, false);
       },
     );
+
+    test(
+      'deve chamar a função onSuccess ao efetuar o login com sucesso.',
+      () async {
+        // arrange
+        final onSuccess = MockCallable<void>();
+        when(() => doLoginMock(any(), any()))
+            .thenAnswer((_) async => tDeniedUser);
+        // act
+        await controller.login('email', 'password', onSuccess: onSuccess);
+        // assert
+        verify(onSuccess).called(1);
+        expect(controller.isLoading, false);
+      },
+    );
+
+    test(
+      'deve deixar de chamar a função onSuccess ao não efetuar o login com sucesso.',
+      () async {
+        // arrange
+        final onSuccess = MockCallable<void>();
+        when(() => doLoginMock(any(), any())).thenAnswer((_) async => null);
+        // act
+        await controller.login('email', 'password', onSuccess: onSuccess);
+        // assert
+        verifyNever(onSuccess);
+        expect(controller.isLoading, false);
+      },
+    );
   });
 
   group('register', () {
@@ -340,6 +369,46 @@ void main() {
         // assert
         verify(() => doRegisterMock('email', 'password', tDeniedUser))
             .called(1);
+        expect(controller.isLoading, false);
+      },
+    );
+
+    test(
+      'deve chamar a função onSuccess ao efetuar o cadastro com sucesso.',
+      () async {
+        // arrange
+        final onSuccess = MockCallable<void>();
+        when(() => doRegisterMock(any(), any(), tDeniedUser))
+            .thenAnswer((_) async => tDeniedUser);
+        // act
+        await controller.register(
+          'email',
+          'password',
+          tDeniedUser,
+          onSuccess: onSuccess,
+        );
+        // assert
+        verify(onSuccess).called(1);
+        expect(controller.isLoading, false);
+      },
+    );
+
+    test(
+      'deve deixar de chamar a função onSuccess ao não efetuar o cadastro com sucesso.',
+      () async {
+        // arrange
+        final onSuccess = MockCallable<void>();
+        when(() => doRegisterMock(any(), any(), tDeniedUser))
+            .thenAnswer((_) async => null);
+        // act
+        await controller.register(
+          'email',
+          'password',
+          tDeniedUser,
+          onSuccess: onSuccess,
+        );
+        // assert
+        verifyNever(onSuccess);
         expect(controller.isLoading, false);
       },
     );
@@ -359,6 +428,36 @@ void main() {
         expect(controller.isLoading, false);
       },
     );
+
+    test(
+      'deve chamar a função onSuccess ao efetuar o envio do link de redefinição de senha com sucesso.',
+      () async {
+        // arrange
+        final onSuccess = MockCallable<void>();
+        when(() => sendPasswordResetEmailMock(any()))
+            .thenAnswer((_) async => true);
+        // act
+        await controller.sendPasswordResetEmail('email', onSuccess: onSuccess);
+        // assert
+        verify(onSuccess).called(1);
+        expect(controller.isLoading, false);
+      },
+    );
+
+    test(
+      'deve deixar de chamar a função onSuccess ao não efetuar o envio do link de redefinição de senha com sucesso.',
+      () async {
+        // arrange
+        final onSuccess = MockCallable<void>();
+        when(() => sendPasswordResetEmailMock(any()))
+            .thenAnswer((_) async => false);
+        // act
+        await controller.sendPasswordResetEmail('email', onSuccess: onSuccess);
+        // assert
+        verifyNever(onSuccess);
+        expect(controller.isLoading, false);
+      },
+    );
   });
 
   group('logout', () {
@@ -371,6 +470,34 @@ void main() {
         await controller.logout();
         // assert
         verify(doLogoutMock).called(1);
+        expect(controller.isLoading, false);
+      },
+    );
+
+    test(
+      'deve chamar a função onSuccess ao efetuar o logout com sucesso.',
+      () async {
+        // arrange
+        final onSuccess = MockCallable<void>();
+        when(doLogoutMock).thenAnswer((_) async => true);
+        // act
+        await controller.logout(onSuccess: onSuccess);
+        // assert
+        verify(onSuccess).called(1);
+        expect(controller.isLoading, false);
+      },
+    );
+
+    test(
+      'deve deixar de chamar a função onSuccess ao não efetuar o logout com sucesso.',
+      () async {
+        // arrange
+        final onSuccess = MockCallable<void>();
+        when(doLogoutMock).thenAnswer((_) async => false);
+        // act
+        await controller.logout(onSuccess: onSuccess);
+        // assert
+        verifyNever(onSuccess);
         expect(controller.isLoading, false);
       },
     );

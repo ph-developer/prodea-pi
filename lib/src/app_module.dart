@@ -10,6 +10,7 @@ import 'domain/services/navigation_service.dart';
 import 'domain/usecases/navigation/get_current_route.dart';
 import 'domain/usecases/navigation/go_back.dart';
 import 'domain/usecases/navigation/go_to.dart';
+import 'presentation/controllers/navigation_controller.dart';
 import 'presentation/guards/auth_guard.dart';
 import 'presentation/guards/guest_guard.dart';
 import 'presentation/pages/account/profile_page.dart';
@@ -71,9 +72,9 @@ class AppModule extends Module {
   @override
   List<Bind> get binds => [
         //! Firebase
-        Bind.instance<FirebaseAuth>(FirebaseAuth.instance),
-        Bind.instance<FirebaseStorage>(FirebaseStorage.instance),
-        Bind.instance<FirebaseFirestore>(FirebaseFirestore.instance),
+        Bind.factory<FirebaseAuth>((i) => FirebaseAuth.instance),
+        Bind.factory<FirebaseStorage>((i) => FirebaseStorage.instance),
+        Bind.factory<FirebaseFirestore>((i) => FirebaseFirestore.instance),
 
         //! Third-Party
         Bind.factory<Connectivity>((i) => Connectivity()),
@@ -133,6 +134,8 @@ class AppModule extends Module {
             (i) => AuthController(i(), i(), i(), i(), i())),
         Bind.singleton<ConnectionStateController>(
             (i) => ConnectionStateController(i())),
+        Bind.singleton<NavigationController>(
+            (i) => NavigationController(i(), i(), i())),
 
         //! Stores
         Bind.singleton<CitiesStore>((i) => CitiesStore(i())),

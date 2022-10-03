@@ -1,12 +1,14 @@
-// ignore_for_file: subtype_of_sealed_class
+// ignore_for_file: subtype_of_sealed_class, depend_on_referenced_packages
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:modular_core/modular_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_auth/firebase_auth.dart' as firebase show User;
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart' as fake;
@@ -15,6 +17,7 @@ import 'package:prodea/src/domain/repositories/city_repo.dart';
 import 'package:prodea/src/domain/repositories/donation_repo.dart';
 import 'package:prodea/src/domain/repositories/file_repo.dart';
 import 'package:prodea/src/domain/repositories/user_repo.dart';
+import 'package:prodea/src/domain/services/navigation_service.dart';
 import 'package:prodea/src/domain/services/network_service.dart';
 import 'package:prodea/src/domain/services/notification_service.dart';
 import 'package:prodea/src/domain/services/photo_service.dart';
@@ -33,6 +36,9 @@ import 'package:prodea/src/domain/usecases/donations/set_donation_as_canceled.da
 import 'package:prodea/src/domain/usecases/donations/set_donation_as_delivered.dart';
 import 'package:prodea/src/domain/usecases/donations/set_donation_as_requested.dart';
 import 'package:prodea/src/domain/usecases/donations/set_donation_as_unrequested.dart';
+import 'package:prodea/src/domain/usecases/navigation/get_current_route.dart';
+import 'package:prodea/src/domain/usecases/navigation/go_back.dart';
+import 'package:prodea/src/domain/usecases/navigation/go_to.dart';
 import 'package:prodea/src/domain/usecases/network/get_connection_status.dart';
 import 'package:prodea/src/domain/usecases/photo/pick_photo_from_camera.dart';
 import 'package:prodea/src/domain/usecases/photo/pick_photo_from_gallery.dart';
@@ -41,7 +47,9 @@ import 'package:prodea/src/domain/usecases/user/get_common_users.dart';
 import 'package:prodea/src/domain/usecases/user/get_donors.dart';
 import 'package:prodea/src/domain/usecases/user/set_user_as_authorized.dart';
 import 'package:prodea/src/domain/usecases/user/set_user_as_denied.dart';
+import 'package:prodea/src/presentation/controllers/auth_controller.dart';
 import 'package:prodea/src/presentation/stores/cities_store.dart';
+import 'package:prodea/src/presentation/stores/users_store.dart';
 
 abstract class Callable<T> {
   void call([T? arg]) {}
@@ -140,3 +148,21 @@ class MockSetUserAsAuthorized extends Mock implements SetUserAsAuthorized {}
 class MockSetUserAsDenied extends Mock implements SetUserAsDenied {}
 
 class MockCitiesStore extends Mock implements CitiesStore {}
+
+class MockUsersStore extends Mock implements UsersStore {}
+
+class MockNavigationService extends Mock implements INavigationService {}
+
+class MockGoTo extends Mock implements GoTo {}
+
+class MockGoBack extends Mock implements GoBack {}
+
+class MockGetCurrentRoute extends Mock implements GetCurrentRoute {}
+
+class MockAuthController extends Mock implements AuthController {}
+
+class MockBuildContext extends Mock implements BuildContext {}
+
+class MockModularArguments extends Mock implements ModularArguments {}
+
+class MockInjector extends Mock implements Injector {}
