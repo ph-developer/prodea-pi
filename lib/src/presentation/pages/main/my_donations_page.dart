@@ -5,12 +5,12 @@ import 'package:flutter_modular/flutter_modular.dart';
 import '../../../../core/extensions/date_time.dart';
 import '../../../domain/dtos/donation_dto.dart';
 import '../../../domain/entities/donation.dart';
-import '../../controllers/connection_state_controller.dart';
 import '../../dialogs/cancel_reason_dialog.dart';
 import '../../dialogs/user_info_dialog.dart';
 import '../../stores/donations_store.dart';
 import '../../stores/users_store.dart';
 import '../../widgets/app_bar/main_app_bar.dart';
+import '../../widgets/button/connection_outlined_button.dart';
 import '../../widgets/layout/layout_breakpoint.dart';
 
 class MyDonationsPage extends StatefulWidget {
@@ -21,7 +21,6 @@ class MyDonationsPage extends StatefulWidget {
 }
 
 class _MyDonationsPageState extends State<MyDonationsPage> {
-  final ConnectionStateController _connectionStateController = Modular.get();
   final DonationsStore _donationsStore = Modular.get();
   final UsersStore _usersStore = Modular.get();
 
@@ -134,18 +133,12 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                     donation.beneficiaryId != null)
                   SizedBox(
                     width: double.infinity,
-                    child: Observer(
-                      builder: (_) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: OutlinedButton(
-                          onPressed: _connectionStateController.isConnected
-                              ? () {
-                                  _donationsStore
-                                      .setDonationAsDelivered(donation);
-                                }
-                              : null,
-                          child: const Text('Marcar como Entregue'),
-                        ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: ConnectionOutlinedButton(
+                        onPressed: () =>
+                            _donationsStore.setDonationAsDelivered(donation),
+                        child: const Text('Marcar como Entregue'),
                       ),
                     ),
                   ),
@@ -154,21 +147,15 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                     !donation.isExpired)
                   SizedBox(
                     width: double.infinity,
-                    child: Observer(
-                      builder: (_) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: OutlinedButton(
-                          onPressed: _connectionStateController.isConnected
-                              ? () {
-                                  showCancelReasonDialog(context,
-                                      onOk: (reason) {
-                                    _donationsStore.setDonationAsCanceled(
-                                        donation, reason);
-                                  });
-                                }
-                              : null,
-                          child: const Text('Cancelar Doação'),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: ConnectionOutlinedButton(
+                        onPressed: () => showCancelReasonDialog(
+                          context,
+                          onOk: (reason) => _donationsStore
+                              .setDonationAsCanceled(donation, reason),
                         ),
+                        child: const Text('Cancelar Doação'),
                       ),
                     ),
                   ),
@@ -252,18 +239,12 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                       donation.beneficiaryId != null)
                     SizedBox(
                       width: double.infinity,
-                      child: Observer(
-                        builder: (_) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: OutlinedButton(
-                            onPressed: _connectionStateController.isConnected
-                                ? () {
-                                    _donationsStore
-                                        .setDonationAsDelivered(donation);
-                                  }
-                                : null,
-                            child: const Text('Marcar como Entregue'),
-                          ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: ConnectionOutlinedButton(
+                          onPressed: () =>
+                              _donationsStore.setDonationAsDelivered(donation),
+                          child: const Text('Marcar como Entregue'),
                         ),
                       ),
                     ),
@@ -272,21 +253,15 @@ class _MyDonationsPageState extends State<MyDonationsPage> {
                       !donation.isExpired)
                     SizedBox(
                       width: double.infinity,
-                      child: Observer(
-                        builder: (_) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: OutlinedButton(
-                            onPressed: _connectionStateController.isConnected
-                                ? () {
-                                    showCancelReasonDialog(context,
-                                        onOk: (reason) {
-                                      _donationsStore.setDonationAsCanceled(
-                                          donation, reason);
-                                    });
-                                  }
-                                : null,
-                            child: const Text('Cancelar Doação'),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: ConnectionOutlinedButton(
+                          onPressed: () => showCancelReasonDialog(
+                            context,
+                            onOk: (reason) => _donationsStore
+                                .setDonationAsCanceled(donation, reason),
                           ),
+                          child: const Text('Cancelar Doação'),
                         ),
                       ),
                     ),

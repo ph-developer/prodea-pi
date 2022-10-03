@@ -5,11 +5,11 @@ import 'package:flutter_modular/flutter_modular.dart';
 import '../../../../core/extensions/date_time.dart';
 import '../../../../core/extensions/string.dart';
 import '../../../domain/entities/donation.dart';
-import '../../controllers/connection_state_controller.dart';
 import '../../dialogs/user_info_dialog.dart';
 import '../../stores/donations_store.dart';
 import '../../stores/users_store.dart';
 import '../../widgets/app_bar/main_app_bar.dart';
+import '../../widgets/button/connection_outlined_button.dart';
 import '../../widgets/layout/layout_breakpoint.dart';
 
 class AvailableDonationsPage extends StatefulWidget {
@@ -20,7 +20,6 @@ class AvailableDonationsPage extends StatefulWidget {
 }
 
 class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
-  final ConnectionStateController _connectionStateController = Modular.get();
   final DonationsStore _donationsStore = Modular.get();
   final UsersStore _usersStore = Modular.get();
   final _cityFilterController = TextEditingController();
@@ -180,18 +179,12 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
                 const SizedBox(height: 8),
                 SizedBox(
                   width: double.infinity,
-                  child: Observer(
-                    builder: (_) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: OutlinedButton(
-                        onPressed: _connectionStateController.isConnected
-                            ? () {
-                                _donationsStore
-                                    .setDonationAsRequested(donation);
-                              }
-                            : null,
-                        child: const Text('Solicitar Doação'),
-                      ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: ConnectionOutlinedButton(
+                      onPressed: () =>
+                          _donationsStore.setDonationAsRequested(donation),
+                      child: const Text('Solicitar Doação'),
                     ),
                   ),
                 ),
@@ -276,18 +269,12 @@ class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
                   const SizedBox(height: 8),
                   SizedBox(
                     width: double.infinity,
-                    child: Observer(
-                      builder: (_) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: OutlinedButton(
-                          onPressed: _connectionStateController.isConnected
-                              ? () {
-                                  _donationsStore
-                                      .setDonationAsRequested(donation);
-                                }
-                              : null,
-                          child: const Text('Solicitar Doação'),
-                        ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: ConnectionOutlinedButton(
+                        onPressed: () =>
+                            _donationsStore.setDonationAsRequested(donation),
+                        child: const Text('Solicitar Doação'),
                       ),
                     ),
                   ),

@@ -6,10 +6,11 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../core/extensions/string.dart';
 import '../../../../core/input_formatters.dart';
-import '../../controllers/connection_state_controller.dart';
 import '../../stores/donation_store.dart';
 import '../../stores/users_store.dart';
 import '../../widgets/app_bar/main_app_bar.dart';
+import '../../widgets/button/connection_outlined_button.dart';
+import '../../widgets/button/loading_outlined_button.dart';
 
 class DonatePage extends StatefulWidget {
   const DonatePage({Key? key}) : super(key: key);
@@ -19,7 +20,6 @@ class DonatePage extends StatefulWidget {
 }
 
 class _DonatePageState extends State<DonatePage> {
-  final ConnectionStateController _connectionStateController = Modular.get();
   final UsersStore _usersStore = Modular.get();
   final DonationStore _donationStore = Modular.get();
 
@@ -215,26 +215,16 @@ class _DonatePageState extends State<DonatePage> {
       child: Observer(
         builder: (_) {
           final isLoading = _donationStore.isLoading;
-          final canSubmit = _connectionStateController.isConnected &&
-              _donationStore.expiration.isNotEmpty &&
+          final canSubmit = _donationStore.expiration.isNotEmpty &&
               _donationStore.expiration.length == 10 &&
               _donationStore.expiration.isAValidDate() &&
               _donationStore.description.isNotEmpty;
 
           if (isLoading) {
-            return const OutlinedButton(
-              onPressed: null,
-              child: SizedBox(
-                height: 18,
-                width: 18,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
-              ),
-            );
+            return const LoadingOutlinedButton();
           }
 
-          return OutlinedButton(
+          return ConnectionOutlinedButton(
             onPressed: canSubmit
                 ? () => _donationStore.postDonation(
                       onSuccess: () {

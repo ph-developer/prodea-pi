@@ -8,6 +8,7 @@ import '../../../../core/input_formatters.dart';
 import '../../controllers/auth_controller.dart';
 import '../../dialogs/city_select_dialog.dart';
 import '../../stores/user_store.dart';
+import '../../widgets/button/loading_outlined_button.dart';
 import '../../widgets/layout/layout_breakpoint.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -360,16 +361,7 @@ class _RegisterPageState extends State<RegisterPage> {
               (_userStore.isBeneficiary || _userStore.isDonor);
 
           if (isLoading) {
-            return const OutlinedButton(
-              onPressed: null,
-              child: SizedBox(
-                height: 18,
-                width: 18,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
-              ),
-            );
+            return const LoadingOutlinedButton();
           }
 
           return OutlinedButton(

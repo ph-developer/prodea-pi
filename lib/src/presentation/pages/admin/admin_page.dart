@@ -3,9 +3,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../domain/entities/user.dart';
-import '../../controllers/connection_state_controller.dart';
 import '../../stores/users_store.dart';
 import '../../widgets/app_bar/connection_app_bar.dart';
+import '../../widgets/button/connection_outlined_button.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -15,7 +15,6 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
-  final ConnectionStateController _connectionStateController = Modular.get();
   final UsersStore _usersStore = Modular.get();
 
   @override
@@ -95,12 +94,8 @@ class _AdminPageState extends State<AdminPage> {
                 width: double.infinity,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: OutlinedButton(
-                    onPressed: _connectionStateController.isConnected
-                        ? () {
-                            _usersStore.setUserAsAuthorized(user);
-                          }
-                        : null,
+                  child: ConnectionOutlinedButton(
+                    onPressed: () => _usersStore.setUserAsAuthorized(user),
                     child: const Text('Autorizar'),
                   ),
                 ),
@@ -112,11 +107,7 @@ class _AdminPageState extends State<AdminPage> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: OutlinedButton(
-                    onPressed: _connectionStateController.isConnected
-                        ? () {
-                            _usersStore.setUserAsDenied(user);
-                          }
-                        : null,
+                    onPressed: () => _usersStore.setUserAsDenied(user),
                     child: const Text('Negar Autorização'),
                   ),
                 ),
