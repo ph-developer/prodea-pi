@@ -30,31 +30,26 @@ class _DonatePageState extends State<DonatePage> {
         icon: const Icon(Icons.volunteer_activism_rounded),
         title: 'Doar',
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: Column(
-            children: [
-              SingleChildScrollView(
-                child: Container(
-                  constraints: const BoxConstraints(maxWidth: 1200),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildDescriptionField(),
-                      const SizedBox(height: 24),
-                      _buildPhotoField(),
-                      const SizedBox(height: 24),
-                      _buildBeneficiaryField(),
-                      const SizedBox(height: 24),
-                      _buildExpirationField(),
-                      const SizedBox(height: 24),
-                      _buildSubmitButton(),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+      body: Center(
+        heightFactor: 1,
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          padding: const EdgeInsets.all(16),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildDescriptionField(),
+                const SizedBox(height: 24),
+                _buildPhotoField(),
+                const SizedBox(height: 24),
+                _buildBeneficiaryField(),
+                const SizedBox(height: 24),
+                _buildExpirationField(),
+                const SizedBox(height: 24),
+                _buildSubmitButton(),
+              ],
+            ),
           ),
         ),
       ),
