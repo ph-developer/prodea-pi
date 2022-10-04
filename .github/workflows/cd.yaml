@@ -5,6 +5,7 @@ on:
 
 jobs:
   deploy-website-on-firebase-hosting:
+    name: Deploy Website on Firebase Hosting
     runs-on: ubuntu-latest
     steps:
       - name: Get Repository
@@ -19,6 +20,16 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+
+      - name: Flutter Version
+        run: flutter --version
+
+      - name: Cache Pub Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.FLUTTER_HOME }}/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
 
       - name: Run Flutter Pub Get
         run: flutter pub get
@@ -37,8 +48,13 @@ jobs:
           echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
 
-      - name: Build APK File
-        run: flutter build apk
+      - name: Build App Bundle
+        run: flutter build appbundle --release
+
+      - uses: actions/upload-artifact@v1
+        with:
+          name: release-appbundle
+          path: ./build/app/outputs/bundle/release/app-release.aab
 
       - name: Build Web App
         run: flutter build web --release
