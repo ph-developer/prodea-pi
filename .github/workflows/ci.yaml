@@ -1,0 +1,121 @@
+name: CI - Flutter Tests
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  flutter-tests:
+    name: Flutter Tests (Unit and Widget)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Repository
+        uses: actions/checkout@v3
+
+      # - name: Setup Java
+      #   uses: actions/setup-java@v1
+      #   with:
+      #     java-version: "12.x"
+
+      # - name: Setup Flutter SDK
+      #   uses: subosito/flutter-action@v2
+      #   with:
+      #     channel: "stable"
+
+      # - name: Run Flutter Pub Get
+      #   run: flutter pub get
+
+      # - name: Run Unit and Widget Tests
+      #   run: flutter test test
+
+  flutter-build-android:
+    name: Flutter Build Test (Android)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Repository
+        uses: actions/checkout@v3
+
+      # - name: Setup Java
+      #   uses: actions/setup-java@v1
+      #   with:
+      #     java-version: "12.x"
+
+      # - name: Setup Flutter SDK
+      #   uses: subosito/flutter-action@v2
+      #   with:
+      #     channel: "stable"
+
+      # - name: Run Flutter Pub Get
+      #   run: flutter pub get
+
+      # - name: Download Android Keystore
+      #   id: android_keystore
+      #   uses: timheuer/base64-to-file@v1.0.3
+      #   with:
+      #     fileName: key.jks
+      #     encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
+      # - name: Create key.properties
+      #   run: |
+      #     echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > android/key.properties
+      #     echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> android/key.properties
+      #     echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
+      #     echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
+
+      # - name: Build APP Bundle
+      #   run: flutter build appbundle --release
+
+  flutter-build-web:
+    name: Flutter Build Test (Web)
+    runs-on: ubuntu-latest
+    needs: flutter-tests
+    steps:
+      - name: Get Repository
+        uses: actions/checkout@v3
+
+      # - name: Setup Java
+      #   uses: actions/setup-java@v1
+      #   with:
+      #     java-version: "12.x"
+
+      # - name: Setup Flutter SDK
+      #   uses: subosito/flutter-action@v2
+      #   with:
+      #     channel: "stable"
+
+      # - name: Run Flutter Pub Get
+      #   run: flutter pub get
+
+      # - name: Build Web App
+      #   run: flutter build web --release
+
+  flutter-integration-tests:
+    name: Flutter Integration Tests
+    runs-on: ubuntu-latest
+    needs: [flutter-tests, flutter-build-android, flutter-build-web]
+    steps:
+      - name: Get Repository
+        uses: actions/checkout@v3
+
+      # - name: Setup Java
+      #   uses: actions/setup-java@v1
+      #   with:
+      #     java-version: "12.x"
+
+      # - name: Setup Flutter SDK
+      #   uses: subosito/flutter-action@v2
+      #   with:
+      #     channel: "stable"
+
+      # - name: Run Flutter Pub Get
+      #   run: flutter pub get
+
+      # - name: Google Cloud Auth
+      #   uses: google-github-actions/auth@v0
+      #   with:
+      #     credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
+
+      # - name: Setup Google Cloud SDK
+      #   uses: google-github-actions/setup-gcloud@v0
+
+      # - name: Run Android Integration Tests
+      #   run: ./.github/scripts/integration_android.sh
