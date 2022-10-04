@@ -1,4 +1,3 @@
-import 'package:asuka/asuka.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,6 +8,7 @@ import 'package:prodea/src/presentation/dialogs/city_select_dialog.dart';
 import 'package:prodea/src/presentation/stores/cities_store.dart';
 
 import '../../../mocks/mocks.dart';
+import '../../../mocks/widgets.dart';
 
 class TestModule extends Module {
   @override
@@ -32,24 +32,12 @@ void main() {
     ]);
   });
 
-  Widget createWidgetUnderTest() {
-    return ModularApp(
-      module: TestModule(),
-      child: MaterialApp(
-        builder: Asuka.builder,
-        home: const Scaffold(
-          key: tScaffoldKey,
-        ),
-      ),
-    );
-  }
-
   testWidgets(
     'deve mostrar um diálogo, interagir com ele e retornar uma string na função onOk.',
     (tester) async {
       // arrange
       Finder widget;
-      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.pumpWidget(makeDialogTestable(tScaffoldKey));
       final onSelect = MockCallable<void>();
       final BuildContext context = tester.element(find.byKey(tScaffoldKey));
 
@@ -102,7 +90,7 @@ void main() {
     (tester) async {
       // arrange
       Finder widget;
-      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.pumpWidget(makeDialogTestable(tScaffoldKey));
       final onSelect = MockCallable<void>();
       final BuildContext context = tester.element(find.byKey(tScaffoldKey));
 
@@ -129,7 +117,7 @@ void main() {
     (tester) async {
       // arrange
       Finder widget;
-      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.pumpWidget(makeDialogTestable(tScaffoldKey));
       final onSelect = MockCallable<void>();
       final BuildContext context = tester.element(find.byKey(tScaffoldKey));
 
