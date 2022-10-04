@@ -1,29 +1,20 @@
-import 'package:asuka/asuka.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:prodea/src/presentation/dialogs/cancel_reason_dialog.dart';
 
 import '../../../mocks/mocks.dart';
+import '../../../mocks/widgets.dart';
 
 void main() {
   const tScaffoldKey = Key('scaffold');
-
-  Widget createWidgetUnderTest() {
-    return MaterialApp(
-      builder: Asuka.builder,
-      home: const Scaffold(
-        key: tScaffoldKey,
-      ),
-    );
-  }
 
   testWidgets(
     'deve mostrar um diálogo, interagir com ele e retornar uma string na função onOk.',
     (tester) async {
       // arrange
       Finder widget;
-      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.pumpWidget(makeDialogTestable(tScaffoldKey));
       final onOk = MockCallable<void>();
       final BuildContext context = tester.element(find.byKey(tScaffoldKey));
 
@@ -57,7 +48,7 @@ void main() {
     (tester) async {
       // arrange
       Finder widget;
-      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.pumpWidget(makeDialogTestable(tScaffoldKey));
       final onOk = MockCallable<void>();
       final BuildContext context = tester.element(find.byKey(tScaffoldKey));
 

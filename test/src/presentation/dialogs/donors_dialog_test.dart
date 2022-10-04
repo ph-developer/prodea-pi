@@ -1,4 +1,3 @@
-import 'package:asuka/asuka.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,6 +9,7 @@ import 'package:prodea/src/presentation/stores/users_store.dart';
 import 'package:mobx/mobx.dart' as mobx;
 
 import '../../../mocks/mocks.dart';
+import '../../../mocks/widgets.dart';
 
 class TestModule extends Module {
   @override
@@ -50,21 +50,12 @@ void main() {
     ]);
   });
 
-  Widget createWidgetUnderTest() {
-    return MaterialApp(
-      builder: Asuka.builder,
-      home: const Scaffold(
-        key: tScaffoldKey,
-      ),
-    );
-  }
-
   testWidgets(
     'deve mostrar um diálogo e fechar ao clicar no botão de voltar.',
     (tester) async {
       // arrange
       Finder widget;
-      await tester.pumpWidget(createWidgetUnderTest());
+      await tester.pumpWidget(makeDialogTestable(tScaffoldKey));
       final BuildContext context = tester.element(find.byKey(tScaffoldKey));
 
       // mostrar modal

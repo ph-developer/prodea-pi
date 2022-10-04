@@ -48,6 +48,8 @@ import 'package:prodea/src/domain/usecases/user/get_donors.dart';
 import 'package:prodea/src/domain/usecases/user/set_user_as_authorized.dart';
 import 'package:prodea/src/domain/usecases/user/set_user_as_denied.dart';
 import 'package:prodea/src/presentation/controllers/auth_controller.dart';
+import 'package:prodea/src/presentation/controllers/connection_state_controller.dart';
+import 'package:prodea/src/presentation/controllers/navigation_controller.dart';
 import 'package:prodea/src/presentation/stores/cities_store.dart';
 import 'package:prodea/src/presentation/stores/users_store.dart';
 
@@ -166,3 +168,8 @@ class MockBuildContext extends Mock implements BuildContext {}
 class MockModularArguments extends Mock implements ModularArguments {}
 
 class MockInjector extends Mock implements Injector {}
+
+class MockConnectionStateController extends Mock
+    implements ConnectionStateController {}
+
+class MockNavigationController extends Mock implements NavigationController {}
