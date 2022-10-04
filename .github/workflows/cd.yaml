@@ -6,7 +6,6 @@ on:
 jobs:
   deploy-website-on-firebase-hosting:
     runs-on: ubuntu-latest
-    needs: flutter-integration-tests
     steps:
       - name: Get Repository
         uses: actions/checkout@v3
