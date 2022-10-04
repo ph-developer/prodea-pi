@@ -136,6 +136,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   _buildIsDonorField(),
                   const SizedBox(height: 12),
                   _buildIsBeneficiaryField(),
+                  const SizedBox(height: 12),
+                  _buildTermsField(),
                   const SizedBox(height: 24),
                   _buildSubmitButton(),
                   const SizedBox(height: 24),
@@ -341,6 +343,14 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTermsField() {
+    return const Text(
+      'Ao solicitar seu cadastro, você concorda com nossos Termos de Uso. '
+      'Para mais informações sobre nossas práticas de privacidade, acesse '
+      'nossa Política de Privacidade.',
     );
   }
 
