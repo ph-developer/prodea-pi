@@ -351,6 +351,7 @@ class _RegisterPageState extends State<RegisterPage> {
       'Ao solicitar seu cadastro, você concorda com nossos Termos de Uso. '
       'Para mais informações sobre nossas práticas de privacidade, acesse '
       'nossa Política de Privacidade.',
+      style: TextStyle(fontSize: 16),
     );
   }
 

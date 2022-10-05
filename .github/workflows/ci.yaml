@@ -1,11 +1,11 @@
-name: CI - Flutter Tests
+name: CI
 on:
   pull_request:
     branches: [main]
 
 jobs:
   flutter-tests:
-    name: Flutter Tests (Unit and Widget)
+    name: Flutter Tests
     runs-on: ubuntu-latest
     steps:
       - name: Get Repository
@@ -21,32 +21,45 @@ jobs:
         with:
           channel: "stable"
 
+      - name: Flutter Version
+        run: flutter --version
+
+      - name: Cache Pub Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.FLUTTER_HOME }}/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
       - name: Run Flutter Pub Get
         run: flutter pub get
 
-      - name: Run Unit and Widget Tests
-        run: flutter test test
+      - name: Run Analyzer
+        run: flutter analyze
 
-  flutter-build-android:
-    name: Flutter Build Test (Android)
-    runs-on: ubuntu-latest
-    needs: flutter-tests
-    steps:
-      - name: Get Repository
-        uses: actions/checkout@v3
+      - name: Run Full_Coverage
+        run: |
+          dart pub global activate full_coverage
+          dart pub global run full_coverage
 
-      - name: Setup Java
-        uses: actions/setup-java@v1
+      - name: Run Unit and Widget Tests With Coverage
+        run: flutter test test --coverage
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
         with:
-          java-version: "12.x"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Flutter SDK
-        uses: subosito/flutter-action@v2
+      - name: Google Cloud Auth
+        uses: google-github-actions/auth@v0
         with:
-          channel: "stable"
+          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
 
-      - name: Run Flutter Pub Get
-        run: flutter pub get
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+
+      # - name: Run Android Integration Tests
+      #   run: ./.github/scripts/integration_android.sh
 
       - name: Download Android Keystore
         id: android_keystore
@@ -62,61 +75,8 @@ jobs:
           echo "keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/key.properties
 
-      - name: Build APP Bundle
+      - name: Test Build App Bundle
         run: flutter build appbundle --release
 
-  flutter-build-web:
-    name: Flutter Build Test (Web)
-    runs-on: ubuntu-latest
-    needs: flutter-tests
-    steps:
-      - name: Get Repository
-        uses: actions/checkout@v3
-
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: "12.x"
-
-      - name: Setup Flutter SDK
-        uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-
-      - name: Run Flutter Pub Get
-        run: flutter pub get
-
-      - name: Build Web App
+      - name: Test Build Web App
         run: flutter build web --release
-
-  # flutter-integration-tests:
-  #   name: Flutter Integration Tests
-  #   runs-on: ubuntu-latest
-  #   needs: [flutter-tests, flutter-build-android, flutter-build-web]
-  #   steps:
-  #     - name: Get Repository
-  #       uses: actions/checkout@v3
-
-  #     - name: Setup Java
-  #       uses: actions/setup-java@v1
-  #       with:
-  #         java-version: "12.x"
-
-  #     - name: Setup Flutter SDK
-  #       uses: subosito/flutter-action@v2
-  #       with:
-  #         channel: "stable"
-
-  #     - name: Run Flutter Pub Get
-  #       run: flutter pub get
-
-  #     - name: Google Cloud Auth
-  #       uses: google-github-actions/auth@v0
-  #       with:
-  #         credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
-
-  #     - name: Setup Google Cloud SDK
-  #       uses: google-github-actions/setup-gcloud@v0
-
-  #     - name: Run Android Integration Tests
-  #       run: ./.github/scripts/integration_android.sh
