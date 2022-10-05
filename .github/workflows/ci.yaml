@@ -37,6 +37,11 @@ jobs:
       - name: Run Analyzer
         run: flutter analyze
 
+      - name: Run Full_Coverage
+        run: |
+          dart pub global activate full_coverage
+          dart pub global run full_coverage
+
       - name: Run Unit and Widget Tests With Coverage
         run: flutter test test --coverage
 
