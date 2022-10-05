@@ -37,8 +37,13 @@ jobs:
       - name: Run Analyzer
         run: flutter analyze
 
-      - name: Run Unit and Widget Tests
-        run: flutter test test
+      - name: Run Unit and Widget Tests With Coverage
+        run: flutter test test --coverage
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Google Cloud Auth
         uses: google-github-actions/auth@v0
