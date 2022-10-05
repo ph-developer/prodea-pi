@@ -1,11 +1,11 @@
-name: CD - Deploy Website on Firebase Hosting
+name: CD
 on:
   push:
     branches: [main]
 
 jobs:
   deploy-website-on-firebase-hosting:
-    name: Deploy Website on Firebase Hosting
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Get Repository

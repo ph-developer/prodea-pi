@@ -1,11 +1,11 @@
-name: CI - Flutter Tests
+name: CI
 on:
   pull_request:
     branches: [main]
 
 jobs:
   flutter-tests:
-    name: Flutter Unit and Widget Tests
+    name: Flutter Tests
     runs-on: ubuntu-latest
     steps:
       - name: Get Repository
