@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../injector.dart';
 import '../../controllers/navigation_controller.dart';
 import '../../dialogs/about_project_dialog.dart';
 import '../../dialogs/donors_dialog.dart';
@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final NavigationController _navigationController = Modular.get();
+  final NavigationController _navigationController = inject();
   final _prodeaLawUri = Uri.parse(
     'https://www.in.gov.br/web/dou/-/lei-n-14.016-de-23-de-junho-de-2020-263187111',
   );

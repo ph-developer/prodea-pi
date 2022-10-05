@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../../injector.dart';
 import '../../../domain/entities/user.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/navigation_controller.dart';
@@ -15,8 +15,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final NavigationController _navigationController = Modular.get();
-  final AuthController _authController = Modular.get();
+  final NavigationController _navigationController = inject();
+  final AuthController _authController = inject();
 
   @override
   Widget build(BuildContext context) {

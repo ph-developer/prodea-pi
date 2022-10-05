@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../core/extensions/string.dart';
+import '../../../injector.dart';
 import '../stores/cities_store.dart';
 
 Future<void> showCitySelectDialog(
@@ -25,7 +25,7 @@ class CitySelectDialog extends StatefulWidget {
 }
 
 class _CitySelectDialogState extends State<CitySelectDialog> {
-  final CitiesStore _citiesStore = Modular.get();
+  final CitiesStore _citiesStore = inject();
   final _cityFilterController = TextEditingController();
 
   @override

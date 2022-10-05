@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/input_formatters.dart';
+import '../../../../injector.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/navigation_controller.dart';
 import '../../dialogs/city_select_dialog.dart';
@@ -20,9 +20,9 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final NavigationController _navigationController = Modular.get();
-  final AuthController _authController = Modular.get();
-  final UserStore _userStore = Modular.get();
+  final NavigationController _navigationController = inject();
+  final AuthController _authController = inject();
+  final UserStore _userStore = inject();
   final _cityController = TextEditingController(text: '');
   var _password = '';
 

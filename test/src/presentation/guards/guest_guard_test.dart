@@ -1,18 +1,11 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:modular_test/modular_test.dart';
+import 'package:prodea/injector.dart';
 import 'package:prodea/src/presentation/controllers/auth_controller.dart';
 import 'package:prodea/src/presentation/guards/guest_guard.dart';
 
 import '../../../mocks/mocks.dart';
-
-class TestModule extends Module {
-  @override
-  List<Bind> get binds => [
-        Bind.instance<AuthController>(MockAuthController()),
-      ];
-}
 
 void main() {
   late AuthController authControllerMock;
@@ -26,9 +19,10 @@ void main() {
 
     when(() => authControllerMock.isLoggedIn).thenAnswer((_) => isLoggedIn);
 
-    initModule(TestModule(), replaceBinds: [
-      Bind.instance<AuthController>(authControllerMock),
-    ]);
+    setupTestInjector((i) {
+      i.unregister<AuthController>();
+      i.registerInstance<AuthController>(authControllerMock);
+    });
   });
 
   group('redirectTo', () {

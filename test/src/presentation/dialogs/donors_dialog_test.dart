@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:modular_test/modular_test.dart';
+import 'package:prodea/injector.dart';
 import 'package:prodea/src/domain/entities/user.dart';
 import 'package:prodea/src/presentation/dialogs/donors_dialog.dart';
 import 'package:prodea/src/presentation/stores/users_store.dart';
@@ -10,13 +9,6 @@ import 'package:mobx/mobx.dart' as mobx;
 
 import '../../../mocks/mocks.dart';
 import '../../../mocks/widgets.dart';
-
-class TestModule extends Module {
-  @override
-  List<Bind> get binds => [
-        Bind.instance<UsersStore>(MockUsersStore()),
-      ];
-}
 
 void main() {
   const tScaffoldKey = Key('scaffold');
@@ -45,9 +37,10 @@ void main() {
     when(() => usersStoreMock.donors)
         .thenReturn(mobx.ObservableList.of([tUser]));
 
-    initModule(TestModule(), replaceBinds: [
-      Bind.instance<UsersStore>(usersStoreMock),
-    ]);
+    setupTestInjector((i) {
+      i.unregister<UsersStore>();
+      i.registerInstance<UsersStore>(usersStoreMock);
+    });
   });
 
   testWidgets(

@@ -481,6 +481,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  go_router:
+    dependency: "direct main"
+    description:
+      name: go_router
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.5"
   graphs:
     dependency: transitive
     description:
@@ -591,6 +598,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.6.0"
+  kiwi:
+    dependency: "direct main"
+    description:
+      name: kiwi
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.2"
   lint:
     dependency: transitive
     description:
@@ -1123,4 +1137,4 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=2.18.0 <3.0.0"
-  flutter: ">=3.0.0"
+  flutter: ">=3.3.0"

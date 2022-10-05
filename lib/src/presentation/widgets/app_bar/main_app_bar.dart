@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../../injector.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/navigation_controller.dart';
 import '../layout/breakpoint.dart';
@@ -11,8 +11,8 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Icon? icon;
   final String? title;
   final List<Widget>? actions;
-  final AuthController _authController = Modular.get();
-  final NavigationController _navigationController = Modular.get();
+  final AuthController _authController = inject();
+  final NavigationController _navigationController = inject();
 
   @override
   final Size preferredSize;

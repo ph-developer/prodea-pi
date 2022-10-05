@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../injector.dart';
 import '../controllers/auth_controller.dart';
 import '../stores/donations_store.dart';
 import '../widgets/layout/breakpoint.dart';
@@ -20,8 +20,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final AuthController _authController = Modular.get();
-  final DonationsStore _donationsStore = Modular.get();
+  final AuthController _authController = inject();
+  final DonationsStore _donationsStore = inject();
   final PageController _pageController = PageController(
     initialPage: 0,
     keepPage: true,

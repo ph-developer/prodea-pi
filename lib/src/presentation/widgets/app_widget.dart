@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../injector.dart';
 import '../../themes/main_theme.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/connection_state_controller.dart';
@@ -18,10 +19,10 @@ class AppWidget extends StatefulWidget {
 }
 
 class _AppWidgetState extends State<AppWidget> {
-  final ConnectionStateController _connectionStateController = Modular.get();
-  final AuthController _authController = Modular.get();
-  final UsersStore _usersStore = Modular.get();
-  final CitiesStore _citiesStore = Modular.get();
+  final ConnectionStateController _connectionStateController = inject();
+  final AuthController _authController = inject();
+  final UsersStore _usersStore = inject();
+  final CitiesStore _citiesStore = inject();
   bool isStarting = true;
 
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../../injector.dart';
 import '../../../domain/entities/user.dart';
 import '../../stores/users_store.dart';
 import '../../widgets/app_bar/connection_app_bar.dart';
@@ -15,7 +15,7 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
-  final UsersStore _usersStore = Modular.get();
+  final UsersStore _usersStore = inject();
 
   @override
   Widget build(BuildContext context) {
