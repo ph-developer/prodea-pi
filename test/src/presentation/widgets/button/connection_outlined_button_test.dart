@@ -1,21 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:modular_test/modular_test.dart';
+import 'package:prodea/injector.dart';
 import 'package:prodea/src/presentation/controllers/connection_state_controller.dart';
 import 'package:prodea/src/presentation/widgets/button/connection_outlined_button.dart';
 
 import '../../../../mocks/mocks.dart';
 import '../../../../mocks/widgets.dart';
-
-class TestModule extends Module {
-  @override
-  List<Bind> get binds => [
-        Bind.instance<ConnectionStateController>(
-            MockConnectionStateController()),
-      ];
-}
 
 void main() {
   late ConnectionStateController connectionStateControllerMock;
@@ -28,9 +19,11 @@ void main() {
     when(() => connectionStateControllerMock.isConnected)
         .thenAnswer((_) => isConnected);
 
-    initModule(TestModule(), replaceBinds: [
-      Bind.instance<ConnectionStateController>(connectionStateControllerMock),
-    ]);
+    setupTestInjector((i) {
+      i.unregister<ConnectionStateController>();
+      i.registerInstance<ConnectionStateController>(
+          connectionStateControllerMock);
+    });
   });
 
   testWidgets('deve testar o botão de conexão (desconectado)', (tester) async {

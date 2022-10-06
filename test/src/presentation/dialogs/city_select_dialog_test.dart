@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobx/mobx.dart' as mobx;
 import 'package:mocktail/mocktail.dart';
-import 'package:modular_test/modular_test.dart';
+import 'package:prodea/injector.dart';
 import 'package:prodea/src/presentation/dialogs/city_select_dialog.dart';
 import 'package:prodea/src/presentation/stores/cities_store.dart';
 
 import '../../../mocks/mocks.dart';
 import '../../../mocks/widgets.dart';
-
-class TestModule extends Module {
-  @override
-  List<Bind> get binds => [
-        Bind.instance<CitiesStore>(MockCitiesStore()),
-      ];
-}
 
 void main() {
   const tScaffoldKey = Key('scaffold');
@@ -27,9 +19,10 @@ void main() {
     when(() => citiesStoreMock.cities)
         .thenReturn(mobx.ObservableList.of(['Araçatuba/SP', 'Penápolis/SP']));
 
-    initModule(TestModule(), replaceBinds: [
-      Bind.instance<CitiesStore>(citiesStoreMock),
-    ]);
+    setupTestInjector((i) {
+      i.unregister<CitiesStore>();
+      i.registerInstance<CitiesStore>(citiesStoreMock);
+    });
   });
 
   testWidgets(

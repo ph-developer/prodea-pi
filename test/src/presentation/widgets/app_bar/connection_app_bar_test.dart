@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:modular_test/modular_test.dart';
+import 'package:prodea/injector.dart';
 import 'package:prodea/src/presentation/controllers/connection_state_controller.dart';
 import 'package:prodea/src/presentation/controllers/navigation_controller.dart';
 import 'package:prodea/src/presentation/dialogs/no_connection_dialog.dart';
@@ -10,15 +9,6 @@ import 'package:prodea/src/presentation/widgets/app_bar/connection_app_bar.dart'
 
 import '../../../../mocks/mocks.dart';
 import '../../../../mocks/widgets.dart';
-
-class TestModule extends Module {
-  @override
-  List<Bind> get binds => [
-        Bind.instance<ConnectionStateController>(
-            MockConnectionStateController()),
-        Bind.instance<NavigationController>(MockNavigationController()),
-      ];
-}
 
 void main() {
   late ConnectionStateController connectionStateControllerMock;
@@ -39,10 +29,13 @@ void main() {
     when(() => navigationControllerMock.navigateBack())
         .thenAnswer((_) => navigateBack);
 
-    initModule(TestModule(), replaceBinds: [
-      Bind.instance<ConnectionStateController>(connectionStateControllerMock),
-      Bind.instance<NavigationController>(navigationControllerMock),
-    ]);
+    setupTestInjector((i) {
+      i.unregister<ConnectionStateController>();
+      i.unregister<NavigationController>();
+      i.registerInstance<ConnectionStateController>(
+          connectionStateControllerMock);
+      i.registerInstance<NavigationController>(navigationControllerMock);
+    });
   });
 
   testWidgets('deve testar a appBar de conexão (desconectado)', (tester) async {

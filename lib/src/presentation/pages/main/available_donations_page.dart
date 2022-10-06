@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../core/extensions/date_time.dart';
 import '../../../../core/extensions/string.dart';
+import '../../../../injector.dart';
 import '../../../domain/entities/donation.dart';
 import '../../dialogs/user_info_dialog.dart';
 import '../../stores/donations_store.dart';
@@ -20,8 +20,8 @@ class AvailableDonationsPage extends StatefulWidget {
 }
 
 class _AvailableDonationsPageState extends State<AvailableDonationsPage> {
-  final DonationsStore _donationsStore = Modular.get();
-  final UsersStore _usersStore = Modular.get();
+  final DonationsStore _donationsStore = inject();
+  final UsersStore _usersStore = inject();
   final _cityFilterController = TextEditingController();
 
   @override

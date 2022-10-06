@@ -1,16 +1,15 @@
 import 'dart:async';
 
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../injector.dart';
 import '../controllers/auth_controller.dart';
 
-class GuestGuard extends RouteGuard {
-  GuestGuard() : super(redirectTo: '/main');
+Future<String?> guestGuard(BuildContext context, GoRouterState state) async {
+  final AuthController authController = inject();
 
-  @override
-  Future<bool> canActivate(String path, ParallelRoute route) async {
-    final AuthController authController = Modular.get();
+  if (authController.isLoggedIn) return '/main';
 
-    return !authController.isLoggedIn;
-  }
+  return null;
 }

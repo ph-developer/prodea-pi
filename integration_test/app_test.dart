@@ -3,14 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:modular_test/modular_test.dart';
 import 'package:prodea/firebase_options.dart';
+import 'package:prodea/injector.dart';
 import 'package:prodea/main.dart' as app;
-import 'package:prodea/src/app_module.dart';
 import 'package:prodea/src/presentation/dialogs/cancel_reason_dialog.dart';
 import 'package:prodea/src/presentation/dialogs/city_select_dialog.dart';
 import 'package:prodea/src/presentation/pages/auth/forgot_password_page.dart';
@@ -25,8 +23,6 @@ import 'mocks/mocks.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  late AppModule appModule;
-  late FirebaseAuth firebaseAuthMock;
   late FirebaseFirestore firebaseFirestoreMock;
   late FirebaseStorage firebaseStorageMock;
   late ImagePicker imagePickerMock;
@@ -46,21 +42,22 @@ void main() {
   group('Testes E2E', () {
     group('Testes de Autenticação', () {
       setUp(() {
-        firebaseAuthMock = setupFirebaseAuthMock(false);
-        appModule = AppModule();
-
-        initModule(appModule, replaceBinds: [
-          Bind.instance<FirebaseAuth>(firebaseAuthMock),
-          Bind.instance<FirebaseStorage>(firebaseStorageMock),
-          Bind.instance<FirebaseFirestore>(firebaseFirestoreMock),
-          Bind.instance<ImagePicker>(imagePickerMock),
-        ]);
+        setupTestInjector((i) {
+          i.unregister<FirebaseStorage>();
+          i.unregister<FirebaseFirestore>();
+          i.unregister<ImagePicker>();
+          i.unregister<FirebaseAuth>();
+          i.registerInstance<FirebaseStorage>(firebaseStorageMock);
+          i.registerInstance<FirebaseFirestore>(firebaseFirestoreMock);
+          i.registerInstance<ImagePicker>(imagePickerMock);
+          i.registerFactory<FirebaseAuth>((_) => setupFirebaseAuthMock(false));
+        });
       });
 
       testWidgets('deve testar a página de login', (tester) async {
         // arrange
         Finder widget;
-        await tester.runAsync(() => app.main([], appModule));
+        await tester.runAsync(() => app.main([], true));
         await tester.pumpAndSettle();
 
         // assert
@@ -103,7 +100,7 @@ void main() {
       testWidgets('deve testar a página recuperar senha', (tester) async {
         // arrange
         Finder widget;
-        await tester.runAsync(() => app.main([], appModule));
+        await tester.runAsync(() => app.main([], true));
         await tester.pumpAndSettle();
 
         // assert
@@ -137,7 +134,7 @@ void main() {
       testWidgets('deve testar a página de cadastro', (tester) async {
         // arrange
         Finder widget;
-        await tester.runAsync(() => app.main([], appModule));
+        await tester.runAsync(() => app.main([], true));
         await tester.pumpAndSettle();
 
         // assert
@@ -262,21 +259,22 @@ void main() {
 
     group('Testes de Plataforma', () {
       setUp(() {
-        firebaseAuthMock = setupFirebaseAuthMock(true);
-        appModule = AppModule();
-
-        initModule(appModule, replaceBinds: [
-          Bind.instance<FirebaseAuth>(firebaseAuthMock),
-          Bind.instance<FirebaseStorage>(firebaseStorageMock),
-          Bind.instance<FirebaseFirestore>(firebaseFirestoreMock),
-          Bind.instance<ImagePicker>(imagePickerMock),
-        ]);
+        setupTestInjector((i) {
+          i.unregister<FirebaseStorage>();
+          i.unregister<FirebaseFirestore>();
+          i.unregister<ImagePicker>();
+          i.unregister<FirebaseAuth>();
+          i.registerInstance<FirebaseStorage>(firebaseStorageMock);
+          i.registerInstance<FirebaseFirestore>(firebaseFirestoreMock);
+          i.registerInstance<ImagePicker>(imagePickerMock);
+          i.registerFactory<FirebaseAuth>((_) => setupFirebaseAuthMock(true));
+        });
       });
 
       testWidgets('deve testar a página doar', (tester) async {
         // arrange
         Finder widget;
-        await tester.runAsync(() => app.main([], appModule));
+        await tester.runAsync(() => app.main([], true));
         await tester.pumpAndSettle();
 
         // assert
@@ -351,7 +349,7 @@ void main() {
       testWidgets('deve testar a página minhas doações', (tester) async {
         // arrange
         Finder widget;
-        await tester.runAsync(() => app.main([], appModule));
+        await tester.runAsync(() => app.main([], true));
         await tester.pumpAndSettle();
 
         // assert

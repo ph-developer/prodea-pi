@@ -1,27 +1,33 @@
 import 'dart:async';
 
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../router.dart';
 import '../../domain/services/navigation_service.dart';
 
-class ModularNavigationService implements INavigationService {
+class GoRouterNavigationService implements INavigationService {
+  late GoRouter _router;
   static final StreamController<String> _currentRoute =
       StreamController.broadcast();
+
+  GoRouterNavigationService([GoRouter? goRouter]) {
+    _router = goRouter ?? router;
+  }
 
   @override
   void goTo(String path, {bool replace = false}) {
     _currentRoute.add(path);
     if (replace) {
-      Modular.to.navigate(path);
+      _router.replace(path);
     } else {
-      Modular.to.pushNamed(path);
+      _router.push(path);
     }
   }
 
   @override
   void goBack() {
-    Modular.to.pop();
-    _currentRoute.add(Modular.to.path);
+    _router.pop();
+    _currentRoute.add(_router.location);
   }
 
   @override

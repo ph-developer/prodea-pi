@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../core/extensions/date_time.dart';
 import '../../../../core/extensions/string.dart';
+import '../../../../injector.dart';
 import '../../../domain/dtos/donation_dto.dart';
 import '../../../domain/entities/donation.dart';
 import '../../dialogs/user_info_dialog.dart';
@@ -21,8 +21,8 @@ class RequestedDonationsPage extends StatefulWidget {
 }
 
 class _RequestedDonationsPageState extends State<RequestedDonationsPage> {
-  final DonationsStore _donationsStore = Modular.get();
-  final UsersStore _usersStore = Modular.get();
+  final DonationsStore _donationsStore = inject();
+  final UsersStore _usersStore = inject();
   final _cityFilterController = TextEditingController();
 
   @override

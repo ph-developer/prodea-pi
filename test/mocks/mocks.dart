@@ -4,11 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:modular_core/modular_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_auth/firebase_auth.dart' as firebase show User;
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart' as fake;
@@ -97,8 +96,6 @@ class MockNetworkService extends Mock implements INetworkService {}
 
 class MockPhotoService extends Mock implements IPhotoService {}
 
-class MockModularNavigator extends Mock implements IModularNavigator {}
-
 class MockGetCurrentUser extends Mock implements GetCurrentUser {}
 
 class MockDoLogin extends Mock implements DoLogin {}
@@ -165,11 +162,11 @@ class MockAuthController extends Mock implements AuthController {}
 
 class MockBuildContext extends Mock implements BuildContext {}
 
-class MockModularArguments extends Mock implements ModularArguments {}
-
-class MockInjector extends Mock implements Injector {}
-
 class MockConnectionStateController extends Mock
     implements ConnectionStateController {}
 
 class MockNavigationController extends Mock implements NavigationController {}
+
+class MockGoRouterState extends Mock implements GoRouterState {}
+
+class MockGoRouter extends Mock implements GoRouter {}

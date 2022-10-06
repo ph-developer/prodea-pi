@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:modular_test/modular_test.dart';
+import 'package:prodea/injector.dart';
 import 'package:prodea/src/domain/entities/user.dart';
 import 'package:prodea/src/presentation/controllers/auth_controller.dart';
 import 'package:prodea/src/presentation/controllers/connection_state_controller.dart';
@@ -12,16 +11,6 @@ import 'package:prodea/src/presentation/widgets/layout/breakpoint.dart';
 
 import '../../../../mocks/mocks.dart';
 import '../../../../mocks/widgets.dart';
-
-class TestModule extends Module {
-  @override
-  List<Bind> get binds => [
-        Bind.instance<ConnectionStateController>(
-            MockConnectionStateController()),
-        Bind.instance<NavigationController>(MockNavigationController()),
-        Bind.instance<AuthController>(MockAuthController()),
-      ];
-}
 
 void main() {
   final binding = TestWidgetsFlutterBinding.ensureInitialized();
@@ -72,11 +61,15 @@ void main() {
           onSuccess: any(named: 'onSuccess'),
         )).thenAnswer((_) async => onNavigate('logout'));
 
-    initModule(TestModule(), replaceBinds: [
-      Bind.instance<ConnectionStateController>(connectionStateControllerMock),
-      Bind.instance<NavigationController>(navigationControllerMock),
-      Bind.instance<AuthController>(authControllerMock),
-    ]);
+    setupTestInjector((i) {
+      i.unregister<ConnectionStateController>();
+      i.unregister<NavigationController>();
+      i.unregister<AuthController>();
+      i.registerInstance<ConnectionStateController>(
+          connectionStateControllerMock);
+      i.registerInstance<NavigationController>(navigationControllerMock);
+      i.registerInstance<AuthController>(authControllerMock);
+    });
   });
 
   testWidgets('deve testar a appBar principal (mobile)', (tester) async {

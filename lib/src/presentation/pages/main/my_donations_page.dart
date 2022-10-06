@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../core/extensions/date_time.dart';
+import '../../../../injector.dart';
 import '../../../domain/dtos/donation_dto.dart';
 import '../../../domain/entities/donation.dart';
 import '../../dialogs/cancel_reason_dialog.dart';
@@ -21,8 +21,8 @@ class MyDonationsPage extends StatefulWidget {
 }
 
 class _MyDonationsPageState extends State<MyDonationsPage> {
-  final DonationsStore _donationsStore = Modular.get();
-  final UsersStore _usersStore = Modular.get();
+  final DonationsStore _donationsStore = inject();
+  final UsersStore _usersStore = inject();
 
   @override
   Widget build(BuildContext context) {

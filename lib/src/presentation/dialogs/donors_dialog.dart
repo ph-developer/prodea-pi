@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
+import '../../../injector.dart';
 import '../stores/users_store.dart';
 
 Future<void> showDonorsDialog(BuildContext context) async {
@@ -12,7 +12,7 @@ Future<void> showDonorsDialog(BuildContext context) async {
 }
 
 class DonorsDialog extends StatelessWidget {
-  final UsersStore _usersStore = Modular.get();
+  final UsersStore _usersStore = inject();
 
   DonorsDialog({Key? key}) : super(key: key);
 

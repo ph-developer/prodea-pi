@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../injector.dart';
 import '../../controllers/auth_controller.dart';
 import '../../controllers/navigation_controller.dart';
 import '../../widgets/button/loading_outlined_button.dart';
@@ -15,8 +15,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final NavigationController _navigationController = Modular.get();
-  final AuthController _authController = Modular.get();
+  final NavigationController _navigationController = inject();
+  final AuthController _authController = inject();
   var _email = '';
   var _password = '';
 

@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../../../core/extensions/string.dart';
 import '../../../../core/input_formatters.dart';
+import '../../../../injector.dart';
 import '../../stores/donation_store.dart';
 import '../../stores/users_store.dart';
 import '../../widgets/app_bar/main_app_bar.dart';
@@ -20,8 +20,8 @@ class DonatePage extends StatefulWidget {
 }
 
 class _DonatePageState extends State<DonatePage> {
-  final UsersStore _usersStore = Modular.get();
-  final DonationStore _donationStore = Modular.get();
+  final UsersStore _usersStore = inject();
+  final DonationStore _donationStore = inject();
 
   @override
   Widget build(BuildContext context) {
