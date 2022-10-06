@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:prodea/src/domain/entities/donation.dart';
@@ -14,7 +13,6 @@ import '../../../mocks/mocks.dart';
 
 void main() {
   late File tFile;
-  late IModularNavigator modularNavigatorMock;
   late CreateDonation createDonationMock;
   late PickPhotoFromCamera pickPhotoFromCameraMock;
   late PickPhotoFromGallery pickPhotoFromGalleryMock;
@@ -31,7 +29,6 @@ void main() {
   setUp(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
 
-    modularNavigatorMock = MockModularNavigator();
     createDonationMock = MockCreateDonation();
     pickPhotoFromCameraMock = MockPickPhotoFromCamera();
     pickPhotoFromGalleryMock = MockPickPhotoFromGallery();
@@ -40,7 +37,6 @@ void main() {
 
     final fileBytes = await rootBundle.load('assets/icon.png');
     tFile = File.fromRawPath(fileBytes.buffer.asUint8List());
-    Modular.navigatorDelegate = modularNavigatorMock;
 
     registerFallbackValue(tDonation);
   });
@@ -66,20 +62,21 @@ void main() {
     );
 
     test(
-      'deve manter-se na página quando não conseguir postar a doação.',
+      'não deve chamar a função onSuccess quando não conseguir postar a doação.',
       () async {
         // arrange
+        final onSuccess = MockCallable<void>();
         store.description = tDonation.description;
         store.beneficiaryId = tDonation.beneficiaryId;
         store.expiration = tDonation.expiration;
         when(() => createDonationMock(tDonation, null))
             .thenAnswer((_) async => null);
         // act
-        await store.postDonation();
+        await store.postDonation(onSuccess: onSuccess);
         // assert
         expect(store.isLoading, false);
         verify(() => createDonationMock(tDonation, null)).called(1);
-        verifyNever(() => modularNavigatorMock.navigate(any()));
+        verifyNever(onSuccess);
       },
     );
   });

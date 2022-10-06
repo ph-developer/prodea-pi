@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'src/data/services/modular_navigation_service.dart';
+import 'src/data/services/go_router_navigation_service.dart';
 import 'src/domain/services/navigation_service.dart';
 import 'src/domain/usecases/navigation/get_current_route.dart';
 import 'src/domain/usecases/navigation/go_back.dart';
@@ -124,7 +124,7 @@ void _injectRepositories() {
 
 void _injectServices() {
   _container.registerFactory<INavigationService>(
-    (i) => ModularNavigationService(),
+    (i) => GoRouterNavigationService(),
   );
   _container.registerFactory<INetworkService>(
     (i) => ConnectivityNetworkService(i()),

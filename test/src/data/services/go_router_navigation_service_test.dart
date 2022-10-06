@@ -1,33 +1,29 @@
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:prodea/src/data/services/modular_navigation_service.dart';
+import 'package:prodea/src/data/services/go_router_navigation_service.dart';
 
 import '../../../mocks/mocks.dart';
 
 void main() {
-  late IModularNavigator modularNavigatorMock;
-  late ModularNavigationService service;
+  late GoRouter goRouterMock;
+  late GoRouterNavigationService service;
 
   setUp(() {
-    modularNavigatorMock = MockModularNavigator();
-    Modular.navigatorDelegate = modularNavigatorMock;
-    service = ModularNavigationService();
+    goRouterMock = MockGoRouter();
+    service = GoRouterNavigationService(goRouterMock);
   });
 
   group('goTo', () {
     test(
       'deve navegar para outra rota sem remover histórico.',
       () async {
-        // arrange
-        when(() => modularNavigatorMock.pushNamed('/home'))
-            .thenAnswer((_) async => null);
         // act
         service.goTo('/home', replace: false);
-        await untilCalled(() => modularNavigatorMock.pushNamed('/home'));
+        await untilCalled(() => goRouterMock.push('/home'));
         // assert
-        verify(() => modularNavigatorMock.pushNamed('/home')).called(1);
-        verifyNever(() => modularNavigatorMock.navigate('/home'));
+        verify(() => goRouterMock.push('/home')).called(1);
+        verifyNever(() => goRouterMock.replace('/home'));
       },
     );
 
@@ -37,8 +33,8 @@ void main() {
         // act
         service.goTo('/home', replace: true);
         // assert
-        verify(() => modularNavigatorMock.navigate('/home')).called(1);
-        verifyNever(() => modularNavigatorMock.pushNamed('/home'));
+        verify(() => goRouterMock.replace('/home')).called(1);
+        verifyNever(() => goRouterMock.push('/home'));
       },
     );
   });
@@ -48,11 +44,11 @@ void main() {
       'deve navegar para a rota anterior.',
       () {
         // arrange
-        when(() => modularNavigatorMock.path).thenAnswer((_) => '/');
+        when(() => goRouterMock.location).thenAnswer((_) => '/');
         // act
         service.goBack();
         // assert
-        verify(() => modularNavigatorMock.pop());
+        verify(() => goRouterMock.pop());
       },
     );
   });
