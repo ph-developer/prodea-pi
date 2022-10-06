@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobx/mobx.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:modular_core/modular_core.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_auth/firebase_auth.dart' as firebase show User;
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart' as fake;
@@ -162,10 +161,6 @@ class MockGetCurrentRoute extends Mock implements GetCurrentRoute {}
 class MockAuthController extends Mock implements AuthController {}
 
 class MockBuildContext extends Mock implements BuildContext {}
-
-class MockModularArguments extends Mock implements ModularArguments {}
-
-class MockInjector extends Mock implements Injector {}
 
 class MockConnectionStateController extends Mock
     implements ConnectionStateController {}
