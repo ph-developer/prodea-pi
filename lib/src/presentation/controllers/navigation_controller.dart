@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:mobx/mobx.dart';
 
+import '../../../core/mixins/stream_subscriber.dart';
 import '../../domain/usecases/navigation/get_current_route.dart';
 import '../../domain/usecases/navigation/go_back.dart';
 import '../../domain/usecases/navigation/go_to.dart';
@@ -13,11 +14,10 @@ part 'navigation_controller.g.dart';
 class NavigationController = _NavigationControllerBase
     with _$NavigationController;
 
-abstract class _NavigationControllerBase with Store {
+abstract class _NavigationControllerBase with Store, StreamSubscriber {
   final GetCurrentRoute _getCurrentRoute;
   final GoTo _goTo;
   final GoBack _goBack;
-  final List<StreamSubscription> _subscriptions = [];
 
   _NavigationControllerBase(
     this._getCurrentRoute,
@@ -29,15 +29,11 @@ abstract class _NavigationControllerBase with Store {
   String currentRoute = '/';
 
   @action
-  void fetchCurrentRoute() {
-    _subscriptions.map((subscription) => subscription.cancel());
-    _subscriptions.clear();
-
-    _subscriptions.addAll([
-      _getCurrentRoute().listen((route) {
-        currentRoute = route;
-      }),
-    ]);
+  Future<void> fetchCurrentRoute() async {
+    await unsubscribeAll();
+    subscribe(_getCurrentRoute(), (route) {
+      currentRoute = route;
+    });
   }
 
   @action
