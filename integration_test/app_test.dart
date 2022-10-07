@@ -57,7 +57,7 @@ void main() {
       testWidgets('deve testar a página de login', (tester) async {
         // arrange
         Finder widget;
-        await tester.runAsync(() => app.main([], true));
+        await tester.runAsync(() => app.main(withoutBootWidget: true));
         await tester.pumpAndSettle();
 
         // assert
@@ -100,7 +100,7 @@ void main() {
       testWidgets('deve testar a página recuperar senha', (tester) async {
         // arrange
         Finder widget;
-        await tester.runAsync(() => app.main([], true));
+        await tester.runAsync(() => app.main(withoutBootWidget: true));
         await tester.pumpAndSettle();
 
         // assert
@@ -134,7 +134,7 @@ void main() {
       testWidgets('deve testar a página de cadastro', (tester) async {
         // arrange
         Finder widget;
-        await tester.runAsync(() => app.main([], true));
+        await tester.runAsync(() => app.main(withoutBootWidget: true));
         await tester.pumpAndSettle();
 
         // assert
@@ -274,7 +274,7 @@ void main() {
       testWidgets('deve testar a página doar', (tester) async {
         // arrange
         Finder widget;
-        await tester.runAsync(() => app.main([], true));
+        await tester.runAsync(() => app.main(withoutBootWidget: true));
         await tester.pumpAndSettle();
 
         // assert
@@ -349,7 +349,7 @@ void main() {
       testWidgets('deve testar a página minhas doações', (tester) async {
         // arrange
         Finder widget;
-        await tester.runAsync(() => app.main([], true));
+        await tester.runAsync(() => app.main(withoutBootWidget: true));
         await tester.pumpAndSettle();
 
         // assert
