@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:mobx/mobx.dart';
 
+import '../../../core/mixins/stream_subscriber.dart';
 import '../../domain/entities/donation.dart';
 import '../../domain/usecases/donations/get_available_donations.dart';
 import '../../domain/usecases/donations/get_donation_photo_url.dart';
@@ -18,7 +19,7 @@ part 'donations_store.g.dart';
 
 class DonationsStore = _DonationsStoreBase with _$DonationsStore;
 
-abstract class _DonationsStoreBase with Store {
+abstract class _DonationsStoreBase with Store, StreamSubscriber {
   final GetRequestedDonations _getRequestedDonations;
   final GetAvailableDonations _getAvailableDonations;
   final GetMyDonations _getMyDonations;
@@ -27,7 +28,6 @@ abstract class _DonationsStoreBase with Store {
   final SetDonationAsUnrequested _setDonationAsUnrequested;
   final SetDonationAsCanceled _setDonationAsCanceled;
   final GetDonationPhotoUrl _getDonationPhotoUrl;
-  final List<StreamSubscription> _subscriptions = [];
 
   _DonationsStoreBase(
     this._getRequestedDonations,
@@ -50,21 +50,17 @@ abstract class _DonationsStoreBase with Store {
   ObservableList<Donation> myDonations = ObservableList.of([]);
 
   @action
-  void fetchDonations() {
-    _subscriptions.map((subscription) => subscription.cancel());
-    _subscriptions.clear();
-
-    _subscriptions.addAll([
-      _getRequestedDonations().listen((list) {
-        requestedDonations = list.asObservable();
-      }),
-      _getAvailableDonations().listen((list) {
-        availableDonations = list.asObservable();
-      }),
-      _getMyDonations().listen((list) {
-        myDonations = list.asObservable();
-      }),
-    ]);
+  Future<void> fetchDonations() async {
+    await unsubscribeAll();
+    await subscribe(_getRequestedDonations(), (list) {
+      requestedDonations = list.asObservable();
+    });
+    await subscribe(_getAvailableDonations(), (list) {
+      availableDonations = list.asObservable();
+    });
+    await subscribe(_getMyDonations(), (list) {
+      myDonations = list.asObservable();
+    });
   }
 
   @action

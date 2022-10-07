@@ -25,20 +25,14 @@ mixin _$ConnectionStateController on _ConnectionStateControllerBase, Store {
     });
   }
 
-  late final _$_ConnectionStateControllerBaseActionController =
-      ActionController(
-          name: '_ConnectionStateControllerBase', context: context);
+  late final _$fetchConnectionStatusAsyncAction = AsyncAction(
+      '_ConnectionStateControllerBase.fetchConnectionStatus',
+      context: context);
 
   @override
-  void fetchConnectionStatus() {
-    final _$actionInfo =
-        _$_ConnectionStateControllerBaseActionController.startAction(
-            name: '_ConnectionStateControllerBase.fetchConnectionStatus');
-    try {
-      return super.fetchConnectionStatus();
-    } finally {
-      _$_ConnectionStateControllerBaseActionController.endAction(_$actionInfo);
-    }
+  Future<void> fetchConnectionStatus() {
+    return _$fetchConnectionStatusAsyncAction
+        .run(() => super.fetchConnectionStatus());
   }
 
   @override

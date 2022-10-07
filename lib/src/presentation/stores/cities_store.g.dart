@@ -25,18 +25,12 @@ mixin _$CitiesStore on _CitiesStoreBase, Store {
     });
   }
 
-  late final _$_CitiesStoreBaseActionController =
-      ActionController(name: '_CitiesStoreBase', context: context);
+  late final _$fetchCitiesAsyncAction =
+      AsyncAction('_CitiesStoreBase.fetchCities', context: context);
 
   @override
-  void fetchCities() {
-    final _$actionInfo = _$_CitiesStoreBaseActionController.startAction(
-        name: '_CitiesStoreBase.fetchCities');
-    try {
-      return super.fetchCities();
-    } finally {
-      _$_CitiesStoreBaseActionController.endAction(_$actionInfo);
-    }
+  Future<void> fetchCities() {
+    return _$fetchCitiesAsyncAction.run(() => super.fetchCities());
   }
 
   @override

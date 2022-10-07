@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:mobx/mobx.dart';
 
+import '../../../core/mixins/stream_subscriber.dart';
 import '../../domain/usecases/network/get_connection_status.dart';
 
 part 'connection_state_controller.g.dart';
@@ -11,9 +12,8 @@ part 'connection_state_controller.g.dart';
 class ConnectionStateController = _ConnectionStateControllerBase
     with _$ConnectionStateController;
 
-abstract class _ConnectionStateControllerBase with Store {
+abstract class _ConnectionStateControllerBase with Store, StreamSubscriber {
   final GetConnectionStatus _getConnectionStatus;
-  final List<StreamSubscription> _subscriptions = [];
 
   _ConnectionStateControllerBase(this._getConnectionStatus);
 
@@ -21,14 +21,10 @@ abstract class _ConnectionStateControllerBase with Store {
   bool isConnected = true;
 
   @action
-  void fetchConnectionStatus() {
-    _subscriptions.map((subscription) => subscription.cancel());
-    _subscriptions.clear();
-
-    _subscriptions.addAll([
-      _getConnectionStatus().listen((connectionStatus) {
-        isConnected = connectionStatus;
-      }),
-    ]);
+  Future<void> fetchConnectionStatus() async {
+    await unsubscribeAll();
+    await subscribe(_getConnectionStatus(), (connectionStatus) {
+      isConnected = connectionStatus;
+    });
   }
 }

@@ -25,19 +25,17 @@ mixin _$NavigationController on _NavigationControllerBase, Store {
     });
   }
 
-  late final _$_NavigationControllerBaseActionController =
-      ActionController(name: '_NavigationControllerBase', context: context);
+  late final _$fetchCurrentRouteAsyncAction = AsyncAction(
+      '_NavigationControllerBase.fetchCurrentRoute',
+      context: context);
 
   @override
-  void fetchCurrentRoute() {
-    final _$actionInfo = _$_NavigationControllerBaseActionController
-        .startAction(name: '_NavigationControllerBase.fetchCurrentRoute');
-    try {
-      return super.fetchCurrentRoute();
-    } finally {
-      _$_NavigationControllerBaseActionController.endAction(_$actionInfo);
-    }
+  Future<void> fetchCurrentRoute() {
+    return _$fetchCurrentRouteAsyncAction.run(() => super.fetchCurrentRoute());
   }
+
+  late final _$_NavigationControllerBaseActionController =
+      ActionController(name: '_NavigationControllerBase', context: context);
 
   @override
   void navigateBack() {

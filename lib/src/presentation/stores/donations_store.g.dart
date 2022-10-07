@@ -57,6 +57,14 @@ mixin _$DonationsStore on _DonationsStoreBase, Store {
     });
   }
 
+  late final _$fetchDonationsAsyncAction =
+      AsyncAction('_DonationsStoreBase.fetchDonations', context: context);
+
+  @override
+  Future<void> fetchDonations() {
+    return _$fetchDonationsAsyncAction.run(() => super.fetchDonations());
+  }
+
   late final _$getDonationPhotoURLAsyncAction =
       AsyncAction('_DonationsStoreBase.getDonationPhotoURL', context: context);
 
@@ -104,20 +112,6 @@ mixin _$DonationsStore on _DonationsStoreBase, Store {
   Future<void> setDonationAsCanceled(Donation donation, String reason) {
     return _$setDonationAsCanceledAsyncAction
         .run(() => super.setDonationAsCanceled(donation, reason));
-  }
-
-  late final _$_DonationsStoreBaseActionController =
-      ActionController(name: '_DonationsStoreBase', context: context);
-
-  @override
-  void fetchDonations() {
-    final _$actionInfo = _$_DonationsStoreBaseActionController.startAction(
-        name: '_DonationsStoreBase.fetchDonations');
-    try {
-      return super.fetchDonations();
-    } finally {
-      _$_DonationsStoreBaseActionController.endAction(_$actionInfo);
-    }
   }
 
   @override

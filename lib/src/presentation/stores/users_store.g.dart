@@ -57,6 +57,14 @@ mixin _$UsersStore on _UsersStoreBase, Store {
     });
   }
 
+  late final _$fetchUsersAsyncAction =
+      AsyncAction('_UsersStoreBase.fetchUsers', context: context);
+
+  @override
+  Future<void> fetchUsers() {
+    return _$fetchUsersAsyncAction.run(() => super.fetchUsers());
+  }
+
   late final _$setUserAsAuthorizedAsyncAction =
       AsyncAction('_UsersStoreBase.setUserAsAuthorized', context: context);
 
@@ -76,17 +84,6 @@ mixin _$UsersStore on _UsersStoreBase, Store {
 
   late final _$_UsersStoreBaseActionController =
       ActionController(name: '_UsersStoreBase', context: context);
-
-  @override
-  void fetchUsers() {
-    final _$actionInfo = _$_UsersStoreBaseActionController.startAction(
-        name: '_UsersStoreBase.fetchUsers');
-    try {
-      return super.fetchUsers();
-    } finally {
-      _$_UsersStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
 
   @override
   User getDonorById(String id) {

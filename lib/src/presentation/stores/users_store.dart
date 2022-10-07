@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:mobx/mobx.dart';
 
+import '../../../core/mixins/stream_subscriber.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/usecases/user/get_beneficiaries.dart';
 import '../../domain/usecases/user/get_common_users.dart';
@@ -15,13 +16,12 @@ part 'users_store.g.dart';
 
 class UsersStore = _UsersStoreBase with _$UsersStore;
 
-abstract class _UsersStoreBase with Store {
+abstract class _UsersStoreBase with Store, StreamSubscriber {
   final GetCommonUsers _getCommonUsers;
   final GetBeneficiaries _getBeneficiaries;
   final GetDonors _getDonors;
   final SetUserAsAuthorized _setUserAsAuthorized;
   final SetUserAsDenied _setUserAsDenied;
-  final List<StreamSubscription> _subscriptions = [];
 
   _UsersStoreBase(
     this._getCommonUsers,
@@ -41,21 +41,17 @@ abstract class _UsersStoreBase with Store {
   ObservableList<User> donors = ObservableList.of([]);
 
   @action
-  void fetchUsers() {
-    _subscriptions.map((subscription) => subscription.cancel());
-    _subscriptions.clear();
-
-    _subscriptions.addAll([
-      _getCommonUsers().listen((list) {
-        commonUsers = list.asObservable();
-      }),
-      _getBeneficiaries().listen((list) {
-        beneficiaries = list.asObservable();
-      }),
-      _getDonors().listen((list) {
-        donors = list.asObservable();
-      }),
-    ]);
+  Future<void> fetchUsers() async {
+    await unsubscribeAll();
+    await subscribe(_getCommonUsers(), (list) {
+      commonUsers = list.asObservable();
+    });
+    await subscribe(_getBeneficiaries(), (list) {
+      beneficiaries = list.asObservable();
+    });
+    await subscribe(_getDonors(), (list) {
+      donors = list.asObservable();
+    });
   }
 
   @action
