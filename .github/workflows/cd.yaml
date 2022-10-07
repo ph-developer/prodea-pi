@@ -34,12 +34,7 @@ jobs:
       - name: Run Flutter Pub Get
         run: flutter pub get
 
-      - name: Run Full_Coverage
-        run: |
-          dart pub global activate full_coverage
-          dart pub global run full_coverage
-
-      - name: Run Unit and Widget Tests
+      - name: Run Unit and Widget Tests With Coverage
         run: flutter test --coverage
 
       - name: Coveralls
