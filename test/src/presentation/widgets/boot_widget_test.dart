@@ -7,16 +7,16 @@ import '../../../mocks/mocks.dart';
 import '../../../mocks/widgets.dart';
 
 void main() {
-  final widgetsBinding = TestWidgetsFlutterBinding.ensureInitialized();
+  final binding = TestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('deve testar a tela de boot', (tester) async {
     // arrange
     Finder widget;
-    await tester.pumpWidget(BootWidget(widgetsBinding: widgetsBinding));
+    await tester.pumpWidget(BootWidget(widgetsBinding: binding));
 
     // assert
     expect(find.byType(BootWidget), findsOneWidget);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(Lottie), findsOneWidget);
 
     // pega as rotas existentes
     widget = find.byType(MaterialApp);

@@ -13,17 +13,16 @@ import 'firebase_options.dart';
 import 'injector.dart';
 import 'src/presentation/widgets/boot_widget.dart';
 
-Future<void> main({bool withoutBootWidget = false}) async {
+Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
-  if (!withoutBootWidget) {
-    if (!kIsWeb) FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  if (!kIsWeb) FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-    runApp(BootWidget(widgetsBinding: widgetsBinding));
-    await Future.delayed(const Duration(seconds: 1));
+  runApp(BootWidget(widgetsBinding: widgetsBinding));
 
-    if (!kIsWeb) FlutterNativeSplash.remove();
-  }
+  await Future.delayed(const Duration(seconds: 1));
+
+  if (!kIsWeb) FlutterNativeSplash.remove();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -36,11 +35,12 @@ Future<void> main({bool withoutBootWidget = false}) async {
   final CitiesStore citiesStore = inject();
   final UsersStore usersStore = inject();
 
-  await authController.fetchCurrentUser();
-
-  connectionStateController.fetchConnectionStatus();
-  citiesStore.fetchCities();
-  usersStore.fetchUsers();
+  await Future.wait([
+    authController.fetchCurrentUser(),
+    connectionStateController.fetchConnectionStatus(),
+    citiesStore.fetchCities(),
+    usersStore.fetchUsers(),
+  ]);
 
   if (kIsWeb && Uri.base.toString().endsWith('/#/')) {
     setupRouter('/');

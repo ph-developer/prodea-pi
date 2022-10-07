@@ -3,6 +3,7 @@ import 'package:prodea/core/errors/failures.dart';
 import 'package:prodea/core/extensions/date_time.dart';
 import 'package:prodea/core/extensions/string.dart';
 import 'package:prodea/core/input_formatters.dart';
+import 'package:prodea/core/mixins/stream_subscriber.dart';
 import 'package:prodea/firebase_options.dart';
 import 'package:prodea/injector.dart';
 import 'package:prodea/main.dart';

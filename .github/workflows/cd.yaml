@@ -4,6 +4,49 @@ on:
     branches: [main]
 
 jobs:
+  test-coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+
+      - name: Flutter Version
+        run: flutter --version
+
+      - name: Cache Pub Dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.FLUTTER_HOME }}/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
+      - name: Run Flutter Pub Get
+        run: flutter pub get
+
+      - name: Run Full_Coverage
+        run: |
+          dart pub global activate full_coverage
+          dart pub global run full_coverage
+
+      - name: Run Unit and Widget Tests
+        run: flutter test --coverage
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
   deploy-website-on-firebase-hosting:
     name: Deploy
     runs-on: ubuntu-latest
